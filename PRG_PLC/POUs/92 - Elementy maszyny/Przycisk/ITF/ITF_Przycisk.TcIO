@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <Itf Name="ITF_Przycisk" Id="{b8f1b9cb-5d5b-41b8-a7c1-04be0c8c9c79}">
+    <Declaration><![CDATA[INTERFACE ITF_Przycisk
+]]></Declaration>
+    <Property Name="CzyNacisniety" Id="{ae016ebb-0355-4e35-beab-a1ab82a85d62}">
+      <Declaration><![CDATA[PROPERTY CzyNacisniety : BOOL]]></Declaration>
+      <Get Name="Get" Id="{75029fef-5a6b-4176-b453-0f2a0e6b624c}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="Podswietlenie" Id="{96743ab6-0b32-4655-b3dd-40939b2e82de}">
+      <Declaration><![CDATA[PROPERTY Podswietlenie : BOOL]]></Declaration>
+      <Set Name="Set" Id="{4168a479-2fa8-403e-b610-7b97443715a5}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+  </Itf>
+</TcPlcObject>

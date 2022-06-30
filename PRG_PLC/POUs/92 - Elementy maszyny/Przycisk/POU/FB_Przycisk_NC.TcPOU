@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="FB_Przycisk_NC" Id="{6319c024-154b-46d0-90c3-ab1a7fbadabd}" SpecialFunc="None">
+    <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									22.06.2022
+//	Obsługa przycisku ze stykiem NC
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+FUNCTION_BLOCK FB_Przycisk_NC IMPLEMENTS ITF_Przycisk
+VAR
+	bStyk							AT %I*	: BOOL;
+	bPodswietlenie					AT %Q*	: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="CzyNacisniety" Id="{c8e99589-ae89-49ad-a359-5ca4e4ae6fba}">
+      <Declaration><![CDATA[PROPERTY CzyNacisniety : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{1cd11f39-c7d1-4f37-bf68-2e26ade25f76}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[CzyNacisniety								:= NOT bStyk;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Podswietlenie" Id="{5a7b5426-5f86-4062-8d50-8d094f90f338}">
+      <Declaration><![CDATA[PROPERTY Podswietlenie : BOOL]]></Declaration>
+      <Set Name="Set" Id="{7440f10a-6156-439e-978b-c17324af39b9}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bPodswietlenie								:= Podswietlenie;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <LineIds Name="FB_Przycisk_NC">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Przycisk_NC.CzyNacisniety.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Przycisk_NC.Podswietlenie.Set">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

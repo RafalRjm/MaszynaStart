@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="FB_Elektrozawor_5na2_2Cewki" Id="{43312228-2aa3-4525-b5b6-17642652764d}" SpecialFunc="None">
+    <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									04.06.2022
+//	Sterowanie elektrozaworem  - 5 na 2 z dwiema cewkami
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+FUNCTION_BLOCK FB_Elektrozawor_5na2_2Cewki IMPLEMENTS ITF_Elektozawor
+VAR
+	bCewkaA							AT %Q*	: BOOL;		//Cewka sterująca wyjściem 2 - 0 do MAX
+	bCewkaB							AT %Q*	: BOOL;		//Cewka sterująca wyjściem 4 - MAX do 0
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Steruj" Id="{0d907344-33e9-47aa-bf16-1ba0d510f6ec}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									04.06.2022
+	Sterowanie cewkami elektrozaworu 
+ 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+==================================================================================================*)
+METHOD Steruj : BOOL
+VAR_INPUT
+	bKierunekWstrone0						: BOOL;
+	bKierunekWStroneMax						: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (bKierunekWStroneMax AND NOT bCewkaA) THEN
+	bCewkaA									:= TRUE;
+END_IF
+IF  (bKierunekWstrone0 AND bCewkaA) THEN
+	bCewkaA									:= FALSE;
+END_IF
+
+IF (bKierunekWstrone0 AND NOT bCewkaB) THEN
+	bCewkaB									:= TRUE;
+END_IF
+IF  (bKierunekWStroneMax AND bCewkaB) THEN
+	bCewkaB									:= FALSE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Elektrozawor_5na2_2Cewki">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Elektrozawor_5na2_2Cewki.Steruj">
+      <LineId Id="24" Count="11" />
+      <LineId Id="16" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

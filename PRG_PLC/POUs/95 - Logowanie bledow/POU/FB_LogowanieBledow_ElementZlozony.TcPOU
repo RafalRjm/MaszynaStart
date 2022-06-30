@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="FB_LogowanieBledow_ElementZlozony" Id="{7c971a6a-3a7e-4f4a-a4b3-ea21449eb85c}" SpecialFunc="None">
+    <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									14.06.2022
+//	FB posredniczący pomiędzy FB a logerem alarmów  rozszerzenie dla elementów złożonych
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+FUNCTION_BLOCK FB_LogowanieBledow_ElementZlozony EXTENDS FB_LogowanieBledow_ElementWykonawczy
+VAR_INPUT
+	
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	arrElementyWykonawcze 					: ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ELEMENTOW_NA_PODZESPOL] OF ITF_LogowanieBledow_ElementWykonawczy;
+	iIloscPodlementow						: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="DefinicjaTabeliZdarzen_1031_Niemiecki" Id="{54cb325b-f9c7-4ecb-92f7-d8523d1fbde9}">
+      <Declaration><![CDATA[METHOD DefinicjaTabeliZdarzen_1031_Niemiecki : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzenOpis			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieOpis;
+
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DefinicjaTabeliZdarzen_1033_Angielski" Id="{31559b68-35d9-4262-9b33-e992876ccd0b}">
+      <Declaration><![CDATA[METHOD DefinicjaTabeliZdarzen_1033_Angielski : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzenOpis			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieOpis;
+
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DefinicjaTabeliZdarzen_1045_Polski" Id="{fadbbf23-aafa-4b41-92e8-2da939e75920}">
+      <Declaration><![CDATA[METHOD DefinicjaTabeliZdarzen_1045_Polski : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzenOpis			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieOpis;
+
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DefinicjaTabeliZdarzen_Ogolna" Id="{9c8f2d04-139d-4ae8-bff9-1264890b9ae3}">
+      <Declaration><![CDATA[METHOD DefinicjaTabeliZdarzen_Ogolna : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzen				: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_Zdarzenie;
+	arrTablicaDefinicjiZdarzenOpis			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieOpis;
+	arrTablicaDefinicjiZdarzenStan			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieStan;
+
+	iIdZdarzenia							: REFERENCE TO INT;
+	iNrPodzespolu							: INT := 0;
+	iNrPodelementu							: INT := 0;
+	iNrElementu								: INT := 0;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{885689b0-3da0-4db5-87c7-07ff4a01bab3}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	arrElementyWykonawcze 					: ARRAY [1..10] OF ITF_LogowanieBledow_ElementWykonawczy;
+	iIloscPodlementow						: INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.arrElementyWykonawcze					:= arrElementyWykonawcze;
+THIS^.iIloscPodlementow						:= iIloscPodlementow;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ZwrocTabliceDefinicji" Id="{de06037e-bb54-4c3c-a94a-eab823626e69}">
+      <Declaration><![CDATA[METHOD ZwrocTabliceDefinicji : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzen				: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_Zdarzenie;
+	arrTablicaDefinicjiZdarzenOpis			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieOpis;
+	arrTablicaDefinicjiZdarzenStan			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieStan;
+	
+	iIdZdarzenia							: REFERENCE TO INT;
+	iNrPodzespolu							: INT;
+	iNrPodelementu							: INT;
+	iNrElementu								: INT;
+	iJezykId								: INT;
+END_VAR
+VAR
+	iI: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//Zwrócenie definicji zdarzen dla głównego elementu 
+SUPER^.ZwrocTabliceDefinicji (	arrTablicaDefinicjiZdarzen := arrTablicaDefinicjiZdarzen,
+								arrTablicaDefinicjiZdarzenOpis := arrTablicaDefinicjiZdarzenOpis,
+								arrTablicaDefinicjiZdarzenStan := arrTablicaDefinicjiZdarzenStan,
+								iIdZdarzenia := iIdZdarzenia,
+								iNrPodzespolu := iNrPodzespolu, 
+								iNrPodelementu := iNrPodelementu,
+								iNrElementu := 1, 
+								iJezykId := iJezykID);
+//zwrócenie tablicy definicji dla podelementów
+
+	FOR iI := 1 TO iIloscPodlementow DO 
+		arrElementyWykonawcze [iI].ZwrocTabliceDefinicji (	arrTablicaDefinicjiZdarzen := arrTablicaDefinicjiZdarzen,
+															arrTablicaDefinicjiZdarzenOpis := arrTablicaDefinicjiZdarzenOpis,
+															arrTablicaDefinicjiZdarzenStan := arrTablicaDefinicjiZdarzenStan,
+															iIdZdarzenia := iIdZdarzenia, 
+															iNrPodzespolu := iNrPodzespolu, 
+															iNrPodelementu := iNrPodelementu,
+															iNrElementu := iI+1, 
+															iJezykId := iJezykID);
+	END_FOR													
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ZwrocTabliceStanu" Id="{bd94ebea-0252-499e-8dad-aed6d7fc0f46}">
+      <Declaration><![CDATA[METHOD ZwrocTabliceStanu : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzenStan			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieStan;
+END_VAR
+
+VAR
+	iI										: INT;
+	iJ										: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[SUPER^.ZwrocTabliceStanu (arrTablicaDefinicjiZdarzenStan := arrTablicaDefinicjiZdarzenStan);
+
+FOR iJ := 1 TO iIloscPodlementow DO
+	arrElementyWykonawcze [iJ].ZwrocTabliceStanu (arrTablicaDefinicjiZdarzenStan := arrTablicaDefinicjiZdarzenStan);
+END_FOR
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_LogowanieBledow_ElementZlozony">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LogowanieBledow_ElementZlozony.DefinicjaTabeliZdarzen_1031_Niemiecki">
+      <LineId Id="4" Count="0" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LogowanieBledow_ElementZlozony.DefinicjaTabeliZdarzen_1033_Angielski">
+      <LineId Id="10" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LogowanieBledow_ElementZlozony.DefinicjaTabeliZdarzen_1045_Polski">
+      <LineId Id="5" Count="0" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LogowanieBledow_ElementZlozony.DefinicjaTabeliZdarzen_Ogolna">
+      <LineId Id="120" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LogowanieBledow_ElementZlozony.FB_init">
+      <LineId Id="7" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="17" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LogowanieBledow_ElementZlozony.ZwrocTabliceDefinicji">
+      <LineId Id="93" Count="0" />
+      <LineId Id="76" Count="1" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="78" Count="2" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="91" Count="1" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="83" Count="6" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="40" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_LogowanieBledow_ElementZlozony.ZwrocTabliceStanu">
+      <LineId Id="9" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="15" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

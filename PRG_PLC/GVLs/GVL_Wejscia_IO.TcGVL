@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <GVL Name="GVL_Wejscia_IO" Id="{c5bacf57-10f0-470d-b016-b9f432921dc7}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'global_init_slot' := '40501'}
+VAR_GLOBAL
+//Przyciski	
+	
+//czujniki siłownik1
+	bCzujnik0S1								: FB_Czujnik_NO;
+	bCzujnikMaxS1							: FB_Czujnik_NO;
+//czujniki siłownika2 
+	bCzujnik0S2								: FB_Czujnik_NO;
+	bCzujnikMaxS2							: FB_Czujnik_NO;
+//czujniki przesuwacza
+	bCzujnik0Z								: FB_Czujnik_NO;
+	bCzujnikMaxZ							: FB_Czujnik_NO;
+	bCzujnik0P								: FB_Czujnik_NO;
+	bCzujnikMaxP							: FB_Czujnik_NO;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

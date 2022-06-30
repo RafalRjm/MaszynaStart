@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <GVL Name="GVL_Elementy" Id="{6029dd5d-800f-492a-9d8f-849b877d4d4b}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'global_init_slot' := '40501'}
+VAR_GLOBAL
+	fbPrzysciskStart						: FB_Przycisk_NO;
+	fbPrzyciskStop							: FB_Przycisk_NO;
+	fbWieza									: FB_WiezaSygnalizacyjna_Cyfrowe;
+
+	fbSilownik								: FB_Silownik_Kontola (		fbCzujnikPozycja0 			:= GVL_Wejscia_IO.bCzujnik0S1, 
+																		fbCzujnikPozycjaMax 		:= GVL_Wejscia_IO.bCzujnikMaxS1,
+																		fbElektrozawor 				:= GVL_Wyjscia_IO.fbElektrozaworS1);
+	fbSilownik1								: FB_Silownik_Kontola (		fbCzujnikPozycja0 			:= GVL_Wejscia_IO.bCzujnik0S2, 
+																		fbCzujnikPozycjaMax 		:= GVL_Wejscia_IO.bCzujnikMaxS2,
+																		fbElektrozawor 				:= GVL_Wyjscia_IO.fbElektrozaworS2);																
+	fbPrzesuwacz							: FB_PrzesuwaczNaSilowniku (bCzujnik0Zabieraka			:= GVL_Wejscia_IO.bCzujnik0Z,
+		                                                                bCzujnikMaxZabieraka		:= GVL_Wejscia_IO.bCzujnikMaxZ	,
+	                                                                    fbElektrozaworZabieraka		:= GVL_Wyjscia_IO.fbElektrozaworZ,
+	                                                                    bCzujnik0Przesuwacza		:= GVL_Wejscia_IO.bCzujnik0P,
+	                                                                    bCzujnikMaxPrzesuwacza		:= GVL_Wejscia_IO.bCzujnikMaxP	,
+	                                                                    fbElektrozaworPrzesuwacza	:= GVL_Wyjscia_IO.fbElektrozaworP);
+	
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

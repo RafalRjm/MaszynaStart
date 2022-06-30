@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <Itf Name="ITF_WiezaSygnalizacyjna" Id="{e8810270-7c71-4a4a-9369-1a1cc5577af3}">
+    <Declaration><![CDATA[INTERFACE ITF_WiezaSygnalizacyjna
+]]></Declaration>
+    <Property Name="Bialy" Id="{d129549b-100f-4571-b6da-b829b2dbdba1}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									22.06.2022
+//	Wlaczanie/Wylaczenia segment bialy   
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+PROPERTY Bialy : BOOL]]></Declaration>
+      <Get Name="Get" Id="{8cf9b1fb-b041-4873-93a0-bb7a1eeedba7}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{397756d4-a5c0-4862-ae8b-4ee04ea4127f}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="Czerwony" Id="{6de8ace4-448a-48fe-8dc4-be9785bb466d}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									22.06.2022
+//	Wlaczanie/Wylaczenia segment czerwony   
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+PROPERTY Czerwony : BOOL]]></Declaration>
+      <Get Name="Get" Id="{d26d826e-b5f2-48e9-b450-bc8c67ecbff2}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{80f33244-c720-4f3c-9c11-dfa241278f87}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="Niebieski" Id="{c4f34a81-89ec-420e-a021-b477279af9db}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									22.06.2022
+//	Wlaczanie/Wylaczenia segment niebieski   
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+PROPERTY Niebieski : BOOL]]></Declaration>
+      <Get Name="Get" Id="{87f1d80b-5b1c-44cb-b876-59763e35143a}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{99ae201d-6883-410a-b56c-bb38d2685b34}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="Zielony" Id="{baffbd22-bdd9-480d-91f5-719e2c314724}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									22.06.2022
+//	Wlaczanie/Wylaczenia segment zielony  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+PROPERTY Zielony : BOOL]]></Declaration>
+      <Get Name="Get" Id="{74783962-1bfb-42b8-9c4f-fc46537266f0}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{0289a3ed-ddea-4e98-9c37-fe06bf410f20}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="Zolty" Id="{727ba3c7-ee84-4921-bfe6-d0ee0975fc45}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									22.06.2022
+//	Wlaczanie/Wylaczenia segment zolty   
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+PROPERTY Zolty : BOOL]]></Declaration>
+      <Get Name="Get" Id="{572bebed-95a9-442f-b46f-ed7cbddc4f2e}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{7c6ed798-bb57-4741-93f5-ce489ee5c073}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+  </Itf>
+</TcPlcObject>

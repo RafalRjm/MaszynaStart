@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="FB_Elektrozawor_5na2_1Cewka" Id="{254ae837-52ef-4683-bdbc-86a1634145f1}" SpecialFunc="None">
+    <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									04.06.2022
+//	Sterowanie elektrozaworem  - 5 na 2 z jedną cewką
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+FUNCTION_BLOCK FB_Elektrozawor_5na2_1Cewka IMPLEMENTS ITF_Elektozawor
+VAR
+	bCewkaA							AT %Q*	: BOOL;		//Cewka sterująca wyjściem 2 - do MAX
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Steruj" Id="{6bd7abcf-294b-4b84-8932-61d81feaa6b6}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									04.06.2022
+	Sterowanie cewkami elektrozaworu 
+ 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+==================================================================================================*)
+METHOD Steruj : BOOL
+VAR_INPUT
+	bKierunekWstrone0						: BOOL;
+	bKierunekWStroneMax						: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (bKierunekWStroneMax AND NOT bCewkaA) THEN
+	bCewkaA									:= TRUE;
+END_IF
+IF  (bKierunekWstrone0 AND bCewkaA) THEN
+	bCewkaA									:= FALSE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Elektrozawor_5na2_1Cewka">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Elektrozawor_5na2_1Cewka.Steruj">
+      <LineId Id="19" Count="4" />
+      <LineId Id="16" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

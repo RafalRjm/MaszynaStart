@@ -1,0 +1,530 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="FB_ElementySterujace" Id="{b59d447d-018f-4a8c-8ba3-ab53e7fb760e}" SpecialFunc="None">
+    <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Sterowanie elementami wizualnymi maszyny w zalezności od stanu pracy 
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+FUNCTION_BLOCK FB_ElementySterujace IMPLEMENTS ITF_StanMaszyny
+VAR_INPUT
+
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	fbWieza									: ITF_WiezaSygnalizacyjna;
+	fbPrzyciskStart							: ITF_Przycisk;
+	fbPrzyciskStop							: ITF_Przycisk;
+	eStanMaszyny							: E_PMLState;
+	eStanMaszynyPoprzedni					: E_PMLState;
+	eTrybPracy								: E_PMLUnitMode;
+	
+	fbImpulsyStart							: FB_Impulsy;
+	tCzasZapaloneStart						: TIME;
+	tCzasZgaszoneStart						: TIME;
+	fbImpulsyStop							: FB_Impulsy;
+	tCzasZapaloneStop						: TIME;
+	tCzasZgaszoneStop						: TIME;
+	
+	bPodswietlanieStart						: BOOL;
+	bPodswietlanieStop						: BOOL;
+	bWlaczMiganieStart						: BOOL;
+	bWlaczMiganieStop						: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF (eStanMaszyny <> eStanMaszynyPoprzedni) THEN
+	CASE eStanMaszyny OF
+		E_PMLState.UNDEFINED	:
+	//		SM_Undefined ();
+		E_PMLState.CLEARING 	:
+			SM_Clearing ();
+		E_PMLState.STOPPED 		:
+			SM_Stopped ();
+		E_PMLState.STARTING 	:
+			SM_Starting ();
+		E_PMLState.IDLE 		:
+			SM_Idle ();
+		E_PMLState.SUSPENDED 	:
+			SM_Suspended ();
+		E_PMLState.EXECUTE 		:
+			SM_Execute ();
+		E_PMLState.STOPPING	 	:
+			SM_Stopping ();
+		E_PMLState.ABORTING 	:
+			SM_Aborting ();
+		E_PMLState.ABORTED 		:
+			SM_Aborted ();
+		E_PMLState.HOLDING 		:
+			SM_Holding ();
+		E_PMLState.HELD 		:
+			SM_Held ();
+		E_PMLState.UNHOLDING 	:
+			SM_Unholding ();
+		E_PMLState.SUSPENDING 	:
+			SM_Suspending ();
+		E_PMLState.UNSUSPENDING :
+			SM_Unsuspending ();
+		E_PMLState.RESETTING 	:
+			SM_Resetting ();
+		E_PMLState.COMPLETING 	:
+			SM_Completing ();
+		E_PMLState.COMPLETE	 	:
+			SM_Complete ();
+	END_CASE
+	eStanMaszynyPoprzedni						:= eStanMaszyny;
+END_IF
+fbImpulsyStart (bWlacz := bWlaczMiganieStart, tZapalone := tCzasZapaloneStart, tZgaszone := tCzasZgaszoneStart);
+fbPrzyciskStart.Podswietlenie					:= bPodswietlanieStart AND 
+													((bWlaczMiganieStart AND fbImpulsyStart.Wyjscie) OR NOT bWlaczMiganieStart);
+fbImpulsyStop (bWlacz := bWlaczMiganieStop, tZapalone := tCzasZapaloneStop, tZgaszone := tCzasZgaszoneStop);
+fbPrzyciskStop.Podswietlenie					:= bPodswietlanieStop AND 
+													((bWlaczMiganieStop AND fbImpulsyStop.Wyjscie) OR NOT bWlaczMiganieStop);
+]]></ST>
+    </Implementation>
+    <Method Name="FB_init" Id="{282c01a2-5601-400d-96b6-1e85c082614a}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	fbWieza									: ITF_WiezaSygnalizacyjna;
+	fbPrzyciskStart							: ITF_Przycisk;
+	fbPrzyciskStop							: ITF_Przycisk;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.fbWieza								:= fbWieza;
+THIS^.fbPrzyciskStart						:= fbPrzyciskStart;
+THIS^.fbPrzyciskStop						:= fbPrzyciskStop;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="NacisnietyStart" Id="{e5d467e8-ae82-4d34-bb8c-44308ea8df10}">
+      <Declaration><![CDATA[PROPERTY NacisnietyStart : BOOL]]></Declaration>
+      <Get Name="Get" Id="{f776517f-96b8-45e6-a29a-b74455e23294}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[NacisnietyStart								:= fbPrzyciskStart.CzyNacisniety;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="NacisnietyStop" Id="{847c8e0e-92d8-4c51-b002-853378e978f3}">
+      <Declaration><![CDATA[
+PROPERTY NacisnietyStop : BOOL]]></Declaration>
+      <Get Name="Get" Id="{f9626338-7f70-4d3c-8aa6-adf4b50a3e7b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[NacisnietyStop								:= fbPrzyciskStop.CzyNacisniety;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="SM_Aborted" Id="{962fd802-37a0-40ee-91a7-655ff3483808}">
+      <Declaration><![CDATA[METHOD SM_Aborted : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[bWlaczMiganieStart							:= FALSE;
+bPodswietlanieStart							:= FALSE;
+bWlaczMiganieStop							:= FALSE;
+bPodswietlanieStop							:= TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Aborting" Id="{f1f5fccd-b1bb-46a0-a7a7-08e54a953d2a}">
+      <Declaration><![CDATA[METHOD SM_Aborting : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[tCzasZapaloneStart							:= T#500MS;
+tCzasZgaszoneStart							:= T#500MS;
+tCzasZapaloneStop							:= T#500MS;
+tCzasZgaszoneStop							:= T#500MS;
+	
+bWlaczMiganieStart							:= TRUE;
+bPodswietlanieStart							:= TRUE;
+bWlaczMiganieStop							:= TRUE;
+bPodswietlanieStop							:= TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Clearing" Id="{3849905a-210f-4088-8708-67f793db9f38}">
+      <Declaration><![CDATA[METHOD SM_Clearing : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[bWlaczMiganieStart							:= FALSE;
+bPodswietlanieStart							:= FALSE;
+bWlaczMiganieStop							:= FALSE;
+bPodswietlanieStop							:= FALSE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Complete" Id="{f282f6dc-02ee-433d-899b-1e3abff24b28}">
+      <Declaration><![CDATA[METHOD SM_Complete : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+bWlaczMiganieStart							:= FALSE;
+bPodswietlanieStart							:= FALSE;
+bWlaczMiganieStop							:= FALSE;
+bPodswietlanieStop							:= TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Completing" Id="{8a05d80c-7054-4042-b12d-c7fa704f77b0}">
+      <Declaration><![CDATA[METHOD SM_Completing : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[tCzasZapaloneStart							:= T#1000MS;
+tCzasZgaszoneStart							:= T#500MS;
+tCzasZapaloneStop							:= T#1000MS;
+tCzasZgaszoneStop							:= T#500MS;
+	
+bWlaczMiganieStart							:= TRUE;
+bPodswietlanieStart							:= TRUE;
+bWlaczMiganieStop							:= FALSE;
+bPodswietlanieStop							:= FALSE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Execute" Id="{c116466f-2942-4b8d-bc54-880ff59ba43f}">
+      <Declaration><![CDATA[METHOD SM_Execute : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	
+bWlaczMiganieStart							:= FALSE;
+bPodswietlanieStart							:= TRUE;
+bWlaczMiganieStop							:= FALSE;
+bPodswietlanieStop							:= FALSE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Held" Id="{0c061f73-35ff-45f5-a045-3c28389981f8}">
+      <Declaration><![CDATA[METHOD SM_Held : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[tCzasZapaloneStart							:= T#1500MS;
+tCzasZgaszoneStart							:= T#1000MS;
+tCzasZapaloneStop							:= T#500MS;
+tCzasZgaszoneStop							:= T#500MS;
+	
+bWlaczMiganieStart							:= TRUE;
+bPodswietlanieStart							:= TRUE;
+bWlaczMiganieStop							:= FALSE;
+bPodswietlanieStop							:= FALSE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Holding" Id="{316735f7-2352-4fe9-9d13-12f51c82811f}">
+      <Declaration><![CDATA[METHOD SM_Holding : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[tCzasZapaloneStart							:= T#1500MS;
+tCzasZgaszoneStart							:= T#1000MS;
+tCzasZapaloneStop							:= T#500MS;
+tCzasZgaszoneStop							:= T#500MS;
+	
+bWlaczMiganieStart							:= TRUE;
+bPodswietlanieStart							:= TRUE;
+bWlaczMiganieStop							:= FALSE;
+bPodswietlanieStop							:= FALSE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Idle" Id="{36cd1914-927b-4150-8c35-0a88152502eb}">
+      <Declaration><![CDATA[METHOD SM_Idle : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+	
+bWlaczMiganieStart							:= FALSE;
+bPodswietlanieStart							:= FALSE;
+bWlaczMiganieStop							:= FALSE;
+bPodswietlanieStop							:= TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Resetting" Id="{4bf7734c-aa62-44b6-bae9-13d2ec2789c2}">
+      <Declaration><![CDATA[METHOD SM_Resetting : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+bWlaczMiganieStart							:= FALSE;
+bPodswietlanieStart							:= FALSE;
+bWlaczMiganieStop							:= FALSE;
+bPodswietlanieStop							:= FALSE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Starting" Id="{edfd915b-33f0-4ab0-952b-5d639ea1428e}">
+      <Declaration><![CDATA[METHOD SM_Starting : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[tCzasZapaloneStart							:= T#1500MS;
+tCzasZgaszoneStart							:= T#1500MS;
+tCzasZapaloneStop							:= T#500MS;
+tCzasZgaszoneStop							:= T#500MS;
+	
+bWlaczMiganieStart							:= TRUE;
+bPodswietlanieStart							:= TRUE;
+bWlaczMiganieStop							:= FALSE;
+bPodswietlanieStop							:= FALSE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Stopped" Id="{b5db691b-3228-4052-bd75-4f711d25d2dd}">
+      <Declaration><![CDATA[METHOD SM_Stopped : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[tCzasZapaloneStart							:= T#1500MS;
+tCzasZgaszoneStart							:= T#1000MS;
+tCzasZapaloneStop							:= T#500MS;
+tCzasZgaszoneStop							:= T#500MS;
+	
+bWlaczMiganieStart							:= FALSE;
+bPodswietlanieStart							:= FALSE;
+bWlaczMiganieStop							:= FALSE;
+bPodswietlanieStop							:= TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Stopping" Id="{449c9fcc-e922-4f47-8fa2-6b3d5e9deb25}">
+      <Declaration><![CDATA[METHOD SM_Stopping : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[tCzasZapaloneStart							:= T#1500MS;
+tCzasZgaszoneStart							:= T#1000MS;
+tCzasZapaloneStop							:= T#1500MS;
+tCzasZgaszoneStop							:= T#1000MS;
+	
+bWlaczMiganieStart							:= FALSE;
+bPodswietlanieStart							:= FALSE;
+bWlaczMiganieStop							:= TRUE;
+bPodswietlanieStop							:= TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Suspended" Id="{485a589e-a488-4fdd-bf0c-2f76fd86f0fc}">
+      <Declaration><![CDATA[METHOD SM_Suspended : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[tCzasZapaloneStart							:= T#2000MS;
+tCzasZgaszoneStart							:= T#1500MS;
+tCzasZapaloneStop							:= T#500MS;
+tCzasZgaszoneStop							:= T#500MS;
+	
+bWlaczMiganieStart							:= TRUE;
+bPodswietlanieStart							:= TRUE;
+bWlaczMiganieStop							:= FALSE;
+bPodswietlanieStop							:= FALSE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Suspending" Id="{b103f59c-8409-4a35-97ed-985b890694a6}">
+      <Declaration><![CDATA[METHOD SM_Suspending : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[tCzasZapaloneStart							:= T#2000MS;
+tCzasZgaszoneStart							:= T#1500MS;
+tCzasZapaloneStop							:= T#500MS;
+tCzasZgaszoneStop							:= T#500MS;
+	
+bWlaczMiganieStart							:= TRUE;
+bPodswietlanieStart							:= TRUE;
+bWlaczMiganieStop							:= FALSE;
+bPodswietlanieStop							:= FALSE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Unholding" Id="{e797bf10-d827-484a-b5c0-3f1ebd08f1cf}">
+      <Declaration><![CDATA[METHOD SM_Unholding : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[tCzasZapaloneStart							:= T#1500MS;
+tCzasZgaszoneStart							:= T#1000MS;
+tCzasZapaloneStop							:= T#500MS;
+tCzasZgaszoneStop							:= T#500MS;
+	
+bWlaczMiganieStart							:= TRUE;
+bPodswietlanieStart							:= TRUE;
+bWlaczMiganieStop							:= FALSE;
+bPodswietlanieStop							:= FALSE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Unsuspending" Id="{4b61b8c4-5671-4610-b80e-c7826986ad27}">
+      <Declaration><![CDATA[METHOD SM_Unsuspending : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[tCzasZapaloneStart							:= T#2000MS;
+tCzasZgaszoneStart							:= T#1500MS;
+tCzasZapaloneStop							:= T#500MS;
+tCzasZgaszoneStop							:= T#500MS;
+	
+bWlaczMiganieStart							:= TRUE;
+bPodswietlanieStart							:= TRUE;
+bWlaczMiganieStop							:= FALSE;
+bPodswietlanieStop							:= FALSE;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="StanMaszyny" Id="{c5cf40ce-783e-49d1-a804-063db68c7842}">
+      <Declaration><![CDATA[PROPERTY StanMaszyny : E_PMLState]]></Declaration>
+      <Set Name="Set" Id="{e2f08a49-34d9-46b6-8e3f-b1b3e4894dba}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[eStanMaszyny								:= StanMaszyny;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="TrybPracy" Id="{cd826e76-655a-4de3-8fbd-d677cc45adf1}">
+      <Declaration><![CDATA[PROPERTY TrybPracy : E_PMLUnitMode]]></Declaration>
+      <Set Name="Set" Id="{62ff4236-22f2-4205-bf99-676735fdd119}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[eTrybPracy									:= TrybPracy;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <LineIds Name="FB_ElementySterujace">
+      <LineId Id="332" Count="42" />
+      <LineId Id="382" Count="0" />
+      <LineId Id="381" Count="0" />
+      <LineId Id="375" Count="0" />
+      <LineId Id="383" Count="0" />
+      <LineId Id="91" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ElementySterujace.FB_init">
+      <LineId Id="11" Count="1" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="13" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ElementySterujace.NacisnietyStart.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ElementySterujace.NacisnietyStop.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ElementySterujace.SM_Aborted">
+      <LineId Id="15" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="9" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_ElementySterujace.SM_Aborting">
+      <LineId Id="20" Count="1" />
+      <LineId Id="23" Count="1" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="15" Count="3" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ElementySterujace.SM_Clearing">
+      <LineId Id="19" Count="3" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ElementySterujace.SM_Complete">
+      <LineId Id="18" Count="3" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ElementySterujace.SM_Completing">
+      <LineId Id="16" Count="7" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="24" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ElementySterujace.SM_Execute">
+      <LineId Id="18" Count="3" />
+      <LineId Id="9" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_ElementySterujace.SM_Held">
+      <LineId Id="18" Count="7" />
+      <LineId Id="14" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ElementySterujace.SM_Holding">
+      <LineId Id="18" Count="7" />
+      <LineId Id="14" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ElementySterujace.SM_Idle">
+      <LineId Id="17" Count="4" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="22" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ElementySterujace.SM_Resetting">
+      <LineId Id="18" Count="3" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ElementySterujace.SM_Starting">
+      <LineId Id="14" Count="7" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ElementySterujace.SM_Stopped">
+      <LineId Id="14" Count="7" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="22" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ElementySterujace.SM_Stopping">
+      <LineId Id="14" Count="7" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ElementySterujace.SM_Suspended">
+      <LineId Id="18" Count="7" />
+      <LineId Id="14" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ElementySterujace.SM_Suspending">
+      <LineId Id="18" Count="7" />
+      <LineId Id="14" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ElementySterujace.SM_Unholding">
+      <LineId Id="17" Count="7" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ElementySterujace.SM_Unsuspending">
+      <LineId Id="17" Count="7" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ElementySterujace.StanMaszyny.Set">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ElementySterujace.TrybPracy.Set">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

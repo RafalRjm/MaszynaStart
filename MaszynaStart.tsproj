@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.29">
+	<Project ProjectGUID="{B65DA74D-FFE4-4FDD-98FD-DDCFAFC5B10C}" Target64Bit="true" ShowHideConfigurations="#x106">
+		<System>
+			<Tasks>
+				<Task Id="3" Priority="20" CycleTime="100000" AmsPort="350" AdtTasks="true">
+					<Name>PlcTask</Name>
+				</Task>
+				<Task Id="4" Priority="30" CycleTime="2000000" AmsPort="351" DisableFpExceptions="true" AdtTasks="true">
+					<Name>VISU_TASK</Name>
+				</Task>
+			</Tasks>
+		</System>
+		<Plc>
+			<Project GUID="{46A25DCE-05D6-4618-8C9F-F8B0159B42F6}" Name="PRG_PLC" PrjFilePath="PRG_PLC\PRG_PLC.plcproj" TmcFilePath="PRG_PLC\PRG_PLC.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2">
+					<Name>PRG_PLC Instance</Name>
+					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+					<Vars VarGrpType="1">
+						<Name>PlcTask Inputs</Name>
+						<Var>
+							<Name>GVL_Elementy.fbPrzysciskStart.bStyk</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Elementy.fbPrzyciskStop.bStyk</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Wejscia_IO.bCzujnik0S1.bWejscie</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Wejscia_IO.bCzujnikMaxS1.bWejscie</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Wejscia_IO.bCzujnik0S2.bWejscie</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Wejscia_IO.bCzujnikMaxS2.bWejscie</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Wejscia_IO.bCzujnik0Z.bWejscie</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Wejscia_IO.bCzujnikMaxZ.bWejscie</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Wejscia_IO.bCzujnik0P.bWejscie</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Wejscia_IO.bCzujnikMaxP.bWejscie</Name>
+							<Type>BOOL</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="2" AreaNo="1">
+						<Name>PlcTask Outputs</Name>
+						<Var>
+							<Name>GVL_Elementy.fbPrzysciskStart.bPodswietlenie</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Elementy.fbPrzyciskStop.bPodswietlenie</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Elementy.fbWieza.bCzerwony</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Elementy.fbWieza.bZolty</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Elementy.fbWieza.bZielony</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Elementy.fbWieza.bNiebieski</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Elementy.fbWieza.bBialy</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Wyjscia_IO.fbElektrozaworS1.bCewkaA</Name>
+							<Comment><![CDATA[Cewka sterująca wyjściem 2 - 0 do MAX]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Wyjscia_IO.fbElektrozaworS1.bCewkaB</Name>
+							<Comment><![CDATA[Cewka sterująca wyjściem 4 - MAX do 0]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Wyjscia_IO.fbElektrozaworS2.bCewkaA</Name>
+							<Comment><![CDATA[Cewka sterująca wyjściem 2 - 0 do MAX]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Wyjscia_IO.fbElektrozaworS2.bCewkaB</Name>
+							<Comment><![CDATA[Cewka sterująca wyjściem 4 - MAX do 0]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Wyjscia_IO.fbElektrozaworZ.bCewkaA</Name>
+							<Comment><![CDATA[Cewka sterująca wyjściem 2 - 0 do MAX]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Wyjscia_IO.fbElektrozaworZ.bCewkaB</Name>
+							<Comment><![CDATA[Cewka sterująca wyjściem 4 - MAX do 0]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Wyjscia_IO.fbElektrozaworP.bCewkaA</Name>
+							<Comment><![CDATA[Cewka sterująca wyjściem 2 - 0 do MAX]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Wyjscia_IO.fbElektrozaworP.bCewkaB</Name>
+							<Comment><![CDATA[Cewka sterująca wyjściem 4 - MAX do 0]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+					</Vars>
+					<Contexts>
+						<Context>
+							<Id NeedCalleeCall="true">0</Id>
+							<Name>PlcTask</Name>
+							<ManualConfig>
+								<OTCID>#x02010030</OTCID>
+							</ManualConfig>
+							<Priority>20</Priority>
+							<CycleTime>10000000</CycleTime>
+						</Context>
+						<Context>
+							<Id NeedCalleeCall="true">1</Id>
+							<Name>VISU_TASK</Name>
+							<ManualConfig>
+								<OTCID>#x02010040</OTCID>
+							</ManualConfig>
+							<Priority>30</Priority>
+							<CycleTime>200000000</CycleTime>
+						</Context>
+					</Contexts>
+					<TaskPouOids>
+						<TaskPouOid Prio="20" OTCID="#x08502001"/>
+						<TaskPouOid Prio="30" OTCID="#x08502002"/>
+					</TaskPouOids>
+				</Instance>
+			</Project>
+		</Plc>
+	</Project>
+</TcSmProject>

@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <GVL Name="GVL_LogowanieBledow_Stale" Id="{6f7cf282-1cc0-47c3-a879-cb2e9534c558}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL CONSTANT
+	MAX_ILOSC_ELEMENTOW						: INT := 10;	//Ilosc elementow zlozonych
+	MAX_ILOSC_ZDARZEN_NA_ELEMENT			: INT := 10;	//ilosc zdarzen na element
+	MAX_ILOSC_ELEMENTOW_NA_PODZESPOL		: INT := 10;	//Ilosc elementow na element złozony
+	MAX_ILOSC_ZDARZEN						: INT := 100;	//ilosc zdarzen zdefiniowanych
+	MAX_ILOSC_ZDARZEN_DO_WYSWIETLANIA		: INT := 50;	//ilosc wyswietlanych zdarzen z tablicy zapamietanych
+	MAX_ILOSC_ZDARZEN_ZAPAMIETANYCH			: INT := 200;	//ilosc zadarzen zapamietanych
+END_VAR
+]]></Declaration>
+  </GVL>
+</TcPlcObject>

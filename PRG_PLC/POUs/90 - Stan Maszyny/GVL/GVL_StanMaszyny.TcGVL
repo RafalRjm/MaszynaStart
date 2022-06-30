@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <GVL Name="GVL_StanMaszyny" Id="{f36fea51-83ab-4e2c-8011-fadc8353f737}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'global_init_slot' := '40515'}
+VAR_GLOBAL
+
+	arrPodzesoly							: ARRAY [1..GVL_StanMaszyny_Stale.MAX_LICZBA_PODZESPOLOW] OF ITF_StanMaszyny :=[
+																GVL_Podzespoly.fbPodzespoltestowy1,
+																GVL_Podzespoly.fbPodzespoltestowy2,
+																GVL_Podzespoly.fbPodzespoltestowy3];
+	fbStanMaszyny							: FB_StanMaszyny (arrPodzesoly := arrPodzesoly,
+																iIloscDodanychPodzespolow := 3);
+	bStart									: BOOL;
+	bStop									: BOOL;
+	bReset									: BOOL;
+	bAbort									: BOOL;
+	bClear									: BOOL;
+	bHold									: BOOL;
+	bUnhold									: BOOL;
+	bSuspend								: BOOL;
+	bUnsuspend								: BOOL;
+	eTrybPracy								: E_PMLUnitMode := E_PMLUnitMode.MANUAL;		
+	bWlaczPrzyciski							: BOOL;												
+	
+END_VAR
+]]></Declaration>
+  </GVL>
+</TcPlcObject>

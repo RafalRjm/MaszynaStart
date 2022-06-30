@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="FB_Czujnik_NO" Id="{a309e5c5-49d5-4f4a-94f9-421545786459}" SpecialFunc="None">
+    <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									04.06.2022
+//	Obsługa czujnika  NO
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+FUNCTION_BLOCK FB_Czujnik_NO IMPLEMENTS ITF_Czujnik
+VAR
+	bWejscie						AT %I*	: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="CzyZadzialany" Id="{acf3546f-68a9-47d1-b1c1-b4e2e1b0ec7a}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Informacja czy czujnik jest zadziałany 
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+PROPERTY CzyZadzialany : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{b5827c71-7ea6-4b81-bf27-2ae7e097e936}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[CzyZadzialany								:= bWejscie;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <LineIds Name="FB_Czujnik_NO">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Czujnik_NO.CzyZadzialany.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

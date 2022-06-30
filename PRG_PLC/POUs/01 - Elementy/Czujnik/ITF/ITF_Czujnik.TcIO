@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <Itf Name="ITF_Czujnik" Id="{6e8c673b-92bf-483b-82fd-2f94af6f886f}">
+    <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									04.06.2022
+//	Obsługa czujnika  
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+INTERFACE ITF_Czujnik
+]]></Declaration>
+    <Property Name="CzyZadzialany" Id="{bcaf3822-8c5a-45f0-a989-8d9f99a05eec}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Informacja czy czujnik jest zadziałany 
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+PROPERTY CzyZadzialany : BOOL]]></Declaration>
+      <Get Name="Get" Id="{f9820399-2ccd-44d8-b380-1e7817e97812}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>

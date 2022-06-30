@@ -1,0 +1,332 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="FB_StanMaszyny_Baza" Id="{668edb3e-1ce7-42b0-b717-b15f849c6a2a}" SpecialFunc="None">
+    <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Klasa bazowa dla podzespołów maszyny 
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+FUNCTION_BLOCK FB_StanMaszyny_Baza IMPLEMENTS ITF_StanMaszyny
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="SM_Aborted" Id="{e443d503-570c-46fa-86f4-e34b9c97e579}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu ABORTED  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Aborted : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Aborting" Id="{7db677b0-5297-4145-9142-386d9fd4463c}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu ABORTING
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Aborting : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Clearing" Id="{4b0ac309-9913-4fc0-bea6-afa95234a24d}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu CLEARING  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Clearing : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Complete" Id="{1d3f95c9-3963-4f15-8720-1585c1134433}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu COMPLETE  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Complete : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Completing" Id="{6140f4b7-556f-4e1d-a07b-65939719b0c1}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu COMPLITING  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Completing : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Execute" Id="{381ae8a5-7073-456c-ac0a-7f23c483d823}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu EXECUTE  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Execute : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Held" Id="{b7be618f-33a5-47e3-a43b-f78a63ccf04b}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu HELD  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Held : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Holding" Id="{6cc3c06b-3302-459f-a02b-e3a71306bbe7}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu HOLDING - wsztrymanie pracy przez maszyne  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Holding : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Idle" Id="{b456fd2e-093f-4a2a-a9f1-2140b209cba7}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu IDLE - maszyna gotowado pracy  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Idle : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Resetting" Id="{2e1500e4-ac96-4dab-a11e-ae0089d48561}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu RESETTING  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Resetting : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Starting" Id="{98954e97-213a-468e-8239-a2280b56b654}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu STARTING  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Starting : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Stopped" Id="{db28fd3c-1862-4eb4-b4ad-5627491b3932}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu STOPPED  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Stopped : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Stopping" Id="{e33adf5d-6995-4414-8e1b-6dac7b299b65}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu STOPPING  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Stopping : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Suspended" Id="{7a2d412b-b637-46bb-ac6a-1f5eb72735bb}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu SUSPENDED - praca wstrzymana prze operatora  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Suspended : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Suspending" Id="{35fad57c-9956-4a16-8341-da5bae4b9509}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu SUSPENDING  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Suspending : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Unholding" Id="{75910719-60f6-4c1e-94d1-4e40cc992a72}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu UNHOLDING  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Unholding : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Unsuspending" Id="{4f15a5d8-3680-4775-9efd-bc000b95ffc3}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu UNSUSPENDING  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Unsuspending : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_StanMaszyny_Baza">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny_Baza.SM_Aborted">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny_Baza.SM_Aborting">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny_Baza.SM_Clearing">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny_Baza.SM_Complete">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny_Baza.SM_Completing">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny_Baza.SM_Execute">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny_Baza.SM_Held">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny_Baza.SM_Holding">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny_Baza.SM_Idle">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny_Baza.SM_Resetting">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny_Baza.SM_Starting">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny_Baza.SM_Stopped">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny_Baza.SM_Stopping">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny_Baza.SM_Suspended">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny_Baza.SM_Suspending">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny_Baza.SM_Unholding">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny_Baza.SM_Unsuspending">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

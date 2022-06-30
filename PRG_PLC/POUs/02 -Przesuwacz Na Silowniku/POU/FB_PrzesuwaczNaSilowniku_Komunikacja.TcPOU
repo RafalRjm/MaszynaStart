@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="FB_PrzesuwaczNaSilowniku_Komunikacja" Id="{116f3c6b-49d5-40ec-b551-60fa47359675}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_PrzesuwaczNaSilowniku_Komunikacja EXTENDS FB_LogowanieBledow_ElementZlozony
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="DefinicjaTabeliZdarzen_1031_Niemiecki" Id="{b0984b0c-b48a-4776-b5d3-82aad7da3f8f}">
+      <Declaration><![CDATA[METHOD DefinicjaTabeliZdarzen_1031_Niemiecki : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzenOpis			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieOpis;
+
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[arrTablicaDefinicjiZdarzenOpis [iStartId+0].sOpis	:= 'DE - TESTOWA WIADOMOSC';
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DefinicjaTabeliZdarzen_1033_Angielski" Id="{74618e42-5332-4d95-985e-fbefcb8c284f}">
+      <Declaration><![CDATA[METHOD DefinicjaTabeliZdarzen_1033_Angielski : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzenOpis			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieOpis;
+
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[arrTablicaDefinicjiZdarzenOpis [iStartId+0].sOpis	:= 'EN - TESTOWA WIADOMOSC';
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DefinicjaTabeliZdarzen_1045_Polski" Id="{158582c3-fd35-49b0-b4ce-47a47e0e89f3}">
+      <Declaration><![CDATA[METHOD DefinicjaTabeliZdarzen_1045_Polski : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzenOpis			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieOpis;
+
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[arrTablicaDefinicjiZdarzenOpis [iStartId+0].sOpis	:= 'PL - TESTOWA WIADOMOSC';
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DefinicjaTabeliZdarzen_Ogolna" Id="{20fdd531-b77c-4532-a144-f0306191f9d5}">
+      <Declaration><![CDATA[METHOD DefinicjaTabeliZdarzen_Ogolna : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzen				: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_Zdarzenie;
+	arrTablicaDefinicjiZdarzenOpis			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieOpis;
+	arrTablicaDefinicjiZdarzenStan			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieStan;
+
+	iIdZdarzenia							: REFERENCE TO INT;
+	iNrPodzespolu							: INT := 0;
+	iNrPodelementu							: INT := 0;
+	iNrElementu								: INT := 0;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//testowy blad
+	iIdZdarzenia												:= iIdZdarzenia + 1;
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].iIdZdarzenia		:= iIdZdarzenia;
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].byRodzajZdarzenia	:= 3;
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].sKodBledu			:= '0001';
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].sNrKomponentu		:= GenerujNrKomponentu (iNrPodzespolu := iNrPodzespolu, iNrPodelementu := iNrPodelementu, iNrElementu := iNrElementu); 
+	arrTablicaDefinicjiZdarzenOpis [iIdZdarzenia].iIdZdarzenia 	:= iIdZdarzenia;
+	arrTablicaDefinicjiZdarzenStan [iIdZdarzenia].iIdZdarzenia 	:= iIdZdarzenia;
+	arrTablicaDefinicjiZdarzenStan [iIdZdarzenia].bAktywne		:= FALSE;
+	]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_PrzesuwaczNaSilowniku_Komunikacja">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PrzesuwaczNaSilowniku_Komunikacja.DefinicjaTabeliZdarzen_1031_Niemiecki">
+      <LineId Id="4" Count="0" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PrzesuwaczNaSilowniku_Komunikacja.DefinicjaTabeliZdarzen_1033_Angielski">
+      <LineId Id="5" Count="0" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PrzesuwaczNaSilowniku_Komunikacja.DefinicjaTabeliZdarzen_1045_Polski">
+      <LineId Id="5" Count="0" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PrzesuwaczNaSilowniku_Komunikacja.DefinicjaTabeliZdarzen_Ogolna">
+      <LineId Id="102" Count="7" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="120" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

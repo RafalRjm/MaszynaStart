@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="FB_Silownik_Kontrola_Komunikacja" Id="{6e1765c6-13ef-4cc8-af85-b94298696ee7}" SpecialFunc="None">
+    <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									14.06.2022
+//	FB posredniczący pomiędzy FB a logerem alarmów  
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+FUNCTION_BLOCK FB_Silownik_Kontrola_Komunikacja EXTENDS FB_LogowanieBledow_ElementWykonawczy
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="DefinicjaTabeliZdarzen_1031_Niemiecki" Id="{86e170c4-ab8f-448f-ade2-be1b5c03aa46}">
+      <Declaration><![CDATA[METHOD DefinicjaTabeliZdarzen_1031_Niemiecki : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzenOpis			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieOpis;
+
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[arrTablicaDefinicjiZdarzenOpis [iStartId+0].sOpis	:= 'DE - zbyt dlugi czas w stronę końca';
+arrTablicaDefinicjiZdarzenOpis [iStartId+1].sOpis	:= 'DE - zbyt dlugi czas w stronę początku';
+arrTablicaDefinicjiZdarzenOpis [iStartId+2].sOpis	:= 'DE - utrata pozycji 0';
+arrTablicaDefinicjiZdarzenOpis [iStartId+3].sOpis	:= 'DE - utrata pozycji MAX';
+arrTablicaDefinicjiZdarzenOpis [iStartId+4].sOpis	:= 'DE - blad ustawienia czujnikow - dwa czujniki aktywne';
+arrTablicaDefinicjiZdarzenOpis [iStartId+5].sOpis	:= 'DE - blad ustawiania ustawienia czujników - zamienione miejscami';
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DefinicjaTabeliZdarzen_1033_Angielski" Id="{312f69bd-29fe-40fb-abd4-3ca95737ef6e}">
+      <Declaration><![CDATA[METHOD DefinicjaTabeliZdarzen_1033_Angielski : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzenOpis			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieOpis;
+
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[arrTablicaDefinicjiZdarzenOpis [iStartId+0].sOpis	:= 'EN - zbyt dlugi czas w stronę końca';
+arrTablicaDefinicjiZdarzenOpis [iStartId+1].sOpis	:= 'EN - zbyt dlugi czas w stronę początku';
+arrTablicaDefinicjiZdarzenOpis [iStartId+2].sOpis	:= 'EN - utrata pozycji 0';
+arrTablicaDefinicjiZdarzenOpis [iStartId+3].sOpis	:= 'EN - utrata pozycji MAX';
+arrTablicaDefinicjiZdarzenOpis [iStartId+4].sOpis	:= 'EN - blad ustawienia czujnikow - dwa czujniki aktywne';
+arrTablicaDefinicjiZdarzenOpis [iStartId+5].sOpis	:= 'EN - blad ustawiania ustawienia czujników - zamienione miejscami';]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DefinicjaTabeliZdarzen_1045_Polski" Id="{1da6467f-9535-4281-b512-f948c9de2cca}">
+      <Declaration><![CDATA[METHOD DefinicjaTabeliZdarzen_1045_Polski : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzenOpis			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieOpis;
+
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[arrTablicaDefinicjiZdarzenOpis [iStartId+0].sOpis	:= 'PL - zbyt dlugi czas w stronę końca';
+arrTablicaDefinicjiZdarzenOpis [iStartId+1].sOpis	:= 'PL - zbyt dlugi czas w stronę początku';
+arrTablicaDefinicjiZdarzenOpis [iStartId+2].sOpis	:= 'PL - utrata pozycji 0';
+arrTablicaDefinicjiZdarzenOpis [iStartId+3].sOpis	:= 'PL - utrata pozycji MAX';
+arrTablicaDefinicjiZdarzenOpis [iStartId+4].sOpis	:= 'PL - blad ustawienia czujnikow - dwa czujniki aktywne';
+arrTablicaDefinicjiZdarzenOpis [iStartId+5].sOpis	:= 'PL - blad ustawiania ustawienia czujników - zamienione miejscami';
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DefinicjaTabeliZdarzen_Ogolna" Id="{56182eaa-3642-491d-aa11-de8bc029eba9}">
+      <Declaration><![CDATA[METHOD DefinicjaTabeliZdarzen_Ogolna : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzen				: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_Zdarzenie;
+	arrTablicaDefinicjiZdarzenOpis			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieOpis;
+	arrTablicaDefinicjiZdarzenStan			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieStan;
+
+	iIdZdarzenia							: REFERENCE TO INT;
+	iNrPodzespolu							: INT := 0;
+	iNrPodelementu							: INT := 0;
+	iNrElementu								: INT := 0;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//zbyt dlugi czas w stronę końca
+	iIdZdarzenia										:= iIdZdarzenia + 1;
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].iIdZdarzenia			:= iIdZdarzenia;
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].byRodzajZdarzenia	:= 2;
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].sKodBledu			:= '0001';
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].sNrKomponentu		:= GenerujNrKomponentu (iNrPodzespolu := iNrPodzespolu, iNrPodelementu := iNrPodelementu, iNrElementu := iNrElementu); 
+	arrTablicaDefinicjiZdarzenOpis [iIdZdarzenia].iIdZdarzenia 	:= iIdZdarzenia;
+	arrTablicaDefinicjiZdarzenStan [iIdZdarzenia].iIdZdarzenia 	:= iIdZdarzenia;
+	arrTablicaDefinicjiZdarzenStan [iIdZdarzenia].bAktywne			:= FALSE;
+//zbyt dlugi czas w stronę początku	
+	iIdZdarzenia										:= iIdZdarzenia + 1;
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].iIdZdarzenia			:= iIdZdarzenia;
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].byRodzajZdarzenia	:= 2;
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].sKodBledu			:= '0002';
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].sNrKomponentu		:= GenerujNrKomponentu (iNrPodzespolu := iNrPodzespolu, iNrPodelementu := iNrPodelementu, iNrElementu := iNrElementu); 
+	arrTablicaDefinicjiZdarzenOpis [iIdZdarzenia].iIdZdarzenia 	:= iIdZdarzenia;
+	arrTablicaDefinicjiZdarzenStan [iIdZdarzenia].iIdZdarzenia 	:= iIdZdarzenia;
+	arrTablicaDefinicjiZdarzenStan [iIdZdarzenia].bAktywne			:= FALSE;
+//utrata pozycji 0
+	iIdZdarzenia										:= iIdZdarzenia + 1;
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].iIdZdarzenia			:= iIdZdarzenia;
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].byRodzajZdarzenia	:= 2;
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].sKodBledu			:= '0003';
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].sNrKomponentu 		:= GenerujNrKomponentu (iNrPodzespolu := iNrPodzespolu, iNrPodelementu := iNrPodelementu, iNrElementu := iNrElementu); 
+	arrTablicaDefinicjiZdarzenOpis [iIdZdarzenia].iIdZdarzenia 	:= iIdZdarzenia;
+	arrTablicaDefinicjiZdarzenStan [iIdZdarzenia].iIdZdarzenia 	:= iIdZdarzenia;
+	arrTablicaDefinicjiZdarzenStan [iIdZdarzenia].bAktywne			:= FALSE;
+//utrata pozycji MAX
+	iIdZdarzenia										:= iIdZdarzenia + 1;
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].iIdZdarzenia			:= iIdZdarzenia;
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].byRodzajZdarzenia	:= 2;
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].sKodBledu			:= '0004';
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].sNrKomponentu 		:= GenerujNrKomponentu (iNrPodzespolu := iNrPodzespolu, iNrPodelementu := iNrPodelementu, iNrElementu := iNrElementu); 
+	arrTablicaDefinicjiZdarzenOpis [iIdZdarzenia].iIdZdarzenia 	:= iIdZdarzenia;
+	arrTablicaDefinicjiZdarzenStan [iIdZdarzenia].iIdZdarzenia 	:= iIdZdarzenia;
+	arrTablicaDefinicjiZdarzenStan [iIdZdarzenia].bAktywne			:= FALSE;
+//blad ustawienia czujnikow - dwa czujniki aktywne
+	iIdZdarzenia										:= iIdZdarzenia + 1;
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].iIdZdarzenia			:= iIdZdarzenia;
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].byRodzajZdarzenia	:= 1;
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].sKodBledu			:= '0005';
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].sNrKomponentu 		:= GenerujNrKomponentu (iNrPodzespolu := iNrPodzespolu, iNrPodelementu := iNrPodelementu, iNrElementu := iNrElementu); 
+	arrTablicaDefinicjiZdarzenOpis [iIdZdarzenia].iIdZdarzenia 	:= iIdZdarzenia;
+	arrTablicaDefinicjiZdarzenStan [iIdZdarzenia].iIdZdarzenia 	:= iIdZdarzenia;
+	arrTablicaDefinicjiZdarzenStan [iIdZdarzenia].bAktywne			:= FALSE;
+//blad ustawiania ustawienia czujników - zamienione miejscami	
+	iIdZdarzenia										:= iIdZdarzenia + 1;
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].iIdZdarzenia			:= iIdZdarzenia;
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].byRodzajZdarzenia	:= 1;
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].sKodBledu			:= '0006';
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].sNrKomponentu 		:= GenerujNrKomponentu (iNrPodzespolu := iNrPodzespolu, iNrPodelementu := iNrPodelementu, iNrElementu := iNrElementu); 
+	arrTablicaDefinicjiZdarzenOpis [iIdZdarzenia].iIdZdarzenia 	:= iIdZdarzenia;
+	arrTablicaDefinicjiZdarzenStan [iIdZdarzenia].iIdZdarzenia 	:= iIdZdarzenia;
+	arrTablicaDefinicjiZdarzenStan [iIdZdarzenia].bAktywne			:= FALSE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Silownik_Kontrola_Komunikacja">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Silownik_Kontrola_Komunikacja.DefinicjaTabeliZdarzen_1031_Niemiecki">
+      <LineId Id="4" Count="0" />
+      <LineId Id="8" Count="5" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Silownik_Kontrola_Komunikacja.DefinicjaTabeliZdarzen_1033_Angielski">
+      <LineId Id="5" Count="4" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Silownik_Kontrola_Komunikacja.DefinicjaTabeliZdarzen_1045_Polski">
+      <LineId Id="5" Count="4" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="14" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Silownik_Kontrola_Komunikacja.DefinicjaTabeliZdarzen_Ogolna">
+      <LineId Id="5" Count="0" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="35" Count="2" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="43" Count="1" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="45" Count="6" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="52" Count="7" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="60" Count="6" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="70" Count="6" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="77" Count="6" />
+      <LineId Id="29" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

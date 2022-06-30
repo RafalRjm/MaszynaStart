@@ -1,0 +1,280 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="FB_Silownik" Id="{1297c481-08dc-4d8c-84f0-8560146f24e2}" SpecialFunc="None">
+    <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa silonwika podstawa
+//	Realizacja wysuwania i chowania tłoczyska dla jednej cewki zwrócenie pozycji skrajnych
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+FUNCTION_BLOCK FB_Silownik IMPLEMENTS ITF_Silownik
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	fbCzujnikPozycja0						: ITF_Czujnik;		//czujnik połozenia tłoczyska
+	fbCzujnikPozycjaMax						: ITF_Czujnik;		//czujnik położenia tłoczyska
+	fbElektrozawor							: ITF_Elektozawor;	//elektrozawor sterujący siłownikiem
+	
+	bPrzesuwanieWStronePoczatku				: BOOL;
+	bPrzesuwanieWStroneKonca				: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+]]></ST>
+    </Implementation>
+    <Method Name="FB_init" Id="{b513b3ea-8c39-4b4d-bcf8-7b81a1d6fdfa}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	fbCzujnikPozycja0						: ITF_Czujnik;		//czujnik połozenia tłoczyska
+	fbCzujnikPozycjaMax						: ITF_Czujnik;		//czujnik położenia tłoczyska
+	fbElektrozawor							: ITF_Elektozawor;	//elektrozawor sterujący siłownikiem
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.fbCzujnikPozycja0						:= fbCzujnikPozycja0;	  
+THIS^.fbCzujnikPozycjaMax					:= fbCzujnikPozycjaMax;
+THIS^.fbElektrozawor						:= fbElektrozawor;
+	]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="NaKoncu" Id="{29585d80-ab18-437b-9186-df24d8e249b1}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Informacja tłoczysko na końcu
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+PROPERTY NaKoncu : BOOL]]></Declaration>
+      <Get Name="Get" Id="{6822745a-2c9c-428e-925f-1df299875c29}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IF (fbCzujnikPozycjaMax.CzyZadzialany AND NOT bPrzesuwanieWStroneKonca) THEN
+	NaKoncu									:= TRUE;
+ELSE
+	NaKoncu									:= FALSE;
+END_IF]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="NaPoczatku" Id="{ba340fb5-1d20-427e-b042-3e17da17759d}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Informacja tłoczysko na początku
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+PROPERTY NaPoczatku : BOOL]]></Declaration>
+      <Get Name="Get" Id="{1158cfd2-88aa-4366-a84a-b1815fa2e130}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IF (fbCzujnikPozycja0.CzyZadzialany AND NOT bPrzesuwanieWStronePoczatku) THEN
+	NaPoczatku								:= TRUE;
+ELSE
+	NaPoczatku								:= FALSE;
+END_IF
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Praca" Id="{48141d32-8bf6-4500-bb99-c269154b2c9e}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Metoda sterująca siłownikiem - MUSI BYĆ WYWOŁYWANA W KAŻDYM CYKLU PROGRAMU
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+METHOD Praca : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//Flaga pomocnicza informacja o przesuwaniu w strone poczatku tłoczyska
+IF (bPrzesuwanieWStronePoczatku AND fbCzujnikPozycja0.CzyZadzialany) THEN
+	bPrzesuwanieWStronePoczatku				:= FALSE;
+END_IF
+//Flaga pomocnicza informacja o przesuwaniu w strone konca tłoczyska
+IF (bPrzesuwanieWStroneKonca AND fbCzujnikPozycjaMax.CzyZadzialany) THEN
+	bPrzesuwanieWStroneKonca				:= FALSE;
+END_IF
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="PrzesunDoKonca" Id="{afdf334a-936e-46d2-8689-55228e4c3d85}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									13.05.2022
+	Przesun tłoczysko w strone końca
+ 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+==================================================================================================*)
+PROPERTY PrzesunDoKonca : BOOL
+]]></Declaration>
+      <Set Name="Set" Id="{ea9d59dc-1106-4339-a9b8-d741df75d156}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[StanSilownika (bRuchWStronePoczatku	:= FALSE,
+				bRuchWstroneKonca	:= TRUE);
+				
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="PrzesunDoPoczatku" Id="{b08016bf-3c52-4599-b57a-d15133cf5dfc}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									13.05.2022
+	Przesun tłoczysko w strone poczatku
+ 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+==================================================================================================*)
+PROPERTY PrzesunDoPoczatku : BOOL
+]]></Declaration>
+      <Set Name="Set" Id="{1a371746-a0a7-440e-b408-a2a083e361a0}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[StanSilownika (bRuchWStronePoczatku	:= TRUE,
+				bRuchWstroneKonca	:= FALSE);
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="PrzesuwanieWStroneKonca" Id="{3077748b-4212-4c7c-b457-32c25bd3dddf}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									13.05.2022
+	Przesuwanie tłoczyska w strone końca
+ 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+==================================================================================================*)
+PROPERTY PrzesuwanieWStroneKonca : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{3333132d-0667-4901-8382-e696e40a08f4}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[PrzesuwanieWStroneKonca						:= bprzesuwanieWStroneKonca;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="PrzesuwanieWStronePoczatku" Id="{7145d0ed-67a2-40b7-b744-631785fd70e2}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									13.05.2022
+	Przesuwanie tłoczyska w strone poczatku
+ 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+==================================================================================================*)
+PROPERTY PrzesuwanieWStronePoczatku : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{b9c218d3-b6b9-4903-a0f0-bd0da2bccbb7}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bPrzesuwanieWStronePoczatku					:= bPrzesuwanieWStronePoczatku;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="StanSilownika" Id="{93bc0ecc-1ba9-4b60-8ad9-d6c5215d0ef2}">
+      <Declaration><![CDATA[METHOD PROTECTED StanSilownika
+VAR_INPUT
+	bRuchWStronePoczatku					: BOOL;
+	bRuchWstroneKonca						: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+IF (bRuchWStronePoczatku AND NOT bRuchWstroneKonca) THEN
+	bPrzesuwanieWStronePoczatku				:= TRUE;
+	bprzesuwanieWStroneKonca				:= FALSE;
+	fbElektrozawor.Steruj (bKierunekWstrone0 := TRUE, bKierunekWStroneMax := FALSE);
+END_IF
+	
+
+IF (bRuchWstroneKonca AND NOT bRuchWStronePoczatku) THEN
+	bprzesuwanieWStroneKonca				:= TRUE;
+	bPrzesuwanieWStronePoczatku				:= FALSE;
+	fbElektrozawor.Steruj (bKierunekWstrone0 := FALSE, bKierunekWStroneMax := TRUE);
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Silownik">
+      <LineId Id="9" Count="0" />
+      <LineId Id="17" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Silownik.FB_init">
+      <LineId Id="7" Count="0" />
+      <LineId Id="11" Count="1" />
+      <LineId Id="21" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Silownik.NaKoncu.Get">
+      <LineId Id="5" Count="3" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Silownik.NaPoczatku.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="1" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Silownik.Praca">
+      <LineId Id="32" Count="0" />
+      <LineId Id="5" Count="2" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="10" Count="1" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="22" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Silownik.PrzesunDoKonca.Set">
+      <LineId Id="2" Count="0" />
+      <LineId Id="6" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Silownik.PrzesunDoPoczatku.Set">
+      <LineId Id="6" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Silownik.PrzesuwanieWStroneKonca.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Silownik.PrzesuwanieWStronePoczatku.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Silownik.StanSilownika">
+      <LineId Id="8" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="13" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

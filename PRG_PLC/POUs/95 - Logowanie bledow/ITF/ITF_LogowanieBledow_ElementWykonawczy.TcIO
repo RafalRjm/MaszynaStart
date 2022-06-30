@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <Itf Name="ITF_LogowanieBledow_ElementWykonawczy" Id="{78e63a64-b558-4c98-aa33-db1e8b2f6677}">
+    <Declaration><![CDATA[INTERFACE ITF_LogowanieBledow_ElementWykonawczy
+]]></Declaration>
+    <Method Name="DefinicjaTabeliZdarzen_1031_Niemiecki" Id="{db72fe60-d62a-4425-9c5c-5a13b30ecb1c}">
+      <Declaration><![CDATA[METHOD DefinicjaTabeliZdarzen_1031_Niemiecki : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzenOpis			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieOpis;
+
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="DefinicjaTabeliZdarzen_1033_Angielski" Id="{d6af3b0e-db4b-4e90-9c9f-04acaf073b6f}">
+      <Declaration><![CDATA[METHOD DefinicjaTabeliZdarzen_1033_Angielski : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzenOpis			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieOpis;
+
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="DefinicjaTabeliZdarzen_1045_Polski" Id="{abd31d49-d20e-4e58-8d96-dbaefb4a28ad}">
+      <Declaration><![CDATA[METHOD DefinicjaTabeliZdarzen_1045_Polski : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzenOpis			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieOpis;
+
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="DefinicjaTabeliZdarzen_Ogolna" Id="{8a0c3e7d-7a6d-4ab5-95b5-32a60f2d9688}">
+      <Declaration><![CDATA[METHOD DefinicjaTabeliZdarzen_Ogolna : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzen				: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_Zdarzenie;
+	arrTablicaDefinicjiZdarzenOpis			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieOpis;
+	arrTablicaDefinicjiZdarzenStan			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieStan;
+
+	iIdZdarzenia							: REFERENCE TO INT;
+	iNrPodzespolu							: INT := 0;
+	iNrPodelementu							: INT := 0;
+	iNrElementu								: INT := 0;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="GenerujNrKomponentu" Id="{61c2c32c-a293-4303-a1b6-1130aa8ac086}">
+      <Declaration><![CDATA[METHOD GenerujNrKomponentu : STRING
+VAR_INPUT
+	iNrPodzespolu							: INT := 0;
+	iNrPodelementu							: INT := 0;
+	iNrElementu								: INT := 0;
+END_VAR
+
+
+]]></Declaration>
+    </Method>
+    <Method Name="ZwrocTabliceDefinicji" Id="{5c7da7b5-2376-4e32-9de5-f780df196d33}">
+      <Declaration><![CDATA[METHOD ZwrocTabliceDefinicji : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzen				: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_Zdarzenie;
+	arrTablicaDefinicjiZdarzenOpis			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieOpis;
+	arrTablicaDefinicjiZdarzenStan			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieStan;
+	
+	iIdZdarzenia							: REFERENCE TO INT;
+	iNrPodzespolu							: INT;
+	iNrPodelementu							: INT;
+	iNrElementu								: INT;
+	iJezykId								: INT;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="ZwrocTabliceStanu" Id="{84821d2a-d706-41c5-b114-55552411d3b3}">
+      <Declaration><![CDATA[METHOD ZwrocTabliceStanu : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzenStan			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieStan;
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

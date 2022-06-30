@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="MAIN" Id="{73f1b474-f0bd-432f-99c4-c461b6a71c21}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	bKonfiguruj								: BOOL := TRUE;
+	
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF (bKonfiguruj) THEN
+	A_Konfiguracja ();
+	bKonfiguruj								:= FALSE;
+END_IF
+//--------LOGER
+	GVL_LogowanieBledow.fbLoger (arrZdarzeniaPamietane 		:= GVL_LogowanieBledow.arrTablicaZdarzenZapamietancyh,
+								iIloscZdarzenZapamietanych 	:= GVL_LogowanieBledow.iIloscZdarzenZapamietanych,
+								bWyswietlanieTablicyAlarmow	:= GVL_LogowanieBledow.bWyswietlAlarmy);
+//--------LOGER
+//--------STEROWANIE MASZYNĄ
+GVL_StanMaszyny.fbStanMaszyny(
+	bStart				:= GVL_StanMaszyny.bStart OR GVL_ElementySterujace.fbElementySterujace.NacisnietyStart, 
+	bStop				:= GVL_StanMaszyny.bStop OR GVL_ElementySterujace.fbElementySterujace.NacisnietyStop, 
+	bReset				:= GVL_StanMaszyny.bReset, 
+	bAbort				:= GVL_StanMaszyny.bAbort, 
+	bClear				:= GVL_StanMaszyny.bClear, 
+	bHold				:= GVL_StanMaszyny.bHold, 
+	bUnHold				:= GVL_StanMaszyny.bUnhold, 
+	bSuspend			:= GVL_StanMaszyny.bSuspend, 
+	bUnsuspend			:= GVL_StanMaszyny.bUnsuspend,
+	eTryb				:= GVL_StanMaszyny.eTrybPracy);
+
+
+GVL_ElementySterujace.fbElementySterujace ();
+GVL_ElementySterujace.fbElementySterujace.StanMaszyny	:= GVL_StanMaszyny.fbStanMaszyny.StanPracy;
+GVL_ElementySterujace.fbElementySterujace.TrybPracy		:= GVL_StanMaszyny.fbStanMaszyny.TrybPracy;
+//--------STEROWANIE MASZYNĄ
+]]></ST>
+    </Implementation>
+    <Action Name="A_Konfiguracja" Id="{124be6a6-033b-419d-b278-24d79c8f18b6}">
+      <Implementation>
+        <ST><![CDATA[	GVL_StanMaszyny.fbStanMaszyny.KonfiguracjaStanowPracyDlaTrybu(
+		eNrTrybu		:= E_PMLUnitMode.AUTOMATIC,  
+		bClearing		:= TRUE, 
+		bStopped		:= TRUE, 
+		bStarting		:= TRUE, 
+		bIdle			:= TRUE, 
+		bSuspended		:= TRUE, 
+		bExecute		:= TRUE, 
+		bStopping		:= TRUE, 
+		bAborting		:= TRUE, 
+		bAborted		:= TRUE, 
+		bHolding		:= TRUE, 
+		bHeld			:= TRUE, 
+		bUnholding		:= TRUE, 
+		bSuspending		:= TRUE, 
+		bUnsuspending	:= TRUE, 
+		bResetting		:= TRUE, 
+		bCompleting		:= TRUE, 
+		bComplete		:= TRUE);
+	GVL_StanMaszyny.fbStanMaszyny.KonfiguracjaStanowPracyDlaTrybu(
+		eNrTrybu		:= E_PMLUnitMode.MANUAL, 
+		bClearing		:= TRUE, 
+		bStopped		:= TRUE, 
+		bStarting		:= TRUE, 
+		bIdle			:= TRUE, 
+		bSuspended		:= FALSE, 
+		bExecute		:= TRUE, 
+		bStopping		:= TRUE, 
+		bAborting		:= TRUE, 
+		bAborted		:= TRUE, 
+		bHolding		:= FALSE, 
+		bHeld			:= FALSE, 
+		bUnholding		:= FALSE, 
+		bSuspending		:= FALSE, 
+		bUnsuspending	:= FALSE, 
+		bResetting		:= TRUE, 
+		bCompleting		:= FALSE, 
+		bComplete		:= FALSE);]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="MAIN">
+      <LineId Id="6" Count="3" />
+      <LineId Id="33" Count="3" />
+      <LineId Id="10" Count="16" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="38" Count="1" />
+    </LineIds>
+    <LineIds Name="MAIN.A_Konfiguracja">
+      <LineId Id="2" Count="36" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,247 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="FB_LogowanieBledow_ElementWykonawczy" Id="{0e41e135-a942-410a-a1d0-904184c3cb28}" SpecialFunc="None">
+    <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									14.06.2022
+//	FB posredniczący pomiędzy FB a logerem alarmów  
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+FUNCTION_BLOCK FB_LogowanieBledow_ElementWykonawczy IMPLEMENTS ITF_LogowanieBledow_ElementWykonawczy
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	iStartId								: INT := 0;	//numer poczatkowy dla podzespolu
+	arrTablicaStanow						: ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN_NA_ELEMENT] OF BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="DefinicjaTabeliZdarzen_1031_Niemiecki" Id="{643bc9ae-eb47-4cbf-ab47-09a4534765d5}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									14.06.2022
+//	Metoda do rozszerzenia z opisem alarmów po niemiecku  
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+METHOD DefinicjaTabeliZdarzen_1031_Niemiecki : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzenOpis			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieOpis;
+
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DefinicjaTabeliZdarzen_1033_Angielski" Id="{69ee583a-8769-41cb-8b88-a8d310541479}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									14.06.2022
+//	Metoda do rozszerzenia z opisem alarmów po andgielsku  
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+METHOD DefinicjaTabeliZdarzen_1033_Angielski : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzenOpis			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieOpis;
+
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DefinicjaTabeliZdarzen_1045_Polski" Id="{ce1846cd-4091-4d0f-9090-4c3979bc83f3}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									14.06.2022
+//	Metoda do rozszerzenia z opisem alarmów po polsku
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+METHOD DefinicjaTabeliZdarzen_1045_Polski : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzenOpis			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieOpis;
+
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DefinicjaTabeliZdarzen_Ogolna" Id="{17f0ac9e-fa84-47fc-8f76-f8da1ae55219}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									14.06.2022
+//	Metoda do rozszerzenia wypełniająca niezmienne dane tablic  
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+METHOD DefinicjaTabeliZdarzen_Ogolna : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzen				: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_Zdarzenie;
+	arrTablicaDefinicjiZdarzenOpis			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieOpis;
+	arrTablicaDefinicjiZdarzenStan			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieStan;
+
+	iIdZdarzenia							: REFERENCE TO INT;
+	iNrPodzespolu							: INT := 0;
+	iNrPodelementu							: INT := 0;
+	iNrElementu								: INT := 0;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GenerujNrKomponentu" Id="{640cc587-38d2-48df-a81b-ccbb90ed60ec}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									14.06.2022
+//	Metoda składa numer podzespołu z podanych zmiennych 
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+METHOD GenerujNrKomponentu : STRING
+VAR_INPUT
+	iNrPodzespolu							: INT := 0;
+	iNrPodelementu							: INT := 0;
+	iNrElementu								: INT := 0;
+END_VAR
+VAR
+	sKod									: STRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[sKod										:= concat (TO_STRING (iNrPodzespolu*100), '-');
+sKod										:= concat (sKod, TO_STRING (iNrPodelementu*10));
+sKod										:= concat (sKod, '-');
+sKod										:= concat (sKod, TO_STRING (iNrElementu));
+
+GenerujNrKomponentu							:= sKod;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="UstawStan" Id="{2375fd5f-82eb-40ea-930e-d40e3dc11912}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									14.06.2022
+//	Przypisanie odpowiedniego stonu w odpowienim miejscu w tabeli potrzebne do aktualizacji stanow alarmow
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+METHOD UstawStan : BOOL
+VAR_INPUT
+	iId										: INT;
+	bStan									: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[arrTablicaStanow [iId]					:= bStan;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ZwrocTabliceDefinicji" Id="{0dc1871e-9775-41dc-a021-6719cf5e9399}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									14.06.2022
+//	Metoda zwraca definicje alarmow dla elementów wykonawczych
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+METHOD ZwrocTabliceDefinicji : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzen				: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_Zdarzenie;
+	arrTablicaDefinicjiZdarzenOpis			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieOpis;
+	arrTablicaDefinicjiZdarzenStan			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieStan;
+	
+	iIdZdarzenia							: REFERENCE TO INT;
+	iNrPodzespolu							: INT;
+	iNrPodelementu							: INT;
+	iNrElementu								: INT;
+	iJezykId								: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	IF (iStartId = 0) THEN
+		iStartId							:= iIdZdarzenia+1;
+		DefinicjaTabeliZdarzen_Ogolna (	arrTablicaDefinicjiZdarzen 		:= arrTablicaDefinicjiZdarzen,
+										arrTablicaDefinicjiZdarzenOpis 	:= arrTablicaDefinicjiZdarzenOpis,
+										arrTablicaDefinicjiZdarzenStan 	:= arrTablicaDefinicjiZdarzenStan,
+										iIdZdarzenia 					:= iIdZdarzenia,
+										iNrPodzespolu 					:= iNrPodzespolu,
+										iNrPodelementu 					:= iNrPodelementu,
+										iNrElementu						:= iNrElementu);
+	END_IF
+	
+	CASE iJezykId OF
+		1031	:	//niemiecki
+			DefinicjaTabeliZdarzen_1031_Niemiecki (arrTablicaDefinicjiZdarzenOpis 	:= arrTablicaDefinicjiZdarzenOpis);
+		1033	:	//angielski
+			DefinicjaTabeliZdarzen_1033_Angielski (arrTablicaDefinicjiZdarzenOpis 	:= arrTablicaDefinicjiZdarzenOpis);
+		1045	:	//polski
+			DefinicjaTabeliZdarzen_1045_Polski (arrTablicaDefinicjiZdarzenOpis 	:= arrTablicaDefinicjiZdarzenOpis);
+		ELSE		//domyslny polski
+			DefinicjaTabeliZdarzen_1045_Polski (arrTablicaDefinicjiZdarzenOpis 	:= arrTablicaDefinicjiZdarzenOpis);		
+	END_CASE
+	
+//	ZwrocTabeleZdarzen						REF= arrZdarzeniaDefinicja;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ZwrocTabliceStanu" Id="{2815a631-9b48-4ff6-87ac-0c51b7159525}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									14.06.2022
+//	Metoda zwraca tablice stanow elementu wykonwaczego  
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+METHOD ZwrocTabliceStanu : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzenStan			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieStan;
+END_VAR
+
+VAR
+	iI: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR iI := 1 TO 10 DO
+	arrTablicaDefinicjiZdarzenStan [iStartId + iI -1].bAktywne := arrTablicaStanow [iI];
+END_FOR
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_LogowanieBledow_ElementWykonawczy">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LogowanieBledow_ElementWykonawczy.DefinicjaTabeliZdarzen_1031_Niemiecki">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LogowanieBledow_ElementWykonawczy.DefinicjaTabeliZdarzen_1033_Angielski">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LogowanieBledow_ElementWykonawczy.DefinicjaTabeliZdarzen_1045_Polski">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LogowanieBledow_ElementWykonawczy.DefinicjaTabeliZdarzen_Ogolna">
+      <LineId Id="29" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LogowanieBledow_ElementWykonawczy.GenerujNrKomponentu">
+      <LineId Id="12" Count="4" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="17" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LogowanieBledow_ElementWykonawczy.UstawStan">
+      <LineId Id="5" Count="0" />
+      <LineId Id="11" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LogowanieBledow_ElementWykonawczy.ZwrocTabliceDefinicji">
+      <LineId Id="61" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="66" Count="7" />
+      <LineId Id="11" Count="11" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="41" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LogowanieBledow_ElementWykonawczy.ZwrocTabliceStanu">
+      <LineId Id="13" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

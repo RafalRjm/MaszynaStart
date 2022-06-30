@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <Itf Name="ITF_Elektozawor" Id="{116db2a7-d9bd-4479-813c-923ad7b3d1ea}">
+    <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									04.06.2022
+//	Sterowanie elektrozaworem  
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+INTERFACE ITF_Elektozawor
+]]></Declaration>
+    <Method Name="Steruj" Id="{78174752-1704-4c0d-a263-8a044f153f3a}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									04.06.2022
+//	Sterowanie cewkami elektrozaworu 
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+METHOD Steruj : BOOL
+VAR_INPUT
+	bKierunekWstrone0						: BOOL;
+	bKierunekWStroneMax						: BOOL;	
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

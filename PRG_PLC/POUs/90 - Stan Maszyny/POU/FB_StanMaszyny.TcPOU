@@ -1,0 +1,1495 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="FB_StanMaszyny" Id="{7caae4b5-f305-4bbf-80c3-80dce42e43fc}" SpecialFunc="None">
+    <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Sterowanie pracą maszyny i jej trybami  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+FUNCTION_BLOCK FB_StanMaszyny
+VAR_INPUT
+	bStart                                  : BOOL;
+	bStop                                   : bool;
+	bReset                                  : bool;
+	bAbort                                  : bool;
+	bClear                                  : bool;
+	bHold                                   : bool;
+	bUnHold                                 : bool;
+	bSuspend                                : bool;
+	bUnsuspend								: BOOL;
+	eTryb									: E_PMLUnitMode;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	arrVisuStany							: ARRAY [0..17] OF DUT_StanMaszyny_VISU_Stan;
+	arrVisuTryb								: ARRAY [0..9] of ARRAY [0..17] OF BOOL;
+	eStan									: E_PMLState := E_PMLState.ABORTING;
+	eTrybPracy								: E_PMLUnitMode := E_PMLUnitMode.MANUAL;
+	
+	arrPodzesoly							: ARRAY [1..GVL_StanMaszyny_Stale.MAX_LICZBA_PODZESPOLOW] OF ITF_StanMaszyny;
+	iIloscDodanychPodzespolow				: INT;
+
+	iAktualnyStan							: INT;
+	iPoprzedniStan							: INT;
+	iNumerTrybuPracy						: INT;
+	iPoprzedniTrybPracy						: INT;
+
+	bResetingSkonczone						: BOOL;
+	bStoppingZakonczone						: BOOL;
+	bAbortingZakonczone						: BOOL;
+	bClearingZakonczone						: BOOL;
+	bCompletingZakonczone					: BOOL;
+	bHoldingZakonczone						: BOOL;
+	bStartingZakonczone						: BOOL;
+	bSuspendingZakonczone					: BOOL;
+	bUnholdingZakonczone					: BOOL;
+	bUnsuspendingZakonczone					: BOOL;	
+	bInicjalizacja							: BOOL;
+	bPierwszePrzejscieWOperacji				: BOOL;
+	arrOperacjaWykonana						: ARRAY [1..GVL_StanMaszyny_Stale.MAX_LICZBA_PODZESPOLOW] OF BOOL;	//tablica zakonczenia zadanej operacji przez podzespoly
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF (NOT bInicjalizacja) THEN
+	bInicjalizacja							:= TRUE;
+	Inicjalizacja ();
+END_IF
+
+
+
+StanMaszyny ();
+]]></ST>
+    </Implementation>
+    <Method Name="FB_init" Id="{f6af3762-2958-41e3-bd7f-6046be85a013}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	arrPodzesoly							: ARRAY [1..GVL_StanMaszyny_Stale.MAX_LICZBA_PODZESPOLOW] OF ITF_StanMaszyny;
+	iIloscDodanychPodzespolow				: INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.arrPodzesoly								:= arrPodzesoly;
+THIS^.iIloscDodanychPodzespolow					:= iIloscDodanychPodzespolow;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Inicjalizacja" Id="{1a2b3f85-281e-4e5e-9601-fab73f305420}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Iniecjalizacja tablicy potrzebnej do wyświetlania diagramu  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD PRIVATE Inicjalizacja : BOOL
+VAR_INPUT
+END_VAR
+
+VAR
+	i,j: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+FOR j := 0 TO 9 DO
+	FOR i := 0 TO 17 DO
+		arrVisuStany [i].bAktywny				:= FALSE;
+		CASE i OF
+			0	:
+				arrVisuStany [i].sNazwa			:= 'UNDEFINED';
+				arrVisuStany [i].dwKolorTla		:= 16#FFFF0000;	//czerwony
+			1	:             
+				arrVisuStany [i].sNazwa			:= 'CLEARING';
+				arrVisuStany [i].dwKolorTla		:= 16#FF00FF00;	//zielony
+			2	:             
+				arrVisuStany [i].sNazwa			:= 'STOPPED';
+				arrVisuStany [i].dwKolorTla		:= 16#FFFFFF00;	//zolty
+			3	:
+				arrVisuStany [i].sNazwa			:= 'STARTING';
+				arrVisuStany [i].dwKolorTla		:= 16#FF00FF00;
+			4	:             
+				arrVisuStany [i].sNazwa			:= 'IDLE';
+				arrVisuStany [i].dwKolorTla		:= 16#FFFFFF00;
+			5	:             
+				arrVisuStany [i].sNazwa			:= 'SUSPENDED';
+				arrVisuStany [i].dwKolorTla		:= 16#FFFFFF00;		
+			6	:             
+				arrVisuStany [i].sNazwa			:= 'EXECUTE';
+				arrVisuStany [i].dwKolorTla		:= 16#FF0000FF;
+			7	:             
+				arrVisuStany [i].sNazwa			:= 'STOPPING';
+				arrVisuStany [i].dwKolorTla		:= 16#FF00FF00;
+			8	:             
+				arrVisuStany [i].sNazwa			:= 'ABORTING';
+				arrVisuStany [i].dwKolorTla		:= 16#FF00FF00;		
+			9	:             
+				arrVisuStany [i].sNazwa			:= 'ABORTED';
+				arrVisuStany [i].dwKolorTla		:= 16#FFFFFF00;
+			10	:             
+				arrVisuStany [i].sNazwa			:= 'HOLDING';
+				arrVisuStany [i].dwKolorTla		:= 16#FF00FF00;
+			11	:             
+				arrVisuStany [i].sNazwa			:= 'HELD';
+				arrVisuStany [i].dwKolorTla		:= 16#FFFFFF00;	
+			12	:             
+				arrVisuStany [i].sNazwa			:= 'UNHOLDING';
+				arrVisuStany [i].dwKolorTla		:= 16#FF00FF00;
+			13	:
+				arrVisuStany [i].sNazwa			:= 'SUSPENDING';
+				arrVisuStany [i].dwKolorTla		:= 16#FF00FF00;
+			14	:             
+				arrVisuStany [i].sNazwa			:= 'UNSUSPENDING';
+				arrVisuStany [i].dwKolorTla		:= 16#FF00FF00;		
+			15	:             
+				arrVisuStany [i].sNazwa			:= 'RESETTING';
+				arrVisuStany [i].dwKolorTla		:= 16#FF00FF00;
+			16	:             
+				arrVisuStany [i].sNazwa			:= 'COMPLETING';
+				arrVisuStany [i].dwKolorTla		:= 16#FF00FF00;
+			17	:             
+				arrVisuStany [i].sNazwa			:= 'COMPLETE';
+				arrVisuStany [i].dwKolorTla		:= 16#FFFFFF00;		
+		END_CASE
+	END_FOR
+END_FOR
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="KonfiguracjaStanowPracyDlaTrybu" Id="{12ec7010-91b1-4fce-8c8d-ee83186f0536}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Konfiguracja który stan w jakim trybie ma być aktywny
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD KonfiguracjaStanowPracyDlaTrybu : BOOL
+VAR_INPUT
+	eNrTrybu								: E_PMLUnitMode;
+	bClearing 								: BOOL;  
+	bStopped 								: BOOL;  
+	bStarting 								: BOOL;  
+	bIdle 									: BOOL;  
+	bSuspended 								: BOOL;  
+	bExecute 								: BOOL;  
+	bStopping	 							: BOOL;  
+	bAborting 								: BOOL;  
+	bAborted 								: BOOL;  
+	bHolding 								: BOOL;  
+	bHeld 									: BOOL;  
+	bUnholding 								: BOOL;  
+	bSuspending 							: BOOL;  
+	bUnsuspending 							: BOOL;  
+	bResetting 								: BOOL;  
+	bCompleting 							: BOOL;  
+	bComplete	 							: BOOL;  
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE eNrTrybu OF
+	E_PMLUnitMode.UNDEFINED		:
+		arrVisuTryb [0][0] 						:= FALSE;						 
+		arrVisuTryb [0][1] 						:= FALSE;						 
+		arrVisuTryb [0][2] 						:= FALSE;						 
+		arrVisuTryb [0][3] 						:= FALSE;						 
+		arrVisuTryb [0][4] 						:= FALSE;						 
+		arrVisuTryb [0][5] 						:= FALSE;						 
+		arrVisuTryb [0][6] 						:= FALSE;						 
+		arrVisuTryb [0][7] 						:= FALSE;						 
+		arrVisuTryb [0][8] 						:= FALSE;						 
+		arrVisuTryb [0][9] 						:= FALSE;						 
+		arrVisuTryb [0][10] 					:= FALSE;						 
+		arrVisuTryb [0][11] 					:= FALSE;						 
+		arrVisuTryb [0][12] 					:= FALSE;						 
+		arrVisuTryb [0][13] 					:= FALSE;						 
+		arrVisuTryb [0][14] 					:= FALSE;						 
+		arrVisuTryb [0][15] 					:= FALSE;						 
+		arrVisuTryb [0][16] 					:= FALSE;						 
+		arrVisuTryb [0][17] 					:= FALSE;						 	
+	E_PMLUnitMode.AUTOMATIC		:
+		arrVisuTryb [1][0] 						:= FALSE;								 
+		arrVisuTryb [1][1] 						:= bClearing; 								 
+		arrVisuTryb [1][2] 						:= bStopped; 								 
+		arrVisuTryb [1][3] 						:= bStarting; 								 
+		arrVisuTryb [1][4] 						:= bIdle; 									 
+		arrVisuTryb [1][5] 						:= bSuspended; 								 
+		arrVisuTryb [1][6] 						:= bExecute; 								 
+		arrVisuTryb [1][7] 						:= bStopping;	 							 
+		arrVisuTryb [1][8] 						:= bAborting; 								 
+		arrVisuTryb [1][9] 						:= bAborted; 								 
+		arrVisuTryb [1][10] 					:= bHolding; 								 
+		arrVisuTryb [1][11] 					:= bHeld; 									 
+		arrVisuTryb [1][12] 					:= bUnholding; 								 
+		arrVisuTryb [1][13] 					:= bSuspending; 							 
+		arrVisuTryb [1][14] 					:= bUnsuspending; 							 
+		arrVisuTryb [1][15] 					:= bResetting;								 
+		arrVisuTryb [1][16] 					:= bCompleting; 							 
+		arrVisuTryb [1][17] 					:= bComplete;
+	E_PMLUnitMode.MAINTENANCE 	:
+		arrVisuTryb [2][0] 						:= FALSE;								 
+		arrVisuTryb [2][1] 						:= bClearing; 								 
+		arrVisuTryb [2][2] 						:= bStopped; 								 
+		arrVisuTryb [2][3] 						:= bStarting; 								 
+		arrVisuTryb [2][4] 						:= bIdle; 									 
+		arrVisuTryb [2][5] 						:= bSuspended; 								 
+		arrVisuTryb [2][6] 						:= bExecute; 								 
+		arrVisuTryb [2][7] 						:= bStopping;	 							 
+		arrVisuTryb [2][8] 						:= bAborting; 								 
+		arrVisuTryb [2][9] 						:= bAborted; 								 
+		arrVisuTryb [2][10] 					:= bHolding; 								 
+		arrVisuTryb [2][11] 					:= bHeld; 									 
+		arrVisuTryb [2][12] 					:= bUnholding; 								 
+		arrVisuTryb [2][13] 					:= bSuspending; 							 
+		arrVisuTryb [2][14] 					:= bUnsuspending; 							 
+		arrVisuTryb [2][15] 					:= bResetting;								 
+		arrVisuTryb [2][16] 					:= bCompleting; 							 
+		arrVisuTryb [2][17] 					:= bComplete;
+	E_PMLUnitMode.MANUAL 		:
+		arrVisuTryb [3][0] 						:= FALSE;								 
+		arrVisuTryb [3][1] 						:= bClearing; 								 
+		arrVisuTryb [3][2] 						:= bStopped; 								 
+		arrVisuTryb [3][3] 						:= bStarting; 								 
+		arrVisuTryb [3][4] 						:= bIdle; 									 
+		arrVisuTryb [3][5] 						:= bSuspended; 								 
+		arrVisuTryb [3][6] 						:= bExecute; 								 
+		arrVisuTryb [3][7] 						:= bStopping;	 							 
+		arrVisuTryb [3][8] 						:= bAborting; 								 
+		arrVisuTryb [3][9] 						:= bAborted; 								 
+		arrVisuTryb [3][10] 					:= bHolding; 								 
+		arrVisuTryb [3][11] 					:= bHeld; 									 
+		arrVisuTryb [3][12] 					:= bUnholding; 								 
+		arrVisuTryb [3][13] 					:= bSuspending; 							 
+		arrVisuTryb [3][14] 					:= bUnsuspending; 							 
+		arrVisuTryb [3][15] 					:= bResetting;								 
+		arrVisuTryb [3][16] 					:= bCompleting; 							 
+		arrVisuTryb [3][17] 					:= bComplete;
+	E_PMLUnitMode.SEMIAUTOMATIC	:
+		arrVisuTryb [4][0] 						:= FALSE;								 
+		arrVisuTryb [4][1] 						:= bClearing; 								 
+		arrVisuTryb [4][2] 						:= bStopped; 								 
+		arrVisuTryb [4][3] 						:= bStarting; 								 
+		arrVisuTryb [4][4] 						:= bIdle; 									 
+		arrVisuTryb [4][5] 						:= bSuspended; 								 
+		arrVisuTryb [4][6] 						:= bExecute; 								 
+		arrVisuTryb [4][7] 						:= bStopping;	 							 
+		arrVisuTryb [4][8] 						:= bAborting; 								 
+		arrVisuTryb [4][9] 						:= bAborted; 								 
+		arrVisuTryb [4][10] 					:= bHolding; 								 
+		arrVisuTryb [4][11] 					:= bHeld; 									 
+		arrVisuTryb [4][12] 					:= bUnholding; 								 
+		arrVisuTryb [4][13] 					:= bSuspending; 							 
+		arrVisuTryb [4][14] 					:= bUnsuspending; 							 
+		arrVisuTryb [4][15] 					:= bResetting;								 
+		arrVisuTryb [4][16] 					:= bCompleting; 							 
+		arrVisuTryb [4][17] 					:= bComplete;
+	E_PMLUnitMode.DRYRUN		:
+		arrVisuTryb [5][0] 						:= FALSE;								 
+		arrVisuTryb [5][1] 						:= bClearing; 								 
+		arrVisuTryb [5][2] 						:= bStopped; 								 
+		arrVisuTryb [5][3] 						:= bStarting; 								 
+		arrVisuTryb [5][4] 						:= bIdle; 									 
+		arrVisuTryb [5][5] 						:= bSuspended; 								 
+		arrVisuTryb [5][6] 						:= bExecute; 								 
+		arrVisuTryb [5][7] 						:= bStopping;	 							 
+		arrVisuTryb [5][8] 						:= bAborting; 								 
+		arrVisuTryb [5][9] 						:= bAborted; 								 
+		arrVisuTryb [5][10] 					:= bHolding; 								 
+		arrVisuTryb [5][11] 					:= bHeld; 									 
+		arrVisuTryb [5][12] 					:= bUnholding; 								 
+		arrVisuTryb [5][13] 					:= bSuspending; 							 
+		arrVisuTryb [5][14] 					:= bUnsuspending; 							 
+		arrVisuTryb [5][15] 					:= bResetting;								 
+		arrVisuTryb [5][16] 					:= bCompleting; 							 
+		arrVisuTryb [5][17] 					:= bComplete;
+	E_PMLUnitMode.USERMODE1		:
+		arrVisuTryb [6][0] 						:= FALSE;								 
+		arrVisuTryb [6][1] 						:= bClearing; 								 
+		arrVisuTryb [6][2] 						:= bStopped; 								 
+		arrVisuTryb [6][3] 						:= bStarting; 								 
+		arrVisuTryb [6][4] 						:= bIdle; 									 
+		arrVisuTryb [6][5] 						:= bSuspended; 								 
+		arrVisuTryb [6][6] 						:= bExecute; 								 
+		arrVisuTryb [6][7] 						:= bStopping;	 							 
+		arrVisuTryb [6][8] 						:= bAborting; 								 
+		arrVisuTryb [6][9] 						:= bAborted; 								 
+		arrVisuTryb [6][10] 					:= bHolding; 								 
+		arrVisuTryb [6][11] 					:= bHeld; 									 
+		arrVisuTryb [6][12] 					:= bUnholding; 								 
+		arrVisuTryb [6][13] 					:= bSuspending; 							 
+		arrVisuTryb [6][14] 					:= bUnsuspending; 							 
+		arrVisuTryb [6][15] 					:= bResetting;								 
+		arrVisuTryb [6][16] 					:= bCompleting; 							 
+		arrVisuTryb [6][17] 					:= bComplete;
+	E_PMLUnitMode.USERMODE2		:
+		arrVisuTryb [7][0] 						:= FALSE;								 
+		arrVisuTryb [7][1] 						:= bClearing; 								 
+		arrVisuTryb [7][2] 						:= bStopped; 								 
+		arrVisuTryb [7][3] 						:= bStarting; 								 
+		arrVisuTryb [7][4] 						:= bIdle; 									 
+		arrVisuTryb [7][5] 						:= bSuspended; 								 
+		arrVisuTryb [7][6] 						:= bExecute; 								 
+		arrVisuTryb [7][7] 						:= bStopping;	 							 
+		arrVisuTryb [7][8] 						:= bAborting; 								 
+		arrVisuTryb [7][9] 						:= bAborted; 								 
+		arrVisuTryb [7][10] 					:= bHolding; 								 
+		arrVisuTryb [7][11] 					:= bHeld; 									 
+		arrVisuTryb [7][12] 					:= bUnholding; 								 
+		arrVisuTryb [7][13] 					:= bSuspending; 							 
+		arrVisuTryb [7][14] 					:= bUnsuspending; 							 
+		arrVisuTryb [7][15] 					:= bResetting;								 
+		arrVisuTryb [7][16] 					:= bCompleting; 							 
+		arrVisuTryb [7][17] 					:= bComplete;
+	E_PMLUnitMode.IDLE 			:
+		arrVisuTryb [8][0] 						:= FALSE;								 
+		arrVisuTryb [8][1] 						:= bClearing; 								 
+		arrVisuTryb [8][2] 						:= bStopped; 								 
+		arrVisuTryb [8][3] 						:= bStarting; 								 
+		arrVisuTryb [8][4] 						:= bIdle; 									 
+		arrVisuTryb [8][5] 						:= bSuspended; 								 
+		arrVisuTryb [8][6] 						:= bExecute; 								 
+		arrVisuTryb [8][7] 						:= bStopping;	 							 
+		arrVisuTryb [8][8] 						:= bAborting; 								 
+		arrVisuTryb [8][9] 						:= bAborted; 								 
+		arrVisuTryb [8][10] 					:= bHolding; 								 
+		arrVisuTryb [8][11] 					:= bHeld; 									 
+		arrVisuTryb [8][12] 					:= bUnholding; 								 
+		arrVisuTryb [8][13] 					:= bSuspending; 							 
+		arrVisuTryb [8][14] 					:= bUnsuspending; 							 
+		arrVisuTryb [8][15] 					:= bResetting;								 
+		arrVisuTryb [8][16] 					:= bCompleting; 							 
+		arrVisuTryb [8][17] 					:= bComplete;
+	E_PMLUnitMode.ESTOP 		:
+		arrVisuTryb [9][0] 						:= FALSE;								 
+		arrVisuTryb [9][1] 						:= bClearing; 								 
+		arrVisuTryb [9][2] 						:= bStopped; 								 
+		arrVisuTryb [9][3] 						:= bStarting; 								 
+		arrVisuTryb [9][4] 						:= bIdle; 									 
+		arrVisuTryb [9][5] 						:= bSuspended; 								 
+		arrVisuTryb [9][6] 						:= bExecute; 								 
+		arrVisuTryb [9][7] 						:= bStopping;	 							 
+		arrVisuTryb [9][8] 						:= bAborting; 								 
+		arrVisuTryb [9][9] 						:= bAborted; 								 
+		arrVisuTryb [9][10] 					:= bHolding; 								 
+		arrVisuTryb [9][11] 					:= bHeld; 									 
+		arrVisuTryb [9][12] 					:= bUnholding; 								 
+		arrVisuTryb [9][13] 					:= bSuspending; 							 
+		arrVisuTryb [9][14] 					:= bUnsuspending; 							 
+		arrVisuTryb [9][15] 					:= bResetting;								 
+		arrVisuTryb [9][16] 					:= bCompleting; 							 
+		arrVisuTryb [9][17] 					:= bComplete;
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="NacisnietyAbortPrzejscieDoAborting" Id="{d0dbf706-91be-4efd-990f-ca44d596a84c}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Metodwa pomocnicza   
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD PRIVATE NacisnietyAbortPrzejscieDoAborting : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	bResetingSkonczone						:= FALSE;	
+	bStoppingZakonczone						:= FALSE;
+	bAbortingZakonczone						:= FALSE;
+	bClearingZakonczone						:= FALSE;
+	bCompletingZakonczone					:= FALSE;
+	bHoldingZakonczone						:= FALSE;
+	bStartingZakonczone						:= FALSE;
+	bSuspendingZakonczone					:= FALSE;
+	bUnholdingZakonczone					:= FALSE;
+	bUnsuspendingZakonczone					:= FALSE;
+	bPierwszePrzejscieWOperacji				:= FALSE;
+	eStan									:= E_PMLState.ABORTING;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="NacisnietyStopPrzejscieDoStopping" Id="{96885ca3-c50c-45e6-85af-49de9484cd78}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Metoda pomocnicza 
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD PRIVATE NacisnietyStopPrzejscieDoStopping : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	bResetingSkonczone						:= FALSE;	
+	bStoppingZakonczone						:= FALSE;
+	bAbortingZakonczone						:= FALSE;
+	bClearingZakonczone						:= FALSE;
+	bCompletingZakonczone					:= FALSE;
+	bHoldingZakonczone						:= FALSE;
+	bStartingZakonczone						:= FALSE;
+	bSuspendingZakonczone					:= FALSE;
+	bUnholdingZakonczone					:= FALSE;
+	bUnsuspendingZakonczone					:= FALSE;
+	bPierwszePrzejscieWOperacji				:= FALSE;
+	eStan									:= E_PMLState.STOPPING;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Aborted" Id="{cc252fc7-689d-476e-8e5f-78edc2c27b19}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu ABORTED  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Aborted : BOOL
+VAR_INPUT
+END_VAR
+
+VAR
+	i: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR i := 1 TO iIloscDodanychPodzespolow DO
+	arrPodzesoly [i].SM_Aborted ();
+END_FOR
+
+IF (bClear) THEN
+	eStan									:= E_PMLState.CLEARING;
+ELSIF (bStop) THEN
+	eStan									:= E_PMLState.STOPPING;
+ELSIF (bAbort) THEN
+	eStan									:= E_PMLState.ABORTING;	
+END_IF
+//ZMIANA TRYBU PRACY
+IF (eTryb <> eTrybPracy) THEN
+//	IF (iNumerTrybuPracy <>iPoprzedniTrybPracy) THEN
+		eTrybPracy								:= eTryb;
+		iPoprzedniTrybPracy						:= iNumerTrybuPracy;
+		eStan									:= E_PMLState.ABORTING;
+//	END_IF
+END_IF
+//ZMIANA TRYBU PRACY
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Aborting" Id="{43d6de10-eada-4b21-9beb-0d23c2a4c15c}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu ABORTING
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Aborting : BOOL
+VAR_INPUT
+END_VAR
+
+VAR
+	i: INT;
+	bAbortingOK: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (NOT bPierwszePrzejscieWOperacji) THEN
+	FOR i := 1 TO iIloscDodanychPodzespolow DO
+		arrOperacjaWykonana [i] 			:= FALSE;
+	END_FOR
+	bPierwszePrzejscieWOperacji				:= TRUE;
+END_IF
+FOR i := 1 TO iIloscDodanychPodzespolow DO
+	IF (NOT arrOperacjaWykonana [i]) THEN
+		arrOperacjaWykonana [i]				:= arrPodzesoly [i].SM_Aborting ();
+	END_IF
+	bAbortingOK								:= bAbortingOK AND arrOperacjaWykonana [i];
+END_FOR
+
+IF (bAbortingZakonczone OR bAbortingOK) THEN
+	bAbortingZakonczone						:= FALSE;
+	bPierwszePrzejscieWOperacji				:= FALSE;
+	eStan									:= E_PMLState.ABORTED;
+//ELSIF (bStop) THEN
+//	eStan									:= E_PMLState.STOPPING;
+//ELSIF (bAbort) THEN
+//	eStan									:= E_PMLState.ABORTING;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Clearing" Id="{e19d64a3-a095-4389-89fa-d28fe48cd638}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu CLEARING  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Clearing : BOOL
+VAR_INPUT
+END_VAR
+
+VAR
+	i: INT;
+	bClearingOK: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (NOT bPierwszePrzejscieWOperacji) THEN
+	FOR i := 1 TO iIloscDodanychPodzespolow DO
+		arrOperacjaWykonana [i] 			:= FALSE;
+	END_FOR
+	bPierwszePrzejscieWOperacji				:= TRUE;
+END_IF
+FOR i := 1 TO iIloscDodanychPodzespolow DO
+	IF (NOT arrOperacjaWykonana [i]) THEN
+		arrOperacjaWykonana [i]				:= arrPodzesoly [i].SM_Clearing ();
+	END_IF
+	bClearingOK								:= bClearingOK AND arrOperacjaWykonana [i];
+END_FOR
+
+IF (bClearingZakonczone OR bClearingOK) THEN
+	bClearingZakonczone						:= FALSE;
+	bPierwszePrzejscieWOperacji				:= FALSE;
+	eStan									:= E_PMLState.STOPPED;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Complete" Id="{b13cc85e-7dae-4172-90db-a0660146c7a3}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu COMPLETE  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Complete : BOOL
+VAR_INPUT
+END_VAR
+
+VAR
+	i: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR i := 1 TO iIloscDodanychPodzespolow DO
+	arrPodzesoly [i].SM_Complete ();
+END_FOR
+
+IF (bReset) THEN
+	eStan									:= E_PMLState.RESETTING;
+ELSIF (bStop) THEN
+	NacisnietyStopPrzejscieDoStopping ();
+ELSIF (bAbort) THEN
+	NacisnietyAbortPrzejscieDoAborting ();
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Completing" Id="{07c92880-56a0-4dde-a555-a1ba0197c4dd}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu COMPLITING  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Completing : BOOL
+VAR_INPUT
+END_VAR
+
+VAR
+	i: INT;
+	bCompletingOK: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (NOT bPierwszePrzejscieWOperacji) THEN
+	FOR i := 1 TO iIloscDodanychPodzespolow DO
+		arrOperacjaWykonana [i] 			:= FALSE;
+	END_FOR
+	bPierwszePrzejscieWOperacji				:= TRUE;
+END_IF
+FOR i := 1 TO iIloscDodanychPodzespolow DO
+	IF (NOT arrOperacjaWykonana [i]) THEN
+		arrOperacjaWykonana [i]					:= arrPodzesoly [i].SM_Completing ();
+	END_IF
+	bCompletingOK								:= bCompletingOK AND arrOperacjaWykonana [i];
+END_FOR
+
+IF (bCompletingZakonczone OR bCompletingOK) THEN
+	eStan									:= E_PMLState.COMPLETE;
+	bCompletingZakonczone					:= FALSE;
+	bPierwszePrzejscieWOperacji				:= FALSE;
+ELSIF (bStop) THEN
+	NacisnietyStopPrzejscieDoStopping ();
+ELSIF (bAbort) THEN
+	NacisnietyAbortPrzejscieDoAborting ();
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Execute" Id="{c45af592-a323-4b42-9c99-7605ac3746ea}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu EXECUTE  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Execute : BOOL
+VAR_INPUT
+END_VAR
+VAR
+	i										: INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR i := 1 TO iIloscDodanychPodzespolow DO
+	arrPodzesoly [i].SM_Execute ();
+END_FOR
+
+IF (bHold) THEN
+	eStan									:= E_PMLState.HOLDING;
+ELSIF (bSuspend) THEN
+	eStan									:= E_PMLState.SUSPENDING;
+ELSIF (bStop) THEN
+	NacisnietyStopPrzejscieDoStopping ();
+ELSIF (bAbort) THEN
+	NacisnietyAbortPrzejscieDoAborting ();
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Held" Id="{c1de8bf4-a018-4e3a-b8b9-bc17db5a3723}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu HELD  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Held : BOOL
+VAR_INPUT
+END_VAR
+
+VAR
+	i: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR i := 1 TO iIloscDodanychPodzespolow DO
+	arrPodzesoly [i].SM_Held ();
+END_FOR
+
+IF (bUnHold) THEN
+	eStan									:= E_PMLState.UNHOLDING;
+ELSIF (bStop) THEN
+	NacisnietyStopPrzejscieDoStopping ();
+ELSIF (bAbort) THEN
+	NacisnietyAbortPrzejscieDoAborting ();
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Holding" Id="{f656beb4-dcbf-45cf-8cbb-6d5083fb63af}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu HOLDING - wsztrymanie pracy przez maszyne  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Holding : BOOL
+VAR_INPUT
+END_VAR
+
+VAR
+	i: INT;
+	bHoldingOK: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (NOT bPierwszePrzejscieWOperacji) THEN
+	FOR i := 1 TO iIloscDodanychPodzespolow DO
+		arrOperacjaWykonana [i] 			:= FALSE;
+	END_FOR
+	bPierwszePrzejscieWOperacji				:= TRUE;
+END_IF
+FOR i := 1 TO iIloscDodanychPodzespolow DO
+	IF (NOT arrOperacjaWykonana [i]) THEN
+		arrOperacjaWykonana [i]				:= arrPodzesoly [i].SM_Holding ();
+	END_IF
+	bHoldingOK								:= bHoldingOK AND arrOperacjaWykonana [i];
+END_FOR
+
+IF (bHoldingZakonczone OR bHoldingOK) THEN
+	bHoldingZakonczone						:= FALSE;
+	bPierwszePrzejscieWOperacji				:= FALSE;
+	eStan									:= E_PMLState.HELD;
+ELSIF (bStop) THEN
+	NacisnietyStopPrzejscieDoStopping ();
+ELSIF (bAbort) THEN
+	NacisnietyAbortPrzejscieDoAborting ();
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Idle" Id="{69650367-85d8-4b9d-9966-f2801eef298e}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu IDLE - maszyna gotowado pracy  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Idle : BOOL
+VAR_INPUT
+END_VAR
+
+VAR
+	i: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR i := 1 TO iIloscDodanychPodzespolow DO
+	arrPodzesoly [i].SM_Idle ();
+END_FOR
+
+IF (bStart) THEN
+	eStan									:= E_PMLState.STARTING;
+ELSIF (bStop) THEN
+	NacisnietyStopPrzejscieDoStopping ();
+ELSIF (bAbort) THEN
+	NacisnietyAbortPrzejscieDoAborting ();
+END_IF
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Resetting" Id="{27906d08-340d-4889-b5de-097c7b735b48}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu RESETTING  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Resetting : BOOL
+VAR_INPUT
+END_VAR
+VAR
+	i										: INT;
+	bResetingOK								: BOOL := TRUE;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (NOT bPierwszePrzejscieWOperacji) THEN
+	FOR i := 1 TO iIloscDodanychPodzespolow DO
+		arrOperacjaWykonana [i] 			:= FALSE;
+	END_FOR
+	bPierwszePrzejscieWOperacji				:= TRUE;
+END_IF
+FOR i := 1 TO iIloscDodanychPodzespolow DO
+	IF (NOT arrOperacjaWykonana [i]) THEN
+		arrOperacjaWykonana [i]				:= arrPodzesoly [i].SM_Resetting ();
+	END_IF
+	bResetingOK								:= bResetingOK AND arrOperacjaWykonana [i];
+END_FOR
+
+IF (bResetingSkonczone OR bResetingOK) THEN
+	eStan									:= E_PMLState.IDLE;
+	bPierwszePrzejscieWOperacji				:= FALSE;
+	bResetingSkonczone						:= FALSE;
+	bResetingOK								:= FALSE;
+ELSIF (bStop) THEN
+	NacisnietyStopPrzejscieDoStopping ();
+ELSIF (bAbort) THEN
+	NacisnietyAbortPrzejscieDoAborting ();
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Starting" Id="{9fdade39-546e-484e-9a1e-009e2f3689f2}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu STARTING  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Starting : BOOL
+VAR_INPUT
+END_VAR
+
+VAR
+	i: INT;
+	bStartingOK: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (NOT bPierwszePrzejscieWOperacji) THEN
+	FOR i := 1 TO iIloscDodanychPodzespolow DO
+		arrOperacjaWykonana [i] 			:= FALSE;
+	END_FOR
+	bPierwszePrzejscieWOperacji				:= TRUE;
+END_IF
+FOR i := 1 TO iIloscDodanychPodzespolow DO
+	IF (NOT arrOperacjaWykonana [i]) THEN
+		arrOperacjaWykonana [i]				:= arrPodzesoly [i].SM_Starting ();
+	END_IF
+	bStartingOK								:= bStartingOK AND arrOperacjaWykonana [i];
+END_FOR
+
+IF (bStartingZakonczone OR bStartingOK) THEN
+	bStartingZakonczone						:= FALSE;
+	bPierwszePrzejscieWOperacji				:= FALSE;
+	eStan									:= E_PMLState.EXECUTE;
+ELSIF (bStop) THEN
+	NacisnietyStopPrzejscieDoStopping ();
+ELSIF (bAbort) THEN
+	NacisnietyAbortPrzejscieDoAborting ();
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Stopped" Id="{b868b587-689e-44eb-9cae-399d817e8ce4}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu STOPPED  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Stopped : BOOL
+VAR_INPUT
+END_VAR
+
+VAR
+	i: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR i := 1 TO iIloscDodanychPodzespolow DO
+	arrPodzesoly [i].SM_Stopped ();
+END_FOR
+
+IF (bReset) THEN
+	eStan									:= E_PMLState.RESETTING;
+END_IF
+//ZMIANA TRYBU PRACY
+IF (eTryb <> eTrybPracy) THEN
+//	IF (iNumerTrybuPracy <>iPoprzedniTrybPracy) THEN
+		eTrybPracy								:= eTryb;
+		iPoprzedniTrybPracy						:= iNumerTrybuPracy;
+		eStan									:= E_PMLState.ABORTING;
+//	END_IF
+END_IF
+//ZMIANA TRYBU PRACY
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Stopping" Id="{b2b25043-0d18-4757-94c8-65b8e8efc367}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu STOPPING  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Stopping : BOOL
+VAR_INPUT
+END_VAR
+
+VAR
+	i: INT;
+	bStoppingOK: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (NOT bPierwszePrzejscieWOperacji) THEN
+	FOR i := 1 TO iIloscDodanychPodzespolow DO
+		arrOperacjaWykonana [i] 			:= FALSE;
+	END_FOR
+	bPierwszePrzejscieWOperacji				:= TRUE;
+END_IF
+FOR i := 1 TO iIloscDodanychPodzespolow DO
+	IF (NOT arrOperacjaWykonana [i]) THEN
+		arrOperacjaWykonana [i]				:= arrPodzesoly [i].SM_Stopping ();
+	END_IF
+	bStoppingOK								:= bStoppingOK AND arrOperacjaWykonana [i];
+END_FOR
+
+IF (bStoppingZakonczone OR bStoppingOK) THEN
+	bStoppingZakonczone						:= FALSE;
+	bPierwszePrzejscieWOperacji				:= FALSE;
+	eStan									:= E_PMLState.STOPPED;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Suspended" Id="{5f14d3a2-1f22-47e6-99a7-c55b20f6274c}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu SUSPENDED - praca wstrzymana prze operatora  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Suspended : BOOL
+VAR_INPUT
+END_VAR
+VAR
+	i 										: INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR i := 1 TO iIloscDodanychPodzespolow DO
+	arrPodzesoly [i].SM_Suspended ();
+END_FOR
+
+IF (bUnsuspend) THEN
+	eStan									:= E_PMLState.UNSUSPENDING;
+ELSIF (bStop) THEN
+	NacisnietyStopPrzejscieDoStopping ();
+ELSIF (bAbort) THEN
+	NacisnietyAbortPrzejscieDoAborting ();
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Suspending" Id="{bb2b8a05-1c4b-4a6a-b5f2-5b9216d849bf}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu SUSPENDING  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Suspending : BOOL
+VAR_INPUT
+END_VAR
+
+VAR
+	i: INT;
+	bSuspendingOK: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (NOT bPierwszePrzejscieWOperacji) THEN
+	FOR i := 1 TO iIloscDodanychPodzespolow DO
+		arrOperacjaWykonana [i] 			:= FALSE;
+	END_FOR
+	bPierwszePrzejscieWOperacji				:= TRUE;
+END_IF
+FOR i := 1 TO iIloscDodanychPodzespolow DO
+	IF (NOT arrOperacjaWykonana [i]) THEN
+		arrOperacjaWykonana [i]				:= arrPodzesoly [i].SM_Suspending ();
+	END_IF
+	bSuspendingOK							:= bSuspendingOK AND arrOperacjaWykonana [i];
+END_FOR
+
+IF (bSuspendingZakonczone OR bSuspendingOK) THEN
+	bSuspendingZakonczone					:= FALSE;
+	bPierwszePrzejscieWOperacji				:= FALSE;
+	eStan									:= E_PMLState.SUSPENDED;
+ELSIF (bStop) THEN
+	NacisnietyStopPrzejscieDoStopping ();
+ELSIF (bAbort) THEN
+	NacisnietyAbortPrzejscieDoAborting ();
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Undefined" Id="{ae5ef7f1-76c4-4631-9ec2-aef7c06e72d2}">
+      <Declaration><![CDATA[METHOD SM_Undefined : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (bReset) THEN
+	eStan									:= E_PMLState.ABORTING;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Unholding" Id="{d52afdbd-9667-4778-8eeb-7348f031766c}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu UNHOLDING  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Unholding : BOOL
+VAR_INPUT
+END_VAR
+
+VAR
+	i: INT;
+	bUnholdingOK: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (NOT bPierwszePrzejscieWOperacji) THEN
+	FOR i := 1 TO iIloscDodanychPodzespolow DO
+		arrOperacjaWykonana [i] 			:= FALSE;
+	END_FOR
+	bPierwszePrzejscieWOperacji				:= TRUE;
+END_IF
+FOR i := 1 TO iIloscDodanychPodzespolow DO
+	IF (NOT arrOperacjaWykonana [i]) THEN
+		arrOperacjaWykonana [i]				:= arrPodzesoly [i].SM_Unholding ();
+	END_IF
+	bUnholdingOK							:= bUnholdingOK AND arrOperacjaWykonana [i];
+END_FOR
+
+IF (bUnholdingZakonczone OR bUnholdingOK) THEN
+	bUnholdingZakonczone					:= FALSE;
+	bPierwszePrzejscieWOperacji				:= FALSE;
+	eStan									:= E_PMLState.EXECUTE;
+ELSIF (bStop) THEN
+	NacisnietyStopPrzejscieDoStopping ();
+ELSIF (bAbort) THEN
+	NacisnietyAbortPrzejscieDoAborting ();
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Unsuspending" Id="{96f9061a-d355-4f4f-b6c3-95a943e1beab}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa stanu UNSUSPENDING  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Unsuspending : BOOL
+VAR_INPUT
+END_VAR
+
+VAR
+	i: INT;
+	bUnsuspendingOK: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (NOT bPierwszePrzejscieWOperacji) THEN
+	FOR i := 1 TO iIloscDodanychPodzespolow DO
+		arrOperacjaWykonana [i] 			:= FALSE;
+	END_FOR
+	bPierwszePrzejscieWOperacji				:= TRUE;
+END_IF
+FOR i := 1 TO iIloscDodanychPodzespolow DO
+	IF (NOT arrOperacjaWykonana [i]) THEN
+		arrOperacjaWykonana [i]				:= arrPodzesoly [i].SM_Unsuspending ();
+	END_IF
+	bUnsuspendingOK							:= bUnsuspendingOK AND arrOperacjaWykonana [i];
+END_FOR
+
+IF (bUnsuspendingZakonczone or bUnsuspendingOK) THEN
+	bUnsuspendingZakonczone					:= FALSE;
+	bPierwszePrzejscieWOperacji				:= FALSE;
+	eStan									:= E_PMLState.EXECUTE;
+ELSIF (bStop) THEN
+	NacisnietyStopPrzejscieDoStopping ();
+ELSIF (bAbort) THEN
+	NacisnietyAbortPrzejscieDoAborting ();
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="StanMaszyny" Id="{35875e3c-e466-41c9-bfbb-9c19f64fc5c9}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Stan pracy metoda sterująca  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD PROTECTED StanMaszyny : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[iAktualnyStan 								:= eStan;
+iNumerTrybuPracy							:= eTrybPracy;
+IF (iAktualnyStan <> iPoprzedniStan) THEN
+	arrVisuStany [iAktualnyStan].bAktywny 	:= TRUE;
+	arrVisuStany [iPoprzedniStan].bAktywny	:= FALSE;
+	iPoprzedniStan								:= iAktualnyStan;
+END_IF
+
+
+CASE eStan OF
+	E_PMLState.UNDEFINED	:
+		SM_Undefined ();
+	E_PMLState.CLEARING 	:
+		SM_Clearing ();
+	E_PMLState.STOPPED 		:
+		SM_Stopped ();
+	E_PMLState.STARTING 	:
+		SM_Starting ();
+	E_PMLState.IDLE 		:
+		SM_Idle ();
+	E_PMLState.SUSPENDED 	:
+		SM_Suspended ();
+	E_PMLState.EXECUTE 		:
+		SM_Execute ();
+	E_PMLState.STOPPING	 	:
+		SM_Stopping ();
+	E_PMLState.ABORTING 	:
+		SM_Aborting ();
+	E_PMLState.ABORTED 		:
+		SM_Aborted ();
+	E_PMLState.HOLDING 		:
+		SM_Holding ();
+	E_PMLState.HELD 		:
+		SM_Held ();
+	E_PMLState.UNHOLDING 	:
+		SM_Unholding ();
+	E_PMLState.SUSPENDING 	:
+		SM_Suspending ();
+	E_PMLState.UNSUSPENDING :
+		SM_Unsuspending ();
+	E_PMLState.RESETTING 	:
+		SM_Resetting ();
+	E_PMLState.COMPLETING 	:
+		SM_Completing ();
+	E_PMLState.COMPLETE	 	:
+		SM_Complete ();
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="StanPracy" Id="{398aa919-e498-4fd2-9d57-af55939beb72}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Zwraca stan pracy  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+PROPERTY StanPracy : E_PMLState]]></Declaration>
+      <Get Name="Get" Id="{94418ccb-3d89-4395-bd5c-dbea4517d7ce}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[StanPracy									:= eStan;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="TrybPracy" Id="{2ed96c68-620f-41b8-b39f-8c5d0c2bf964}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Zwraca tryb pracy  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+PROPERTY TrybPracy : E_PMLUnitMode]]></Declaration>
+      <Get Name="Get" Id="{afbbe58d-e26a-44bc-816f-27cc2c74e843}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[TrybPracy									:= eTrybPracy;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <LineIds Name="FB_StanMaszyny">
+      <LineId Id="86" Count="4" />
+      <LineId Id="97" Count="1" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="77" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny.FB_init">
+      <LineId Id="7" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="17" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny.Inicjalizacja">
+      <LineId Id="93" Count="1" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="5" Count="1" />
+      <LineId Id="13" Count="1" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="37" Count="1" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="40" Count="7" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="49" Count="16" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="67" Count="17" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="12" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny.KonfiguracjaStanowPracyDlaTrybu">
+      <LineId Id="5" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="48" Count="16" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="65" Count="16" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="82" Count="16" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="99" Count="16" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="116" Count="16" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="133" Count="16" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="150" Count="16" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="167" Count="16" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="184" Count="16" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="201" Count="16" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny.NacisnietyAbortPrzejscieDoAborting">
+      <LineId Id="6" Count="9" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny.NacisnietyStopPrzejscieDoStopping">
+      <LineId Id="6" Count="9" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny.SM_Aborted">
+      <LineId Id="36" Count="1" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="14" Count="2" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="18" Count="2" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="22" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny.SM_Aborting">
+      <LineId Id="50" Count="4" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="47" Count="2" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="9" Count="1" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="57" Count="3" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="21" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny.SM_Clearing">
+      <LineId Id="37" Count="5" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="35" Count="1" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="16" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny.SM_Complete">
+      <LineId Id="52" Count="1" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="39" Count="2" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="15" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny.SM_Completing">
+      <LineId Id="69" Count="5" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="66" Count="1" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="41" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="48" Count="2" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="12" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny.SM_Execute">
+      <LineId Id="55" Count="1" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="42" Count="2" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="15" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny.SM_Held">
+      <LineId Id="51" Count="1" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="38" Count="2" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny.SM_Holding">
+      <LineId Id="68" Count="5" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="66" Count="1" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="41" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="48" Count="2" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="15" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny.SM_Idle">
+      <LineId Id="40" Count="1" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="5" Count="1" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="7" Count="1" />
+      <LineId Id="15" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny.SM_Resetting">
+      <LineId Id="78" Count="0" />
+      <LineId Id="76" Count="1" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="79" Count="1" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="73" Count="1" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="48" Count="1" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="6" Count="1" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="54" Count="3" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny.SM_Starting">
+      <LineId Id="68" Count="5" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="65" Count="1" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="40" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="47" Count="2" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny.SM_Stopped">
+      <LineId Id="32" Count="1" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="5" Count="2" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="13" Count="1" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="17" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny.SM_Stopping">
+      <LineId Id="38" Count="5" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="35" Count="2" />
+      <LineId Id="18" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny.SM_Suspended">
+      <LineId Id="51" Count="1" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="38" Count="2" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny.SM_Suspending">
+      <LineId Id="68" Count="5" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="65" Count="1" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="40" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="47" Count="2" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny.SM_Undefined">
+      <LineId Id="5" Count="3" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny.SM_Unholding">
+      <LineId Id="68" Count="5" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="66" Count="1" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="41" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="48" Count="2" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="16" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny.SM_Unsuspending">
+      <LineId Id="69" Count="5" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="66" Count="1" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="41" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="48" Count="2" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="16" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny.StanMaszyny">
+      <LineId Id="44" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="45" Count="3" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="6" Count="36" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny.StanPracy.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StanMaszyny.TrybPracy.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

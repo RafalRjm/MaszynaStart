@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <GVL Name="GVL_ElementySterujace" Id="{23142a29-5e69-4885-94db-c257939228d6}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'global_init_slot' := '40520'}
+VAR_GLOBAL
+	fbElementySterujace						: FB_ElementySterujace (
+													fbWieza					:= GVL_Elementy.fbWieza,
+													fbPrzyciskStart			:= GVL_Elementy.fbPrzysciskStart,
+													fbPrzyciskStop			:= GVL_Elementy.fbPrzyciskStop
+												);
+												
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

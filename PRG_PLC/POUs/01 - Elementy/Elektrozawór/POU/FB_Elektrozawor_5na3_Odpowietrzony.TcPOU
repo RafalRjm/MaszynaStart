@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="FB_Elektrozawor_5na3_Odpowietrzony" Id="{01eafdd3-4032-478f-9dcc-7cff6efaf55d}" SpecialFunc="None">
+    <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									04.06.2022
+//	Sterowanie elektrozaworem  - 5 na 3 odpowietrzony 
+//	nie mapodanych sygnałów na cewki powietrze nie jest podawane na siłownik
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+FUNCTION_BLOCK FB_Elektrozawor_5na3_Odpowietrzony IMPLEMENTS ITF_Elektozawor
+VAR
+	bCewkaA							AT %Q*	: BOOL;		//Cewka sterująca wyjściem 2 - 0 do MAX
+	bCewkaB							AT %Q*	: BOOL;		//Cewka sterująca wyjściem 4 - MAX do 0
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Steruj" Id="{b2c4e6c9-74b2-4575-9eb3-8ee27f5f51a0}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									04.06.2022
+	Sterowanie cewkami elektrozaworu 
+ 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+==================================================================================================*)
+METHOD Steruj : BOOL
+VAR_INPUT
+	bKierunekWstrone0						: BOOL;
+	bKierunekWStroneMax						: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (bKierunekWStroneMax AND NOT bCewkaA) THEN
+	bCewkaA									:= TRUE;
+END_IF
+IF  (bKierunekWstrone0 AND bCewkaA) THEN
+	bCewkaA									:= FALSE;
+END_IF
+
+IF (bKierunekWstrone0 AND NOT bCewkaB) THEN
+	bCewkaB									:= TRUE;
+END_IF
+IF  (bKierunekWStroneMax AND bCewkaB) THEN
+	bCewkaB									:= FALSE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Elektrozawor_5na3_Odpowietrzony">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Elektrozawor_5na3_Odpowietrzony.Steruj">
+      <LineId Id="36" Count="11" />
+      <LineId Id="16" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

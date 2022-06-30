@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <DUT Name="DUT_LogowanieBledow_ZdarzenieWyswietlane" Id="{3a8038e3-be32-4dba-9d17-06e77e7b5e07}">
+    <Declaration><![CDATA[TYPE DUT_LogowanieBledow_ZdarzenieWyswietlane :
+STRUCT
+	sNrKomponentu							: STRING[10];
+	sKodBledu								: STRING[10];
+	byRodzajZdarzenia						: BYTE;
+	sOpis									: STRING;
+	dtDataStart								: DT;
+	dtDataKoniec							: DT;
+	dwKolor									: UDINT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

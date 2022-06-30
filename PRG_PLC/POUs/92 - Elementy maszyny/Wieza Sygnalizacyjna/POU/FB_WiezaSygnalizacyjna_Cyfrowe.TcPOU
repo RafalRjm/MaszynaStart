@@ -1,0 +1,201 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="FB_WiezaSygnalizacyjna_Cyfrowe" Id="{3a8c2e0e-0d8b-4d99-aca2-93bac4cc37df}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_WiezaSygnalizacyjna_Cyfrowe IMPLEMENTS ITF_WiezaSygnalizacyjna
+VAR
+	bCzerwony						AT%Q*	: BOOL;
+	bZolty							AT%Q*	: BOOL;
+	bZielony						AT%Q*	: BOOL;
+	bNiebieski						AT%Q*	: BOOL;
+	bBialy							AT%Q*	: BOOL;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="Bialy" Id="{f4b7929b-5bb9-4c08-9e35-c2e6090d98e7}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									22.06.2022
+	Wlaczanie/Wylaczenia segment bialy   
+ 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+==================================================================================================*)
+PROPERTY Bialy : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{a97d4511-e3db-406e-823b-bf829057ecc1}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Bialy										:= bBialy;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{03e4a57e-21e5-4f60-8e98-70494430c300}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bBialy										:= Bialy;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Czerwony" Id="{bf1972cd-37a2-4362-93bb-07214392fb65}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									22.06.2022
+	Wlaczanie/Wylaczenia segment czerwony   
+ 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+==================================================================================================*)
+PROPERTY Czerwony : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{57eefb78-838a-4f5f-a261-261198c249ef}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Czerwony									:= bCzerwony;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{c5011a76-a9dc-4a6c-bb19-1142af4e22d0}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bCzerwony									:= Czerwony;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Niebieski" Id="{4d8cffb8-e1c8-4696-bac4-6476a4944a69}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									22.06.2022
+	Wlaczanie/Wylaczenia segment niebieski   
+ 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+==================================================================================================*)
+PROPERTY Niebieski : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{b55a68f0-e5e3-4257-bd94-18bbecd83250}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Niebieski									:= bNiebieski;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{5ca4def4-ddfe-4c66-9ff6-850020d0343f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bNiebieski									:= Niebieski;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Zielony" Id="{b0bf2c0f-1b9b-4ae4-99c2-b2afd64cb06d}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									22.06.2022
+	Wlaczanie/Wylaczenia segment zielony  
+ 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+==================================================================================================*)
+PROPERTY Zielony : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{abeb282b-6e43-4ad3-8470-8d6ddc6f4e40}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Zielony										:= bZielony;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{675701ae-0ab2-4957-a980-32260458028f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bZielony									:= Zielony;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Zolty" Id="{1b747b60-9574-460f-a783-f6f2fdd7fb73}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									22.06.2022
+	Wlaczanie/Wylaczenia segment zolty   
+ 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+==================================================================================================*)
+PROPERTY Zolty : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{057ecf5f-1452-4ee3-99c3-3793618016ef}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Zolty										:= bZolty;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{350806d8-06b8-4fa6-b44b-5291f7be0217}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bZolty										:= Zolty;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <LineIds Name="FB_WiezaSygnalizacyjna_Cyfrowe">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_WiezaSygnalizacyjna_Cyfrowe.Bialy.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_WiezaSygnalizacyjna_Cyfrowe.Bialy.Set">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_WiezaSygnalizacyjna_Cyfrowe.Czerwony.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_WiezaSygnalizacyjna_Cyfrowe.Czerwony.Set">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_WiezaSygnalizacyjna_Cyfrowe.Niebieski.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_WiezaSygnalizacyjna_Cyfrowe.Niebieski.Set">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_WiezaSygnalizacyjna_Cyfrowe.Zielony.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_WiezaSygnalizacyjna_Cyfrowe.Zielony.Set">
+      <LineId Id="2" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_WiezaSygnalizacyjna_Cyfrowe.Zolty.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_WiezaSygnalizacyjna_Cyfrowe.Zolty.Set">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

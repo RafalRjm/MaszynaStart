@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <DUT Name="DUT_LogowanieBledow_WyswietlanieParametry" Id="{ee460722-8345-4f4e-b289-9101d4242619}">
+    <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									04.02.2022
+//	Struktura parametrów wyświetlania danych historii zdarzeń
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+TYPE DUT_LogowanieBledow_WyswietlanieParametry :
+STRUCT
+//FILTRY WYSIETLANIA
+	// Flagi wykonywalnosci
+	bFiltrID								: BOOL;
+	bFiltrRodzaj							: BOOL;
+	bFiltrStartOD							: BOOL;
+	bFiltrStartDO							: BOOL;
+	bFiltrKoniecOD							: BOOL;
+	bFiltrKoniecDO							: BOOL;
+	bFiltrAktywne							: BOOL;
+	// Parametry
+	iFiltrID								: INT;	
+	byFiltrRodzaj							: BYTE;
+	dtFiltrStartOD							: DT;
+	dtFiltrStartDO							: DT;
+	dtFiltrKoniecOD							: DT;
+	dtFiltrKoniecDO							: DT;
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="FB_TestowyPodzespol" Id="{99f89362-8e9d-468a-b3d0-680272f81d5a}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_TestowyPodzespol IMPLEMENTS ITF_StanMaszyny
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	bTest: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="SM_Aborted" Id="{b3adb595-c575-44bc-8e8f-ac910d5547ed}">
+      <Declaration><![CDATA[METHOD SM_Aborted : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Aborting" Id="{ff86a194-6384-42c7-8a50-5f54004caf4d}">
+      <Declaration><![CDATA[METHOD SM_Aborting : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Clearing" Id="{9f838446-aca4-43b9-a966-1b05722d56c9}">
+      <Declaration><![CDATA[METHOD SM_Clearing : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Complete" Id="{56695ff9-28e7-4ca0-a185-779231234124}">
+      <Declaration><![CDATA[METHOD SM_Complete : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Completing" Id="{97e9600b-cd0a-40be-bbb7-c741cdbedcef}">
+      <Declaration><![CDATA[METHOD SM_Completing : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Execute" Id="{8260b679-a04d-4603-b694-3d98274942b7}">
+      <Declaration><![CDATA[METHOD SM_Execute : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Held" Id="{a51677eb-3af3-4e6c-8449-e2965c2a80ac}">
+      <Declaration><![CDATA[METHOD SM_Held : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Holding" Id="{0cc369d8-bbf0-483f-ad05-bc9284a70efd}">
+      <Declaration><![CDATA[METHOD SM_Holding : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Idle" Id="{9229ad4d-183a-4ca8-8182-96e655276085}">
+      <Declaration><![CDATA[METHOD SM_Idle : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Resetting" Id="{3954a808-3ab2-4ced-8fbe-faa53df131ae}">
+      <Declaration><![CDATA[
+METHOD SM_Resetting : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (bTest) THEN
+	SM_Resetting							:= TRUE;
+ELSE
+	SM_Resetting							:= FALSE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Starting" Id="{5c1e1cdd-7f23-42c7-a2dd-3c86560ba010}">
+      <Declaration><![CDATA[METHOD SM_Starting : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Stopped" Id="{2ffa1c49-b6cd-4187-9b87-8703c2b34d01}">
+      <Declaration><![CDATA[METHOD SM_Stopped : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Stopping" Id="{37127ed8-0483-45a4-8944-3d198debdd83}">
+      <Declaration><![CDATA[METHOD SM_Stopping : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Suspended" Id="{bb9adbf7-9dea-4619-b3c9-c3933fefc2b8}">
+      <Declaration><![CDATA[METHOD SM_Suspended : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Suspending" Id="{be6e168b-d458-4148-b196-fd131ff1bd5d}">
+      <Declaration><![CDATA[METHOD SM_Suspending : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Unholding" Id="{d88c606e-cf74-422c-9d60-f3f4e1d300f4}">
+      <Declaration><![CDATA[METHOD SM_Unholding : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Unsuspending" Id="{f18588c7-a45d-4239-8fc0-23496702a4c8}">
+      <Declaration><![CDATA[METHOD SM_Unsuspending : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_TestowyPodzespol">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TestowyPodzespol.SM_Aborted">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TestowyPodzespol.SM_Aborting">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TestowyPodzespol.SM_Clearing">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TestowyPodzespol.SM_Complete">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TestowyPodzespol.SM_Completing">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TestowyPodzespol.SM_Execute">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TestowyPodzespol.SM_Held">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TestowyPodzespol.SM_Holding">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TestowyPodzespol.SM_Idle">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TestowyPodzespol.SM_Resetting">
+      <LineId Id="4" Count="1" />
+      <LineId Id="7" Count="1" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TestowyPodzespol.SM_Starting">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TestowyPodzespol.SM_Stopped">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TestowyPodzespol.SM_Stopping">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TestowyPodzespol.SM_Suspended">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TestowyPodzespol.SM_Suspending">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TestowyPodzespol.SM_Unholding">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TestowyPodzespol.SM_Unsuspending">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

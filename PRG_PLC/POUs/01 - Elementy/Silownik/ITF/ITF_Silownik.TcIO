@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <Itf Name="ITF_Silownik" Id="{c626ea3f-206e-4dd7-a6eb-4c7c9e35fde1}">
+    <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsługa silonwika
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+INTERFACE ITF_Silownik
+]]></Declaration>
+    <Property Name="NaKoncu" Id="{6c0f39ed-5f11-4602-8b34-7f70e07297d0}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Informaca czy  tłoczysko jest na końca
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+PROPERTY NaKoncu : BOOL]]></Declaration>
+      <Get Name="Get" Id="{f2351728-6ab9-418c-a9b5-8d1b43c90e3d}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="NaPoczatku" Id="{4b003e2b-bc1a-4f0c-b05d-ac1a347b0e34}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Informaca czy  tłoczysko jest na poczatku
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+PROPERTY NaPoczatku : BOOL]]></Declaration>
+      <Get Name="Get" Id="{f90c93b5-1d32-4499-a376-075f92aaa24d}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="PrzesunDoKonca" Id="{12625c0d-3639-42e6-82e8-97562d661dc7}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Przesun tłoczysko w strone końca
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+PROPERTY PrzesunDoKonca : BOOL]]></Declaration>
+      <Set Name="Set" Id="{1c076f25-1dd2-46a3-a204-378cd6ec298b}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="PrzesunDoPoczatku" Id="{5e56f3d3-a59e-4a4f-a4cb-9d6e635af9fb}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Przesun tłoczysko w strone poczatku
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+PROPERTY PrzesunDoPoczatku : BOOL]]></Declaration>
+      <Set Name="Set" Id="{5f2d3893-dbf6-41a8-be6d-482c4cf0bbda}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="PrzesuwanieWStroneKonca" Id="{0a622f42-0961-41f2-8628-bfd7288c9ea7}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Przesuwanie tłoczyska w strone końca
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+PROPERTY PrzesuwanieWStroneKonca : BOOL]]></Declaration>
+      <Get Name="Get" Id="{c8ba331e-11e0-4dab-881d-44a9b6d36d3c}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="PrzesuwanieWStronePoczatku" Id="{0f1f8ac8-70ae-42e4-856c-33770d2311cb}">
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Przesuwanie tłoczyska w strone poczatku
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+PROPERTY PrzesuwanieWStronePoczatku : BOOL]]></Declaration>
+      <Get Name="Get" Id="{5b7df7fc-c472-444f-9c28-ef54c7ad7d9a}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>

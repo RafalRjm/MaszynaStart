@@ -1,0 +1,432 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="FB_LogowanieBledow" Id="{b71b0a28-4386-4dc4-b55c-25a29e40a801}" SpecialFunc="None">
+    <Declaration><![CDATA[//==================================================================================================
+//							RJM MASZYNY SP. Z O>O>
+//									05.02.2022
+//	Metoda sterujaca logowaniem bledow
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+FUNCTION_BLOCK FB_LogowanieBledow
+VAR_INPUT
+	arrZdarzeniaPamietane					: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN_ZAPAMIETANYCH] OF DUT_LogowanieBledow_Zapamietanych;
+	iIloscZdarzenZapamietanych				: REFERENCE TO INT;
+	bWyswietlanieTablicyAlarmow				: BOOL;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	arrTablicaElementowWykonawczych 		: ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ELEMENTOW] OF ITF_LogowanieBledow_ElementWykonawczy;
+	iIloscDodanychElementow					: INT;	//ilość dodanych elementow wykonawczych, przypisać w deklaracji	
+	iJezykID								: INT := 1045;	//id języka - domyślnie polski	
+
+	iIloscDodanychWszystkichZdarzen 		: INT;			//ilosść dodanych zdarzeń globalnie
+	
+	bwypelnij								: BOOL;			//Wypełnienie tablic - wykonać na początku i po zmianie języka
+	bDaneWypelnione							: BOOL := FALSE;//jak true mozna odczytywac stany podzespolow
+	iI										: INT;
+	iJ										: INT;
+	
+	arrTablicaDefinicjiZdarzen				: ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_Zdarzenie;
+	arrTablicaDefinicjiZdarzenOpis			: ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieOpis;
+	arrTablicaDefinicjiZdarzenStan			: ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieStan;
+	arrTablicaWyswietlana					: ARRAY [1..GVL_LOgowanieBledow_Stale.MAX_ILOSC_ZDARZEN_DO_WYSWIETLANIA] OF DUT_LogowanieBledow_ZdarzenieWyswietlane;
+	arrPoczatekZdarzenia					: ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF R_TRIG;
+	arrKoniecZdarzenia						: ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF F_TRIG;
+
+	fbLocalSystemTime						: FB_LocalSystemTime;
+	stAktualnyCzas							: TIMESTRUCT;				// Aktualny czas sytemowy w formie struktury
+	dtAktualnyCzas							: DT;		
+	bBladRozmiaruTablicyMozliwychZdarzen	: BOOL;						// Niewlasciwy rozmiar tablicy zdarzen - sprawdz HS_ILOSC_ZDARZEN_PAMIETANYCH
+	bReferencjaOK							: BOOL;
+	bInicjalizacjaDanychTablicyPamietanych	: BOOL := FALSE;
+	tonOdswierzanieTablicyPamieci			: TON;
+	tOdswierzenieTablicyPamieci				: TIME := T#100MS;
+	bOdswierzanieCiagle						: BOOL;
+	tonOdswierzaniaTablicyWyswietlania		: TON;
+	tOdswierzaniaTablicyWyswietlania		: TIME := T#200MS;
+	stWyswietlanieParametry					: DUT_LogowanieBledow_WyswietlanieParametry;
+	bWiecejDanychZapamietanych				: BOOL;	//informacja ze jest wiecej danych zapamietanych niz do wyswietlenia
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//Pobranie aktualnego czasu systemu
+	fbLocalSystemTime (bEnable:= TRUE, systemTime=> stAktualnyCzas);
+	dtAktualnyCzas								:= SYSTEMTIME_TO_DT(stAktualnyCzas);
+//Sprawdzenie błędów rozmiaru tablic 
+	bBladRozmiaruTablicyMozliwychZdarzen 		:= GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN < 5 OR
+													GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN > 1000;
+//Nie ma błędów pracuj z tablicami
+	bReferencjaOK := __ISVALIDREF (arrZdarzeniaPamietane);
+
+	IF (NOT bBladRozmiaruTablicyMozliwychZdarzen AND bReferencjaOK) THEN
+	//Inicjalizacja tablicy przy starcie 
+		Inicjalizacja ();
+	//Wypełnienie tablicy zdarzen dla wszystkich elementow
+		IF(bwypelnij) THEN
+			WypelnianieTablicyZdarzen ();
+		END_IF
+	//Aktualizacja tablicy stanów
+	//Timer odswiezania
+		tonOdswierzanieTablicyPamieci(IN:= NOT tonOdswierzanieTablicyPamieci.Q, PT:= tOdswierzenieTablicyPamieci, Q=> , ET=> );
+		IF (bDaneWypelnione AND (bOdswierzanieCiagle OR tonOdswierzanieTablicyPamieci.Q)) THEN
+			ObslugaAktywnychZdarzen ();
+		END_IF		
+	//Odswierzanie tablicy alarmow
+		tonOdswierzaniaTablicyWyswietlania(IN:= NOT tonOdswierzaniaTablicyWyswietlania.Q,
+											 PT:= tOdswierzaniaTablicyWyswietlania, Q=> , ET=> );		// Timer odswiezania
+		IF (bWyswietlanieTablicyAlarmow) THEN
+			Wyswietlanie ();
+		END_IF
+	END_IF
+
+]]></ST>
+    </Implementation>
+    <Method Name="FB_init" Id="{b7e0c430-8f48-483d-850f-546111d97dba}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	tablica 								: ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ELEMENTOW] OF ITF_LogowanieBledow_ElementWykonawczy;
+	iIloscDodanychElementow					: INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.arrTablicaElementowWykonawczych 								:= tablica;
+THIS^.iIloscDodanychElementow				:= iIloscDodanychElementow;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Inicjalizacja" Id="{99d6ad27-b237-412f-a3af-f06b7226184f}">
+      <Declaration><![CDATA[//==================================================================================================
+//							RJM MASZYNY SP. Z O>O>
+//									05.02.2022
+//	Inicjalizacja tablicy zapamietanych zdarzen
+//	Wyszukanie niezakonczonych i konczymy
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+METHOD PRIVATE Inicjalizacja : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[		IF (NOT bInicjalizacjaDanychTablicyPamietanych) THEN
+			bInicjalizacjaDanychTablicyPamietanych	:= TRUE;
+			FOR iJ := 1 TO iIloscZdarzenZapamietanych DO
+				IF (arrZdarzeniaPamietane [iJ].bAktywne) THEN
+					arrZdarzeniaPamietane [iJ].bAktywne	:= FALSE;
+					//wywolac ZadanieKonie();
+				END_IF
+			END_FOR
+		END_IF
+		]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ObslugaAktywnychZdarzen" Id="{8c0f7a89-2fc7-4423-93f8-521ff2e66ff2}">
+      <Declaration><![CDATA[//==================================================================================================
+//							RJM MASZYNY SP. Z O>O>
+//									05.02.2022
+//	Skanowanie tablicy stanow i po pojawieniu sie aktywnego zdarzenia dodajemy do tablicy pamietanych
+//	po zakonczeniu aktywnosci zgloszenia zmieniamy w tablicy pamietanych
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+METHOD PRIVATE ObslugaAktywnychZdarzen : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	FOR iJ := 1 TO iIloscDodanychElementow DO
+		arrTablicaElementowWykonawczych [iJ].ZwrocTabliceStanu (arrTablicaDefinicjiZdarzenStan := arrTablicaDefinicjiZdarzenStan);
+	END_FOR
+	
+	FOR iJ := 1 TO iIloscDodanychWszystkichZdarzen DO
+		arrPoczatekZdarzenia [iJ] (CLK := arrTablicaDefinicjiZdarzenStan [iJ].bAktywne);
+		IF (arrPoczatekZdarzenia [iJ].Q) THEN
+		//dodac nowe zdarzenie do tablicy arrZdarzeniaPamietane
+			ZdarzeniePoczatek (iIdZdarzenia 	:= arrTablicaDefinicjiZdarzen [iJ].iIdZdarzenia,
+								dtAktualnyCzas 	:= dtAktualnyCzas);
+		END_IF
+		arrKoniecZdarzenia [iJ] (CLK := arrTablicaDefinicjiZdarzenStan [iJ].bAktywne);
+		IF (arrKoniecZdarzenia [iJ].Q) THEN
+		//odznaczyc koniec zdarzenia w tablicy arrZdarzeniaPamietane
+			ZdarzenieKoniec (iNumerWiersza 		:= ZnajdzZdarzenieWTablicyPamietanychPoID (iIDZdarzenia := arrTablicaDefinicjiZdarzen [iJ].iIdZdarzenia),
+								dtAktualnyCzas 	:= dtAktualnyCzas);
+		END_IF
+	END_FOR	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="WypelnianieTablicyZdarzen" Id="{108d3f54-5eb4-4e0b-b911-74f9dcaaabd4}">
+      <Declaration><![CDATA[//==================================================================================================
+//							RJM MASZYNY SP. Z O>O>
+//									05.02.2022
+//	Pobieranie danych zdarzen od podelementow systemu i dopisywanie ich do tablicy zdarzen
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+METHOD PRIVATE WypelnianieTablicyZdarzen : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	bDaneWypelnione						:= FALSE;
+	FOR iI := 1 TO iIloscDodanychElementow DO 
+		arrTablicaElementowWykonawczych [iI].ZwrocTabliceDefinicji (	
+												arrTablicaDefinicjiZdarzen := arrTablicaDefinicjiZdarzen,
+												arrTablicaDefinicjiZdarzenOpis := arrTablicaDefinicjiZdarzenOpis,
+												arrTablicaDefinicjiZdarzenStan := arrTablicaDefinicjiZdarzenStan,
+												iIdZdarzenia := iIloscDodanychWszystkichZdarzen, 
+												iNrPodzespolu := iI, 
+												iNrPodelementu := 1,
+												iNrElementu := 1, 
+												iJezykId := iJezykID);
+	END_FOR
+	bwypelnij 							:= FALSE;
+	bDaneWypelnione						:= TRUE;
+		
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="WypelnijTabliceZdarzen" Id="{4a058b9b-7ed5-4a20-8f86-36e7cd0888e3}">
+      <Declaration><![CDATA[//==================================================================================================
+//							RJM MASZYNY SP. Z O>O>
+//									05.02.2022
+//	Start wypelniania tablicy zdarzen
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+PROPERTY WypelnijTabliceZdarzen : BOOL]]></Declaration>
+      <Set Name="Set" Id="{432c778d-56b7-467a-8279-dc1872be0bc5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bwypelnij									:= WypelnijTabliceZdarzen;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="Wyswietlanie" Id="{89fd5269-628b-481b-9c9b-050d2f7a7141}">
+      <Declaration><![CDATA[METHOD PRIVATE Wyswietlanie : BOOL
+VAR_INPUT
+END_VAR
+
+VAR
+	j										: INT;
+	i										: INT;
+	bUsunZWyswietlania						: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (tonOdswierzaniaTablicyWyswietlania.Q) THEN
+	MEMSET(ADR(arrTablicaWyswietlana),0,SIZEOF(arrTablicaWyswietlana));
+	j										:= 1; //wskaznik wierszy tablicy wyswietlania
+	bWiecejDanychZapamietanych				:= FALSE;
+	FOR i := 1 TO iIloscZdarzenZapamietanych DO
+		bUsunZWyswietlania					:= FALSE;	
+		IF (arrZdarzeniaPamietane [i].iIDZdarzenia <> 0) THEN	//sprawdzenie czy w wierszu sa jakies dane
+			//Ustawienie filtrow wyswietlania
+			bUsunZWyswietlania				:= stWyswietlanieParametry.bFiltrID AND stWyswietlanieParametry.iFiltrID <> arrTablicaDefinicjiZdarzen [arrZdarzeniaPamietane [i].iIDZdarzenia].byRodzajZdarzenia;
+//			bUsunZWyswietlania				:= bUsunZWyswietlania OR (stWyswietlanieParametry.bFiltrRodzaj AND stWyswietlanieParametry.byFiltrRodzaj <> arrTablicaDefinicjiZdarzen [arrZdarzeniaPamietane [i].iIDZdarzenia].byRodzajZdarzenia);
+			bUsunZWyswietlania				:= bUsunZWyswietlania OR (stWyswietlanieParametry.bFiltrStartOD AND arrZdarzeniaPamietane [i].dtDataStart <= stWyswietlanieParametry.dtFiltrStartOD);
+			bUsunZWyswietlania				:= bUsunZWyswietlania OR (stWyswietlanieParametry.bFiltrStartDO AND arrZdarzeniaPamietane [i].dtDataStart >= stWyswietlanieParametry.dtFiltrStartDO);
+			bUsunZWyswietlania				:= bUsunZWyswietlania OR (stWyswietlanieParametry.bFiltrKoniecOD AND arrZdarzeniaPamietane [i].dtDataKoniec <= stWyswietlanieParametry.dtFiltrKoniecOD);
+			bUsunZWyswietlania				:= bUsunZWyswietlania OR (stWyswietlanieParametry.bFiltrKoniecDO AND arrZdarzeniaPamietane [i].dtDataKoniec >= stWyswietlanieParametry.dtFiltrKoniecDO);
+			bUsunZWyswietlania				:= bUsunZWyswietlania OR (stWyswietlanieParametry.bFiltrAktywne AND DT#1970-1-1-0:0:0 <> arrZdarzeniaPamietane[i].dtDataKoniec);
+			// Analogicznie dodajemy inne filtry jesli jest taka potrzeba
+			// Jesli element nie zostal usuniety przez filtr to dodajemy go do tablicy alarmow wyswietlanych
+			IF (NOT bUsunZWyswietlania) THEN
+				arrTablicaWyswietlana [j].sNrKomponentu	:= arrTablicaDefinicjiZdarzen [i].sNrKomponentu;
+				arrTablicaWyswietlana [j].byRodzajZdarzenia	:= arrTablicaDefinicjiZdarzen [i].byRodzajZdarzenia;
+ 				arrTablicaWyswietlana [j].sOpis			:= arrTablicaDefinicjiZdarzenOpis [i].sOpis;
+				arrTablicaWyswietlana [j].sKodBledu		:= arrTablicaDefinicjiZdarzen [i].sKodBledu;
+				arrTablicaWyswietlana [j].dtDataStart	:= arrZdarzeniaPamietane [i].dtDataStart;
+				arrTablicaWyswietlana [j].dtDataKoniec	:= arrZdarzeniaPamietane [i].dtDataKoniec;
+				CASE arrTablicaWyswietlana [j].byRodzajZdarzenia OF
+					1	: arrTablicaWyswietlana [j].dwKolor	:= 16#FFFF0000;	// blad 		- czerwony
+					2	: arrTablicaWyswietlana [j].dwKolor	:= 16#FFFFFF00;	// ostzrezenie 	- zolty
+					3	: arrTablicaWyswietlana [j].dwKolor	:= 16#FFFFFFFF;	// wiadomosc 	- bialy
+					4	: arrTablicaWyswietlana [j].dwKolor	:= 16#FF0000FF; // safety 		- niebieski
+				END_CASE
+				j := j + 1;
+			END_IF
+		END_IF
+		IF (j > GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN_DO_WYSWIETLANIA) THEN
+			bWiecejDanychZapamietanych		:= TRUE;
+			EXIT;
+		END_IF
+	END_FOR
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ZdarzenieKoniec" Id="{f9d3b915-fa53-42aa-8c74-e84fc6f09009}">
+      <Declaration><![CDATA[//==================================================================================================
+//							RJM MASZYNY SP. Z O>O>
+//									05.02.2022
+//	Zdarzenie przestalo byc aktywne zmien dane
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+METHOD PRIVATE ZdarzenieKoniec : BOOL
+VAR_INPUT
+	iNumerWiersza							: INT;	//numer wiersza dla konkretnego IDzdarzenia
+	dtAktualnyCzas							: DT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[arrZdarzeniaPamietane [iNumerWiersza].dtDataKoniec	:= dtAktualnyCzas;
+arrZdarzeniaPamietane [iNumerWiersza].bAktywne		:= FALSE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ZdarzeniePoczatek" Id="{a7601710-58cb-46ea-968e-ba911ea72e9b}">
+      <Declaration><![CDATA[//==================================================================================================
+//							RJM MASZYNY SP. Z O>O>
+//									05.02.2022
+//	Dodanie nowego aktywnego zdarzenia do tablicy pamietanych
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+METHOD PRIVATE ZdarzeniePoczatek : BOOL
+VAR_INPUT
+	iIdZdarzenia							: INT;
+	dtAktualnyCzas							: DT;
+END_VAR
+VAR
+	i										: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[iIloscZdarzenZapamietanych					:= iIloscZdarzenZapamietanych + 1;
+// Przesun elemety tablicy
+FOR i := 0 TO iIloscZdarzenZapamietanych - 2 DO
+	arrZdarzeniaPamietane [iIloscZdarzenZapamietanych - i]	:= arrZdarzeniaPamietane [iIloscZdarzenZapamietanych - i - 1];
+END_FOR
+
+// Dodaj nowy
+//arrZdarzeniaPamietane [1].dwIDZdarzenia		:= stZdarzenie.dwIDZdarzenia;
+arrZdarzeniaPamietane [1].iIDZdarzenia		:= iIDZdarzenia;
+arrZdarzeniaPamietane [1].dtDataStart		:= dtAktualnyCzas;
+arrZdarzeniaPamietane [1].dtDataKoniec		:= DT#1970-1-1-0:0:0;
+arrZdarzeniaPamietane [1].bAktywne			:= TRUE;
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ZnajdzZdarzenieWTablicyPamietanychPoID" Id="{6012cbf6-8ad2-4bf0-bb40-371ee1c2c9f5}">
+      <Declaration><![CDATA[//==================================================================================================
+//							RJM MASZYNY SP. Z O>O>
+//									05.02.2022
+//	Zwraca numer wiersza w tabeli pamieci z podanym idzdarzenia
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+
+METHOD PROTECTED ZnajdzZdarzenieWTablicyPamietanychPoID : INT
+VAR_INPUT
+	iIDZdarzenia							: INT;
+END_VAR
+VAR 
+	i										: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR i := 1 TO iIloscZdarzenZapamietanych DO
+	IF (arrZdarzeniaPamietane [i].iIDZdarzenia = iIDZdarzenia) THEN
+		ZnajdzZdarzenieWTablicyPamietanychPoID	:= i;
+		EXIT;
+	END_IF
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_LogowanieBledow">
+      <LineId Id="202" Count="3" />
+      <LineId Id="207" Count="0" />
+      <LineId Id="216" Count="0" />
+      <LineId Id="208" Count="1" />
+      <LineId Id="217" Count="0" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="243" Count="0" />
+      <LineId Id="245" Count="0" />
+      <LineId Id="220" Count="4" />
+      <LineId Id="259" Count="1" />
+      <LineId Id="225" Count="0" />
+      <LineId Id="242" Count="0" />
+      <LineId Id="218" Count="0" />
+      <LineId Id="310" Count="0" />
+      <LineId Id="313" Count="0" />
+      <LineId Id="317" Count="0" />
+      <LineId Id="309" Count="0" />
+      <LineId Id="311" Count="1" />
+      <LineId Id="219" Count="0" />
+      <LineId Id="181" Count="0" />
+      <LineId Id="82" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LogowanieBledow.FB_init">
+      <LineId Id="7" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="17" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LogowanieBledow.Inicjalizacja">
+      <LineId Id="6" Count="7" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="14" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LogowanieBledow.ObslugaAktywnychZdarzen">
+      <LineId Id="6" Count="3" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="10" Count="11" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LogowanieBledow.WypelnianieTablicyZdarzen">
+      <LineId Id="6" Count="2" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="9" Count="8" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="18" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_LogowanieBledow.WypelnijTabliceZdarzen.Set">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LogowanieBledow.Wyswietlanie">
+      <LineId Id="5" Count="1" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="25" Count="9" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="37" Count="1" />
+      <LineId Id="40" Count="2" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="47" Count="2" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="62" Count="1" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="7" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_LogowanieBledow.ZdarzenieKoniec">
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_LogowanieBledow.ZdarzeniePoczatek">
+      <LineId Id="41" Count="0" />
+      <LineId Id="30" Count="2" />
+      <LineId Id="8" Count="1" />
+      <LineId Id="22" Count="5" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="40" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LogowanieBledow.ZnajdzZdarzenieWTablicyPamietanychPoID">
+      <LineId Id="5" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

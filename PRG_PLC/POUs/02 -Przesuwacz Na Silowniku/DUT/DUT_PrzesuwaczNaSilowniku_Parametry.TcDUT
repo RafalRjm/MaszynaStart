@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <DUT Name="DUT_PrzesuwaczNaSilowniku_Parametry" Id="{995f496c-5b26-4fde-bf41-49b7cc9be11f}">
+    <Declaration><![CDATA[TYPE DUT_PrzesuwaczNaSilowniku_Parametry :
+STRUCT
+	stPrzesuwaczNaped						: DUT_SilownikParametry;
+	stZabierak								: DUT_SilownikParametry;
+	rCzasNaKoncu							: REAL := 2000;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

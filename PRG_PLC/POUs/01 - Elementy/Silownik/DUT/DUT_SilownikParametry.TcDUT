@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <DUT Name="DUT_SilownikParametry" Id="{19b93c4e-c509-4ba3-a0d0-5e842466ad5d}">
+    <Declaration><![CDATA[TYPE DUT_SilownikParametry :
+STRUCT
+	rCzasNaPrace							: REAL := 5000;
+	rCzasNaPowrot							: REAL := 5000;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

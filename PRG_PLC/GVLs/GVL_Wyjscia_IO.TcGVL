@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <GVL Name="GVL_Wyjscia_IO" Id="{5939d848-3004-495f-b187-c7f07b9f676e}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'global_init_slot' := '40510'}
+VAR_GLOBAL
+//elektrozawor siłownika 1
+	fbElektrozaworS1						: FB_Elektrozawor_5na2_2Cewki;
+//elektrozawor siłownika 2
+	fbElektrozaworS2						: FB_Elektrozawor_5na2_2Cewki;
+//elektrozawory przesuwacza
+	fbElektrozaworZ							: FB_Elektrozawor_5na2_2Cewki;
+	fbElektrozaworP							: FB_Elektrozawor_5na2_2Cewki;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>
