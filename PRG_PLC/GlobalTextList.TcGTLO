@@ -46,6 +46,22 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"376"</v>
+              <v n="TextDefault">"DO ZROBIENIA :
+- Wysyłanie komunikatów od maszyny
+- Poprawienie wizualizacji logowanie błędów
+
+
+
+
+
+- Użytkownicy ograniczenia w dodawanych modulach
+
+
+- Języki tłumaczenia"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"475"</v>
               <v n="TextDefault">"DO ZROBIENIA :
 - Wysyłanie komunikatów od maszyny
@@ -148,6 +164,11 @@
             <o>
               <v n="TextID">"892"</v>
               <v n="TextDefault">"Tryb automatyczny"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"732"</v>
+              <v n="TextDefault">"Tryb półautomatyczny"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>

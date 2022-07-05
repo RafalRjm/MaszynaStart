@@ -5,12 +5,12 @@
 {attribute 'global_init_slot' := '40510'}
 VAR_GLOBAL
 //elektrozawor siłownika 1
-	fbElektrozaworS1						: FB_Elektrozawor_5na2_2Cewki;
+	fbElektrozaworC1						: FB_Elektrozawor_5na2_2Cewki;
 //elektrozawor siłownika 2
-	fbElektrozaworS2						: FB_Elektrozawor_5na2_2Cewki;
+	fbElektrozaworC2						: FB_Elektrozawor_5na2_2Cewki;
 //elektrozawory przesuwacza
-	fbElektrozaworZ							: FB_Elektrozawor_5na2_2Cewki;
-	fbElektrozaworP							: FB_Elektrozawor_5na2_2Cewki;
+	fbElektrozaworPW_Z						: FB_Elektrozawor_5na2_2Cewki;
+	fbElektrozaworPW_N						: FB_Elektrozawor_5na2_2Cewki;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

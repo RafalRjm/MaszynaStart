@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <DUT Name="DUT_Ciecie_Parametry" Id="{ee6a79ba-aa3f-4742-8dbe-2adb957fe591}">
+    <Declaration><![CDATA[TYPE DUT_Ciecie_Parametry :
+STRUCT
+	stNaped									: DUT_SilownikParametry;
+	rOdczekaj								: real := 1000; 	//chwila na odczekanie po cięciu
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

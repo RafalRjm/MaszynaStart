@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <DUT Name="DUT_Krajalnica_Parametry" Id="{007b4032-0535-4ded-8e24-0aa0e648edef}">
+    <Declaration><![CDATA[TYPE DUT_Krajalnica_Parametry :
+STRUCT
+	stCiecie1								: DUT_Ciecie_Parametry;	
+	stCiecie2								: DUT_Ciecie_Parametry;
+	stPodawanieWafla						: DUT_PrzesuwaczNaSilowniku_Parametry;
+	
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

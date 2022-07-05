@@ -4,9 +4,24 @@
     <Declaration><![CDATA[{attribute 'qualified_only'}
 {attribute 'global_init_slot' := '40505'}
 VAR_GLOBAL
-	fbPodzespoltestowy1						: FB_TestowyPodzespol;
-	fbPodzespoltestowy2						: FB_TestowyPodzespol;
-	fbPodzespoltestowy3						: FB_TestowyPodzespol;
-END_VAR]]></Declaration>
+
+	fbKrajalnica							: FB_Krajalnica ( 	bC1_Czujnik0					:= GVL_Wejscia_IO.bCzujnik0C1,	
+                                                                bC1_CzujnikMax					:= GVL_Wejscia_IO.bCzujnikMaxC1,
+                                                                fbC1_Elektrozawor				:= GVL_Wyjscia_IO.fbElektrozaworC1,
+																bC2_Czujnik0					:= GVL_Wejscia_IO.bCzujnik0C2,	
+                                                                bC2_CzujnikMax					:= GVL_Wejscia_IO.bCzujnikMaxC2,
+                                                                fbC2_Elektrozawor				:= GVL_Wyjscia_IO.fbElektrozaworC2,
+																bPW_Z_Czujnik0		    		:= GVL_Wejscia_IO.bCzujnik0PW_Z,
+																bPW_Z_CzujnikMax	   			:= GVL_Wejscia_IO.bCzujnikMaxPW_Z,
+																fbPW_Z_Elektrozawor				:= GVL_Wyjscia_IO.fbElektrozaworPW_Z,
+																bPW_P_Czujnik0		    		:= GVL_Wejscia_IO.bCzujnik0PW_N,
+																bPW_P_CzujnikMax	   			:= GVL_Wejscia_IO.bCzujnikMaxPW_N,
+																fbPW_P_Elektrozawor				:= GVL_Wyjscia_IO.fbElektrozaworPW_N,
+																bWafalNaWejsciu					:= GVL_Wejscia_IO.bWafelNaWejsciu,
+                                                                bWafalDoCiecia1					:= GVL_Wejscia_IO.bWafelDoCiecia1,
+                                                                bWafalDoCiecia2					:= GVL_Wejscia_IO.bWafelDoCiecia2);
+
+END_VAR	
+]]></Declaration>
   </GVL>
 </TcPlcObject>

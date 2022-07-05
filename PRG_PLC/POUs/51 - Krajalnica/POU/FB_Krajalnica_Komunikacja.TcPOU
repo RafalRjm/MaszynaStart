@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="FB_Krajalnica_Komunikacja" Id="{24ec660a-fdec-41af-bd16-00332dcc9c61}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Krajalnica_Komunikacja EXTENDS FB_LogowanieBledow_ElementZlozony
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="DefinicjaTabeliZdarzen_1031_Niemiecki" Id="{782ca1b3-6969-4262-a0a7-fcec370d5ba6}">
+      <Declaration><![CDATA[METHOD DefinicjaTabeliZdarzen_1031_Niemiecki : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzenOpis			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieOpis;
+
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//arrTablicaDefinicjiZdarzenOpis [iStartId+0].sOpis	:= 'DE - TESTOWA WIADOMOSC';
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DefinicjaTabeliZdarzen_1033_Angielski" Id="{9398542a-d901-4a63-a5a2-55dbeb1effe3}">
+      <Declaration><![CDATA[METHOD DefinicjaTabeliZdarzen_1033_Angielski : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzenOpis			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieOpis;
+
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//arrTablicaDefinicjiZdarzenOpis [iStartId+0].sOpis	:= 'EN - TESTOWA WIADOMOSC';
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DefinicjaTabeliZdarzen_1045_Polski" Id="{7f8f933e-f70b-4985-9665-f7dc640ff2ce}">
+      <Declaration><![CDATA[METHOD DefinicjaTabeliZdarzen_1045_Polski : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzenOpis			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieOpis;
+
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//arrTablicaDefinicjiZdarzenOpis [iStartId+0].sOpis	:= 'PL - TESTOWA WIADOMOSC';
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DefinicjaTabeliZdarzen_Ogolna" Id="{060bf940-87c2-490d-800a-aa313bbf9092}">
+      <Declaration><![CDATA[METHOD DefinicjaTabeliZdarzen_Ogolna : BOOL
+VAR_INPUT
+	arrTablicaDefinicjiZdarzen				: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_Zdarzenie;
+	arrTablicaDefinicjiZdarzenOpis			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieOpis;
+	arrTablicaDefinicjiZdarzenStan			: REFERENCE TO ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ZDARZEN] OF DUT_LogowanieBledow_ZdarzenieStan;
+
+	iIdZdarzenia							: REFERENCE TO INT;
+	iNrPodzespolu							: INT := 0;
+	iNrPodelementu							: INT := 0;
+	iNrElementu								: INT := 0;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(*
+//testowy blad
+	iIdZdarzenia												:= iIdZdarzenia + 1;
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].iIdZdarzenia		:= iIdZdarzenia;
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].byRodzajZdarzenia	:= 3;
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].sKodBledu			:= '0001';
+	arrTablicaDefinicjiZdarzen [iIdZdarzenia].sNrKomponentu		:= GenerujNrKomponentu (iNrPodzespolu := iNrPodzespolu, iNrPodelementu := iNrPodelementu, iNrElementu := iNrElementu); 
+	arrTablicaDefinicjiZdarzenOpis [iIdZdarzenia].iIdZdarzenia 	:= iIdZdarzenia;
+	arrTablicaDefinicjiZdarzenStan [iIdZdarzenia].iIdZdarzenia 	:= iIdZdarzenia;
+	arrTablicaDefinicjiZdarzenStan [iIdZdarzenia].bAktywne		:= FALSE;
+	*)]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Krajalnica_Komunikacja">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Krajalnica_Komunikacja.DefinicjaTabeliZdarzen_1031_Niemiecki">
+      <LineId Id="4" Count="0" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Krajalnica_Komunikacja.DefinicjaTabeliZdarzen_1033_Angielski">
+      <LineId Id="5" Count="0" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Krajalnica_Komunikacja.DefinicjaTabeliZdarzen_1045_Polski">
+      <LineId Id="5" Count="0" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Krajalnica_Komunikacja.DefinicjaTabeliZdarzen_Ogolna">
+      <LineId Id="131" Count="0" />
+      <LineId Id="102" Count="7" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="120" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

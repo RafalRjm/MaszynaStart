@@ -1,0 +1,247 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="FB_Podzespol" Id="{949452eb-fc4d-4a0e-a0fe-b93c47040e13}" SpecialFunc="None">
+    <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsluga przesuwacza na siłowniku 
+//	Siłownik zabieraka plus siłownik przesuwający 
+//	Cykl przesuwania: wysun zabierak -> przesun -> schowaj zabierak -> powrót  
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+FUNCTION_BLOCK FB_Podzespol IMPLEMENTS ITF_Podzespol
+VAR_INPUT
+	//Parametry
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	//Elementy wejsciowe i wykonawcze
+	bBazuj									: BOOL;
+	bBazowanie								: BOOL;
+	bCyklBazowaniaSkonczony					: BOOL;
+	bPierwszePrzejscieBazowanie				: BOOL;
+	iKrokBazowania							: INT :=0;
+
+	bWykonajCyklPracy						: BOOL;
+	bCyklPracy								: BOOL;
+	bCyklPracySkonczony						: BOOL;
+	bPierwszePrzejsciePracy					: BOOL;
+	iKrokPracy								: INT := 0;
+
+	bReset									: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+]]></ST>
+    </Implementation>
+    <Property Name="Bazowanie" Id="{de861099-975c-460b-9214-ab2e4e311cf4}">
+      <Declaration><![CDATA[PROPERTY Bazowanie : BOOL]]></Declaration>
+      <Get Name="Get" Id="{80dd3ea9-4af7-429a-9bd6-1b130d94d8fe}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Bazowanie									:= bBazuj;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Bazuj" Id="{f19580c7-faa4-46fb-951a-cd39f21a1bb8}">
+      <Declaration><![CDATA[PROPERTY Bazuj : BOOL]]></Declaration>
+      <Set Name="Set" Id="{8c8422bd-bd5c-444e-878f-977bfcd17b9b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bBazuj										:= Bazuj;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="CyklBazowania_Praca" Id="{39f153ed-c28d-4946-ba03-e9ada10a35ca}">
+      <Declaration><![CDATA[METHOD CyklBazowania_Praca : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="CyklPracy" Id="{c0cc5125-af2b-4de4-902b-0544250420cd}">
+      <Declaration><![CDATA[PROPERTY CyklPracy : BOOL]]></Declaration>
+      <Get Name="Get" Id="{4c5815cd-c358-420b-9012-25b89de44865}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[CyklPracy								:= bCyklPracy;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="CyklPracy_Praca" Id="{55bb8217-c2cc-426c-be1b-8ccfdf670244}">
+      <Declaration><![CDATA[METHOD CyklPracy_Praca : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="CyklPracySkonczony" Id="{745efc5f-1c75-46f2-890a-67ce5579776c}">
+      <Declaration><![CDATA[PROPERTY CyklPracySkonczony : BOOL]]></Declaration>
+      <Get Name="Get" Id="{295751f2-2320-4721-b9e8-d78c6077cab6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[CyklPracySkonczony					:= bCyklPracySkonczony;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Praca" Id="{d1c7505e-7deb-41c8-8ef3-5ed97584e7cd}">
+      <Declaration><![CDATA[METHOD Praca : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//---------------Resetowanie zmiennych
+	IF (bReset) THEN
+		Resetowanie ();
+	END_IF
+//---------------Resetowanie zmiennych
+//---------------Bazowanie siłowników - powrót do poczatku
+	IF (bBazuj) THEN
+		bPierwszePrzejscieBazowanie				:= FALSE;
+		bBazowanie								:= TRUE;
+		bBazuj									:= FALSE;
+	END_IF
+	IF (bBazowanie) THEN
+		bBazowanie								:= CyklBazowania_Praca ();
+	END_IF
+//---------------Bazowanie siłowników - powrót do poczatku
+//---------------Cykl przesuwnaia - koniec gora dol poczatek
+	IF (bWykonajCyklPracy) THEN
+		bCyklPracy						:= TRUE;
+	END_IF
+	IF (bCyklPracy) THEN
+		bCyklPracy						:= CyklPracy_Praca ();
+	END_IF
+//---------------Cykl przesuwnaia - koniec gora dol poczatek
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Resetowanie" Id="{536fd351-b547-45c1-869b-f8ce19cdaec7}">
+      <Declaration><![CDATA[METHOD Resetowanie : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[bWykonajCyklPracy							:= FALSE;
+bCyklPracy									:= FALSE;
+bCyklPracySkonczony							:= FALSE;
+bBazuj										:= false;
+bBazowanie									:= false;
+bCyklBazowaniaSkonczony						:= FALSE;
+bPierwszePrzejscieBazowanie					:= FALSE;
+bPierwszePrzejsciePracy						:= FALSE;
+iKrokBazowania								:= 0;
+iKrokPracy									:= 0;
+
+
+
+bReset										:= FALSE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Resetuj" Id="{ea07d737-c450-461e-bea6-b99b2751909e}">
+      <Declaration><![CDATA[PROPERTY Resetuj : BOOL]]></Declaration>
+      <Set Name="Set" Id="{7974553e-0e6f-4103-8155-4d3c223dd74b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bReset										:=Resetuj;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="WykonajCyklPracy" Id="{832e94f4-b5d9-4be0-8672-b2568055784e}">
+      <Declaration><![CDATA[PROPERTY WykonajCyklPracy : BOOL]]></Declaration>
+      <Set Name="Set" Id="{eb4d3d60-e4c6-4492-b66f-ac492e0be639}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bWykonajCyklPracy						:= WykonajCyklPracy;
+
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <LineIds Name="FB_Podzespol">
+      <LineId Id="9" Count="0" />
+      <LineId Id="33" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Podzespol.Bazowanie.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Podzespol.Bazuj.Set">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Podzespol.CyklBazowania_Praca">
+      <LineId Id="25" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Podzespol.CyklPracy.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Podzespol.CyklPracy_Praca">
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Podzespol.CyklPracySkonczony.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Podzespol.Praca">
+      <LineId Id="17" Count="0" />
+      <LineId Id="5" Count="2" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="12" Count="2" />
+      <LineId Id="19" Count="1" />
+      <LineId Id="32" Count="2" />
+      <LineId Id="26" Count="2" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="23" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Podzespol.Resetowanie">
+      <LineId Id="11" Count="3" />
+      <LineId Id="6" Count="2" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="24" Count="1" />
+      <LineId Id="19" Count="1" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Podzespol.Resetuj.Set">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Podzespol.WykonajCyklPracy.Set">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

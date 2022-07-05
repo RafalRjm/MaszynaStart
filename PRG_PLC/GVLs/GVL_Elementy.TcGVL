@@ -8,19 +8,27 @@ VAR_GLOBAL
 	fbPrzyciskStop							: FB_Przycisk_NO;
 	fbWieza									: FB_WiezaSygnalizacyjna_Cyfrowe;
 
-	fbSilownik								: FB_Silownik_Kontola (		fbCzujnikPozycja0 			:= GVL_Wejscia_IO.bCzujnik0S1, 
-																		fbCzujnikPozycjaMax 		:= GVL_Wejscia_IO.bCzujnikMaxS1,
-																		fbElektrozawor 				:= GVL_Wyjscia_IO.fbElektrozaworS1);
-	fbSilownik1								: FB_Silownik_Kontola (		fbCzujnikPozycja0 			:= GVL_Wejscia_IO.bCzujnik0S2, 
-																		fbCzujnikPozycjaMax 		:= GVL_Wejscia_IO.bCzujnikMaxS2,
-																		fbElektrozawor 				:= GVL_Wyjscia_IO.fbElektrozaworS2);																
-	fbPrzesuwacz							: FB_PrzesuwaczNaSilowniku (bCzujnik0Zabieraka			:= GVL_Wejscia_IO.bCzujnik0Z,
-		                                                                bCzujnikMaxZabieraka		:= GVL_Wejscia_IO.bCzujnikMaxZ	,
-	                                                                    fbElektrozaworZabieraka		:= GVL_Wyjscia_IO.fbElektrozaworZ,
-	                                                                    bCzujnik0Przesuwacza		:= GVL_Wejscia_IO.bCzujnik0P,
-	                                                                    bCzujnikMaxPrzesuwacza		:= GVL_Wejscia_IO.bCzujnikMaxP	,
-	                                                                    fbElektrozaworPrzesuwacza	:= GVL_Wyjscia_IO.fbElektrozaworP);
-	
-END_VAR]]></Declaration>
+END_VAR
+
+
+
+	(*
+	fbSilownikCiecia1						: FB_Silownik_Kontrola (	fbCzujnikPozycja0 			:= GVL_Wejscia_IO.bCzujnik0C1, 
+																		fbCzujnikPozycjaMax 		:= GVL_Wejscia_IO.bCzujnikMaxC1,
+																		fbElektrozawor 				:= GVL_Wyjscia_IO.fbElektrozaworC1);
+
+	fbSilownikCiecia2						: FB_Silownik_Kontrola (	fbCzujnikPozycja0 			:= GVL_Wejscia_IO.bCzujnik0C2, 
+																		fbCzujnikPozycjaMax 		:= GVL_Wejscia_IO.bCzujnikMaxC2,
+																		fbElektrozawor 				:= GVL_Wyjscia_IO.fbElektrozaworC2);
+
+	fbPodawanieWaflaZabierak				: FB_Silownik_Kontrola (	fbCzujnikPozycja0 			:= GVL_Wejscia_IO.bCzujnik0PW_Z, 
+																		fbCzujnikPozycjaMax 		:= GVL_Wejscia_IO.bCzujnikMaxPW_Z,
+																		fbElektrozawor 				:= GVL_Wyjscia_IO.fbElektrozaworPW_Z);																	
+		
+	fbPodawanieWaflaPrzesuwanie				: FB_Silownik_Kontrola (	fbCzujnikPozycja0 			:= GVL_Wejscia_IO.bCzujnik0PW_N, 
+																		fbCzujnikPozycjaMax 		:= GVL_Wejscia_IO.bCzujnikMaxPW_N,
+																		fbElektrozawor 				:= GVL_Wyjscia_IO.fbElektrozaworPW_N);																	
+
+	*)]]></Declaration>
   </GVL>
 </TcPlcObject>

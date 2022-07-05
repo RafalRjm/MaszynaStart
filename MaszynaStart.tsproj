@@ -13,7 +13,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{46A25DCE-05D6-4618-8C9F-F8B0159B42F6}" Name="PRG_PLC" PrjFilePath="PRG_PLC\PRG_PLC.plcproj" TmcFilePath="PRG_PLC\PRG_PLC.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="PRG_PLC\PRG_PLC.tmc">
 					<Name>PRG_PLC Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -27,44 +27,52 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Wejscia_IO.bCzujnik0S1.bWejscie</Name>
+							<Name>GVL_Wejscia_IO.bCzujnik0C1.bWejscie</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Wejscia_IO.bCzujnikMaxS1.bWejscie</Name>
+							<Name>GVL_Wejscia_IO.bCzujnikMaxC1.bWejscie</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Wejscia_IO.bCzujnik0S2.bWejscie</Name>
+							<Name>GVL_Wejscia_IO.bCzujnik0C2.bWejscie</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Wejscia_IO.bCzujnikMaxS2.bWejscie</Name>
+							<Name>GVL_Wejscia_IO.bCzujnikMaxC2.bWejscie</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Wejscia_IO.bCzujnik0Z.bWejscie</Name>
+							<Name>GVL_Wejscia_IO.bCzujnik0PW_Z.bWejscie</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Wejscia_IO.bCzujnikMaxZ.bWejscie</Name>
+							<Name>GVL_Wejscia_IO.bCzujnikMaxPW_Z.bWejscie</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Wejscia_IO.bCzujnik0P.bWejscie</Name>
+							<Name>GVL_Wejscia_IO.bCzujnik0PW_N.bWejscie</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Wejscia_IO.bCzujnikMaxP.bWejscie</Name>
+							<Name>GVL_Wejscia_IO.bCzujnikMaxPW_N.bWejscie</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Wejscia_IO.bWafelDoCiecia1.bWejscie</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Wejscia_IO.bWafelNaWejsciu.bWejscie</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Wejscia_IO.bWafelDoCiecia2.bWejscie</Name>
 							<Type>BOOL</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="2" AreaNo="1">
 						<Name>PlcTask Outputs</Name>
-						<Var>
-							<Name>GVL_Elementy.fbPrzysciskStart.bPodswietlenie</Name>
-							<Type>BOOL</Type>
-						</Var>
 						<Var>
 							<Name>GVL_Elementy.fbPrzyciskStop.bPodswietlenie</Name>
 							<Type>BOOL</Type>
@@ -90,42 +98,46 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Wyjscia_IO.fbElektrozaworS1.bCewkaA</Name>
+							<Name>GVL_Elementy.fbPrzysciskStart.bPodswietlenie</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Wyjscia_IO.fbElektrozaworC1.bCewkaA</Name>
 							<Comment><![CDATA[Cewka sterująca wyjściem 2 - 0 do MAX]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Wyjscia_IO.fbElektrozaworS1.bCewkaB</Name>
+							<Name>GVL_Wyjscia_IO.fbElektrozaworC1.bCewkaB</Name>
 							<Comment><![CDATA[Cewka sterująca wyjściem 4 - MAX do 0]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Wyjscia_IO.fbElektrozaworS2.bCewkaA</Name>
+							<Name>GVL_Wyjscia_IO.fbElektrozaworC2.bCewkaA</Name>
 							<Comment><![CDATA[Cewka sterująca wyjściem 2 - 0 do MAX]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Wyjscia_IO.fbElektrozaworS2.bCewkaB</Name>
+							<Name>GVL_Wyjscia_IO.fbElektrozaworC2.bCewkaB</Name>
 							<Comment><![CDATA[Cewka sterująca wyjściem 4 - MAX do 0]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Wyjscia_IO.fbElektrozaworZ.bCewkaA</Name>
+							<Name>GVL_Wyjscia_IO.fbElektrozaworPW_Z.bCewkaA</Name>
 							<Comment><![CDATA[Cewka sterująca wyjściem 2 - 0 do MAX]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Wyjscia_IO.fbElektrozaworZ.bCewkaB</Name>
+							<Name>GVL_Wyjscia_IO.fbElektrozaworPW_Z.bCewkaB</Name>
 							<Comment><![CDATA[Cewka sterująca wyjściem 4 - MAX do 0]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Wyjscia_IO.fbElektrozaworP.bCewkaA</Name>
+							<Name>GVL_Wyjscia_IO.fbElektrozaworPW_N.bCewkaA</Name>
 							<Comment><![CDATA[Cewka sterująca wyjściem 2 - 0 do MAX]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Wyjscia_IO.fbElektrozaworP.bCewkaB</Name>
+							<Name>GVL_Wyjscia_IO.fbElektrozaworPW_N.bCewkaB</Name>
 							<Comment><![CDATA[Cewka sterująca wyjściem 4 - MAX do 0]]></Comment>
 							<Type>BOOL</Type>
 						</Var>

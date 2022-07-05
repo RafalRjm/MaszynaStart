@@ -6,11 +6,9 @@
 VAR_GLOBAL
 
 	arrPodzesoly							: ARRAY [1..GVL_StanMaszyny_Stale.MAX_LICZBA_PODZESPOLOW] OF ITF_StanMaszyny :=[
-																GVL_Podzespoly.fbPodzespoltestowy1,
-																GVL_Podzespoly.fbPodzespoltestowy2,
-																GVL_Podzespoly.fbPodzespoltestowy3];
+																GVL_Podzespoly.fbKrajalnica];
 	fbStanMaszyny							: FB_StanMaszyny (arrPodzesoly := arrPodzesoly,
-																iIloscDodanychPodzespolow := 3);
+																iIloscDodanychPodzespolow := 1);
 	bStart									: BOOL;
 	bStop									: BOOL;
 	bReset									: BOOL;

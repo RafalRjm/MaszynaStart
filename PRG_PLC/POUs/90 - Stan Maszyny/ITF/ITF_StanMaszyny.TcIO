@@ -6,6 +6,7 @@
     <Method Name="SM_Aborted" Id="{ee45967d-d5f3-4a74-a1ad-b8f8be01ac94}">
       <Declaration><![CDATA[METHOD SM_Aborted : BOOL
 VAR_INPUT
+	
 END_VAR
 ]]></Declaration>
     </Method>
@@ -36,6 +37,7 @@ END_VAR
     <Method Name="SM_Execute" Id="{dad41575-f4e3-4a36-bc81-045bb8cd4c3c}">
       <Declaration><![CDATA[METHOD SM_Execute : BOOL
 VAR_INPUT
+	eTrybPracy								: E_PMLUnitMode;
 END_VAR
 ]]></Declaration>
     </Method>

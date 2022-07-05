@@ -6,12 +6,10 @@
 VAR_GLOBAL
 	arrElementyWykonawcze 					: ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ELEMENTOW] OF 
 																ITF_LogowanieBledow_ElementWykonawczy := [
-																	GVL_Elementy.fbSilownik.fbLBKomunikacja, 
-																	GVL_Elementy.fbSilownik1.fbLBKomunikacja,
-																	GVL_Elementy.fbPrzesuwacz.fbLBKomunikacja];
+																	GVL_Podzespoly.fbKrajalnica.fbLBKomunikacja];
 
 	fbLoger 								: FB_LogowanieBledow (	tablica := arrElementyWykonawcze,
-																	iIloscDodanychElementow := 3);
+																	iIloscDodanychElementow := 1);
 	bWyswietlAlarmy							: BOOL;																
 	
 END_VAR

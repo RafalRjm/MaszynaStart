@@ -6,17 +6,22 @@
 VAR_GLOBAL
 //Przyciski	
 	
-//czujniki siłownik1
-	bCzujnik0S1								: FB_Czujnik_NO;
-	bCzujnikMaxS1							: FB_Czujnik_NO;
-//czujniki siłownika2 
-	bCzujnik0S2								: FB_Czujnik_NO;
-	bCzujnikMaxS2							: FB_Czujnik_NO;
-//czujniki przesuwacza
-	bCzujnik0Z								: FB_Czujnik_NO;
-	bCzujnikMaxZ							: FB_Czujnik_NO;
-	bCzujnik0P								: FB_Czujnik_NO;
-	bCzujnikMaxP							: FB_Czujnik_NO;
+//czujniki siłownika ciecia 1
+	bCzujnik0C1								: FB_Czujnik_NO;
+	bCzujnikMaxC1							: FB_Czujnik_NO;
+//czujniki siłownika ciecia 2
+	bCzujnik0C2								: FB_Czujnik_NO;
+	bCzujnikMaxC2							: FB_Czujnik_NO;
+//czujniki przesuwacza wafla
+	bCzujnik0PW_Z							: FB_Czujnik_NO;
+	bCzujnikMaxPW_Z							: FB_Czujnik_NO;
+	bCzujnik0PW_N							: FB_Czujnik_NO;
+	bCzujnikMaxPW_N							: FB_Czujnik_NO;
+//czujnik waflae
+	bWafelNaWejsciu							: FB_Czujnik_NO;
+	bWafelDoCiecia1							: FB_Czujnik_NO;
+	bWafelDoCiecia2							: FB_Czujnik_NO;
+	
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

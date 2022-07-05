@@ -150,11 +150,12 @@
                       <v n="Value">"DO ZROBIENIA :
 - Wysyłanie komunikatów od maszyny
 - Poprawienie wizualizacji logowanie błędów
--Użytkownicy całość
 
 
 
 
+
+- Użytkownicy ograniczenia w dodawanych modulach
 
 
 - Języki tłumaczenia"</v>
@@ -165,7 +166,7 @@
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
-                      <v n="Value">"475"</v>
+                      <v n="Value">"376"</v>
                     </o>
                   </l>
                 </o>
@@ -414,10 +415,10 @@
               <d n="FbMethods" t="CaseInsensitiveHashtable" ckt="String" cvt="Guid">
                 <v>FB_Init</v>
                 <v>4a588020-df88-4a95-a684-013d01ea7c96</v>
-                <v>FB_Exit</v>
-                <v>a47fcddc-cfef-4fc7-88be-9c0b8bba6cba</v>
                 <v>FB_Reinit</v>
                 <v>923ad77f-cd2e-49a9-9c02-a9205c4989ef</v>
+                <v>FB_Exit</v>
+                <v>a47fcddc-cfef-4fc7-88be-9c0b8bba6cba</v>
               </d>
               <v n="FbName">"NotImportant"</v>
               <v n="FbGuid">{4a02a9a5-5077-4854-afd7-50430b0d2958}</v>

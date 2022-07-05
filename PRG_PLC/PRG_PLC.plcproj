@@ -25,6 +25,10 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="GVLs\GVL_Parametry.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
     <Compile Include="GVLs\GVL_Podzespoly.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
@@ -76,22 +80,40 @@
     <Compile Include="POUs\01 - Elementy\Silownik\POU\FB_Silownik.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\01 - Elementy\Silownik\POU\FB_Silownik_Kontola.TcPOU">
+    <Compile Include="POUs\01 - Elementy\Silownik\POU\FB_Silownik_Kontrola.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\01 - Elementy\Silownik\POU\FB_Silownik_Kontrola_Komunikacja.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\02 -Przesuwacz Na Silowniku\DUT\DUT_PrzesuwaczNaSilowniku_Parametry.TcDUT">
+    <Compile Include="POUs\02 - Przesuwacz Na Silowniku\DUT\DUT_PrzesuwaczNaSilowniku_Parametry.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\02 -Przesuwacz Na Silowniku\POU\FB_PrzesuwaczNaSilowniku.TcPOU">
+    <Compile Include="POUs\02 - Przesuwacz Na Silowniku\POU\FB_PrzesuwaczNaSilowniku.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\02 -Przesuwacz Na Silowniku\POU\FB_PrzesuwaczNaSilowniku_Komunikacja.TcPOU">
+    <Compile Include="POUs\02 - Przesuwacz Na Silowniku\POU\FB_PrzesuwaczNaSilowniku_Komunikacja.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\03 - Ciecie\DUT\DUT_Ciecie_Parametry.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\03 - Ciecie\POU\FB_Ciecie.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\03 - Ciecie\POU\FB_Ciecie_Komunikacja.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\50 - testowy podzespol\POU\FB_TestowyPodzespol.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\51 - Krajalnica\DUT\DUT_Krajalnica_Parametry.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\51 - Krajalnica\POU\FB_Krajalnica.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\51 - Krajalnica\POU\FB_Krajalnica_Komunikacja.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\90 - Stan Maszyny\DUT\DUT_StanMaszyny_VISU_Stan.TcDUT">
@@ -159,6 +181,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\92 - Elementy maszyny\Wieza Sygnalizacyjna\POU\FB_WiezaSygnalizacyjna_Cyfrowe.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\93 - Podzespol\ITF\ITF_Podzespol.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\93 - Podzespol\POU\FB_Podzespol.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\95 - Logowanie bledow\DUT\DUT_LogowanieBledow_WyswietlanieParametry.TcDUT">
@@ -244,12 +272,15 @@
     <Folder Include="POUs\01 - Elementy\Silownik\DUT" />
     <Folder Include="POUs\01 - Elementy\Silownik\ITF" />
     <Folder Include="POUs\01 - Elementy\Silownik\POU" />
-    <Folder Include="POUs\02 -Przesuwacz Na Silowniku" />
-    <Folder Include="POUs\02 -Przesuwacz Na Silowniku\DUT" />
-    <Folder Include="POUs\02 -Przesuwacz Na Silowniku\ITF" />
-    <Folder Include="POUs\02 -Przesuwacz Na Silowniku\POU" />
+    <Folder Include="POUs\02 - Przesuwacz Na Silowniku" />
+    <Folder Include="POUs\02 - Przesuwacz Na Silowniku\DUT" />
+    <Folder Include="POUs\02 - Przesuwacz Na Silowniku\POU" />
+    <Folder Include="POUs\03 - Ciecie\DUT" />
+    <Folder Include="POUs\03 - Ciecie\POU" />
     <Folder Include="POUs\50 - testowy podzespol" />
     <Folder Include="POUs\50 - testowy podzespol\POU" />
+    <Folder Include="POUs\51 - Krajalnica\DUT" />
+    <Folder Include="POUs\51 - Krajalnica\POU" />
     <Folder Include="POUs\90 - Stan Maszyny" />
     <Folder Include="POUs\90 - Stan Maszyny\DUT" />
     <Folder Include="POUs\90 - Stan Maszyny\GVL" />
@@ -268,6 +299,8 @@
     <Folder Include="POUs\92 - Elementy maszyny\Wieza Sygnalizacyjna" />
     <Folder Include="POUs\92 - Elementy maszyny\Wieza Sygnalizacyjna\ITF" />
     <Folder Include="POUs\92 - Elementy maszyny\Wieza Sygnalizacyjna\POU" />
+    <Folder Include="POUs\93 - Podzespol\ITF" />
+    <Folder Include="POUs\93 - Podzespol\POU" />
     <Folder Include="POUs\95 - Logowanie bledow" />
     <Folder Include="POUs\95 - Logowanie bledow\DUT" />
     <Folder Include="POUs\95 - Logowanie bledow\GVL" />
@@ -275,6 +308,9 @@
     <Folder Include="POUs\95 - Logowanie bledow\POU" />
     <Folder Include="POUs\95 - Logowanie bledow\Wizualizacja" />
     <Folder Include="POUs\99 - Wizualizacja" />
+    <Folder Include="POUs\03 - Ciecie" />
+    <Folder Include="POUs\93 - Podzespol" />
+    <Folder Include="POUs\51 - Krajalnica" />
     <Folder Include="VISUs" />
     <Folder Include="POUs" />
     <Folder Include="VISUs\Grafika" />
@@ -367,8 +403,8 @@
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-  <Data>
-    <o xml:space="preserve" t="OptionKey">
+        <Data>
+          <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -411,14 +447,14 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-  </Data>
-  <TypeList>
-    <Type n="Boolean">System.Boolean</Type>
-    <Type n="Hashtable">System.Collections.Hashtable</Type>
-    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-    <Type n="String">System.String</Type>
-  </TypeList>
-</XmlArchive>
+        </Data>
+        <TypeList>
+          <Type n="Boolean">System.Boolean</Type>
+          <Type n="Hashtable">System.Collections.Hashtable</Type>
+          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+          <Type n="String">System.String</Type>
+        </TypeList>
+      </XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>

@@ -36,6 +36,8 @@ GVL_ElementySterujace.fbElementySterujace ();
 GVL_ElementySterujace.fbElementySterujace.StanMaszyny	:= GVL_StanMaszyny.fbStanMaszyny.StanPracy;
 GVL_ElementySterujace.fbElementySterujace.TrybPracy		:= GVL_StanMaszyny.fbStanMaszyny.TrybPracy;
 //--------STEROWANIE MASZYNĄ
+
+GVL_Podzespoly.fbKrajalnica (stParametry := GVL_Parametry.stKrajalnica);
 ]]></ST>
     </Implementation>
     <Action Name="A_Konfiguracja" Id="{124be6a6-033b-419d-b278-24d79c8f18b6}">
@@ -77,6 +79,25 @@ GVL_ElementySterujace.fbElementySterujace.TrybPracy		:= GVL_StanMaszyny.fbStanMa
 		bUnsuspending	:= FALSE, 
 		bResetting		:= TRUE, 
 		bCompleting		:= FALSE, 
+		bComplete		:= FALSE);
+	GVL_StanMaszyny.fbStanMaszyny.KonfiguracjaStanowPracyDlaTrybu(
+		eNrTrybu		:= E_PMLUnitMode.SEMIAUTOMATIC, 
+		bClearing		:= TRUE, 
+		bStopped		:= TRUE, 
+		bStarting		:= TRUE, 
+		bIdle			:= TRUE, 
+		bSuspended		:= FALSE, 
+		bExecute		:= TRUE, 
+		bStopping		:= TRUE, 
+		bAborting		:= TRUE, 
+		bAborted		:= TRUE, 
+		bHolding		:= FALSE, 
+		bHeld			:= FALSE, 
+		bUnholding		:= FALSE, 
+		bSuspending		:= FALSE, 
+		bUnsuspending	:= FALSE, 
+		bResetting		:= TRUE, 
+		bCompleting		:= FALSE, 
 		bComplete		:= FALSE);]]></ST>
       </Implementation>
     </Action>
@@ -85,11 +106,16 @@ GVL_ElementySterujace.fbElementySterujace.TrybPracy		:= GVL_StanMaszyny.fbStanMa
       <LineId Id="33" Count="3" />
       <LineId Id="10" Count="16" />
       <LineId Id="2" Count="0" />
-      <LineId Id="38" Count="1" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="47" Count="0" />
     </LineIds>
     <LineIds Name="MAIN.A_Konfiguracja">
       <LineId Id="2" Count="36" />
       <LineId Id="1" Count="0" />
+      <LineId Id="40" Count="17" />
+      <LineId Id="39" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

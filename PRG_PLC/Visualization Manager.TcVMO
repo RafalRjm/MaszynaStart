@@ -19,7 +19,7 @@
             <v n="VisuInternal">false</v>
             <v n="CurrentVisuGlobal">true</v>
             <v n="FileTransferMode">true</v>
-            <v n="VisuStyle">"XS style, 3.1.7.0 (Beckhoff Automation GmbH)"</v>
+            <v n="VisuStyle">"Basic style, 3.1.6.0 (Beckhoff Automation GmbH)"</v>
             <v n="MaxNumOfClients">100</v>
             <n n="Language" />
             <v n="NumpadDialog">"VisuDialogs.Numpad"</v>
@@ -49,10 +49,10 @@
             <d n="FbMethods" t="CaseInsensitiveHashtable" ckt="String" cvt="Guid">
               <v>FB_Init</v>
               <v>2b799d01-2f85-4bef-b093-dcb6bdc811b2</v>
-              <v>FB_Reinit</v>
-              <v>58351b43-3fc4-4540-99d0-9a616136a68c</v>
               <v>FB_Exit</v>
               <v>a90eb74c-508b-4703-9a0f-38aaa8d798b8</v>
+              <v>FB_Reinit</v>
+              <v>58351b43-3fc4-4540-99d0-9a616136a68c</v>
             </d>
             <v n="FbName">"__VisuInitInstantiation_Fb"</v>
             <v n="FbGuid">{2419b1db-e96b-4ffe-a224-2f03fbac76cc}</v>

@@ -18,15 +18,15 @@ VAR_INPUT
 	bUnHold                                 : bool;
 	bSuspend                                : bool;
 	bUnsuspend								: BOOL;
-	eTryb									: E_PMLUnitMode;
+	eTryb									: E_PMLUnitMode;	//zadany tryb pracy
 END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
 	arrVisuStany							: ARRAY [0..17] OF DUT_StanMaszyny_VISU_Stan;
 	arrVisuTryb								: ARRAY [0..9] of ARRAY [0..17] OF BOOL;
-	eStan									: E_PMLState := E_PMLState.ABORTING;
-	eTrybPracy								: E_PMLUnitMode := E_PMLUnitMode.MANUAL;
+	eStan									: E_PMLState := E_PMLState.ABORTING;		//aktualny stan maszyny
+	eTrybPracy								: E_PMLUnitMode := E_PMLUnitMode.MANUAL;	//aktualny tryb pracy
 	
 	arrPodzesoly							: ARRAY [1..GVL_StanMaszyny_Stale.MAX_LICZBA_PODZESPOLOW] OF ITF_StanMaszyny;
 	iIloscDodanychPodzespolow				: INT;
@@ -628,6 +628,7 @@ END_IF
 //==================================================================================================
 METHOD SM_Execute : BOOL
 VAR_INPUT
+	eTrybPracy								: E_PMLUnitMode;
 END_VAR
 VAR
 	i										: INT;
@@ -635,7 +636,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[FOR i := 1 TO iIloscDodanychPodzespolow DO
-	arrPodzesoly [i].SM_Execute ();
+	arrPodzesoly [i].SM_Execute (eTrybPracy := eTrybPracy);
 END_FOR
 
 IF (bHold) THEN
@@ -1098,7 +1099,7 @@ CASE eStan OF
 	E_PMLState.SUSPENDED 	:
 		SM_Suspended ();
 	E_PMLState.EXECUTE 		:
-		SM_Execute ();
+		SM_Execute (eTrybPracy := eTrybPracy);
 	E_PMLState.STOPPING	 	:
 		SM_Stopping ();
 	E_PMLState.ABORTING 	:

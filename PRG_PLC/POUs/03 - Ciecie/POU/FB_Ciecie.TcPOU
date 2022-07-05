@@ -1,0 +1,218 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="FB_Ciecie" Id="{78a4327f-bfa8-4889-9351-f99b4f586bfe}" SpecialFunc="None">
+    <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Zespoł siłownika cięcia  
+//	Cykl ciecia: ciecie -> odczekanie -> powrot   
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+FUNCTION_BLOCK FB_Ciecie EXTENDS FB_Podzespol
+VAR_INPUT
+	stParametry								: DUT_Ciecie_Parametry;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	bCzujnik0Naped							: ITF_Czujnik;
+	bCzujnikMaxNaped						: ITF_Czujnik;
+	fbElektrozaworNaped						: ITF_Elektozawor;
+	fbNaped									: FB_Silownik_Kontrola (	fbCzujnikPozycja0 			:= GVL_Wejscia_IO.bCzujnik0C1, 
+																		fbCzujnikPozycjaMax 		:= GVL_Wejscia_IO.bCzujnikMaxC1,
+																		fbElektrozawor 				:= GVL_Wyjscia_IO.fbElektrozaworC1);
+
+	arrElementyWykonawcze 					: ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ELEMENTOW_NA_PODZESPOL] OF ITF_LogowanieBledow_ElementWykonawczy := 
+														[fbNaped.fbLBKomunikacja];
+	fbLBKomunikacja							: FB_Ciecie_Komunikacja 
+														(arrElementyWykonawcze := arrElementyWykonawcze,
+														iIloscPodlementow := 1);		
+	tonOdczekaj								: TON;													
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="CyklBazowania_Praca" Id="{6692190d-0ae5-4a06-a46d-7f2177aefcf8}">
+      <Declaration><![CDATA[METHOD CyklBazowania_Praca : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (NOT bPierwszePrzejscieBazowanie) THEN
+	bPierwszePrzejscieBazowanie				:= TRUE;
+	bCyklBazowaniaSkonczony					:= FALSE;
+	fbNaped.PrzesunDoPoczatku				:= TRUE;
+END_IF
+
+IF (fbNaped.NaPoczatku) THEN
+	bPierwszePrzejscieBazowanie				:= FALSE;
+	bCyklBazowaniaSkonczony					:= TRUE;
+	CyklBazowania_Praca						:= FALSE;
+ELSE
+	CyklBazowania_Praca						:= TRUE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CyklPracy_Praca" Id="{6797f9bb-600e-458d-a2f5-3da6fb974138}">
+      <Declaration><![CDATA[METHOD CyklPracy_Praca : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (NOT bPierwszePrzejsciePracy) THEN
+	bPierwszePrzejsciePracy					:= TRUE;
+	bCyklPracySkonczony						:= FALSE;
+	fbNaped.PrzesunDoKonca					:= TRUE;
+	tonOdczekaj.IN							:= FALSE;
+	iKrokPracy								:= 1;
+END_IF
+
+CASE iKrokPracy OF
+	1	:
+	IF (fbNaped.NaKoncu) THEN
+		tonOdczekaj.IN						:= TRUE;
+		iKrokPracy							:= 10;
+	END_IF
+	CyklPracy_Praca							:= TRUE;
+	10	:
+	IF (tonOdczekaj.Q) THEN
+		tonOdczekaj.IN						:= FALSE;
+		fbNaped.PrzesunDoPoczatku			:= TRUE;
+		iKrokPracy							:= 20;
+	END_IF
+	CyklPracy_Praca							:= TRUE;
+	20	:
+	IF (fbNaped.NaPoczatku) THEN
+		iKrokPracy							:= 30;
+	END_IF
+	CyklPracy_Praca							:= TRUE;
+	30	:
+		iKrokPracy							:= 0;
+		CyklPracy_Praca						:= FALSE;
+END_CASE
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{d4b3d785-c240-4f67-b4c2-fde01cf703e4}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	bCzujnik0Naped							: ITF_Czujnik;
+	bCzujnikMaxNaped						: ITF_Czujnik;
+	fbElektrozaworNaped						: ITF_Elektozawor;
+
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.bCzujnik0Naped						:= bCzujnik0Naped;
+THIS^.bCzujnikMaxNaped						:= bCzujnikMaxNaped;
+THIS^.fbElektrozaworNaped					:= fbElektrozaworNaped;
+
+THIS^.fbNaped.FB_init (FALSE, FALSE, bCzujnik0Naped, bCzujnikMaxNaped, fbElektrozaworNaped); 
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Praca" Id="{a7095052-7027-46be-846c-cd007f0cd31b}">
+      <Declaration><![CDATA[METHOD Praca : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[tonOdczekaj (PT := REAL_TO_TIME (stParametry.rOdczekaj));
+fbNaped.Praca ();
+
+SUPER^.Praca ();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Resetowanie" Id="{3e939cc9-904f-4537-91a5-46a599a6f938}">
+      <Declaration><![CDATA[METHOD Resetowanie : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[tonOdczekaj.IN								:= FALSE;
+
+SUPER^.Resetowanie ();
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Ciecie">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Ciecie.CyklBazowania_Praca">
+      <LineId Id="5" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="21" Count="3" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="25" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Ciecie.CyklPracy_Praca">
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="9" Count="1" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="37" Count="1" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="42" Count="1" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="69" Count="1" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Ciecie.FB_init">
+      <LineId Id="11" Count="1" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="33" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Ciecie.Praca">
+      <LineId Id="39" Count="0" />
+      <LineId Id="44" Count="1" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="40" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Ciecie.Resetowanie">
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="8" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

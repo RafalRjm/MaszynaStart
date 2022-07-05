@@ -1,0 +1,248 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="FB_PrzesuwaczNaSilowniku" Id="{c7ba1278-3548-4e13-8976-321b6c21dbe0}" SpecialFunc="None">
+    <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									13.05.2022
+//	Obsluga przesuwacza na siłowniku 
+//	Siłownik zabieraka plus siłownik przesuwający 
+//	Cykl przesuwania: wysun zabierak -> przesun -> schowaj zabierak -> powrót  
+// 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
+//==================================================================================================
+FUNCTION_BLOCK FB_PrzesuwaczNaSilowniku EXTENDS FB_Podzespol
+VAR_INPUT
+	stParametry								: DUT_PrzesuwaczNaSilowniku_Parametry;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	bCzujnik0Zabieraka						: ITF_Czujnik;
+	bCzujnikMaxZabieraka					: ITF_Czujnik;
+	fbElektrozaworZabieraka					: ITF_Elektozawor;
+	bCzujnik0Przesuwacza					: ITF_Czujnik;
+	bCzujnikMaxPrzesuwacza					: ITF_Czujnik;
+	fbElektrozaworPrzesuwacza				: ITF_Elektozawor;
+	fbZabierak								: FB_Silownik_Kontrola (	fbCzujnikPozycja0 			:= GVL_Wejscia_IO.bCzujnik0PW_Z, 
+																		fbCzujnikPozycjaMax 		:= GVL_Wejscia_IO.bCzujnikMaxPW_Z,
+																		fbElektrozawor 				:= GVL_Wyjscia_IO.fbElektrozaworPW_Z);
+	fbPrzesuwanie							: FB_Silownik_Kontrola (	fbCzujnikPozycja0 			:= GVL_Wejscia_IO.bCzujnik0PW_N, 
+																		fbCzujnikPozycjaMax 		:= GVL_Wejscia_IO.bCzujnikMaxPW_N,
+																		fbElektrozawor 				:= GVL_Wyjscia_IO.fbElektrozaworPW_N);
+
+	arrElementyWykonawcze 					: ARRAY [1..GVL_LogowanieBledow_Stale.MAX_ILOSC_ELEMENTOW_NA_PODZESPOL] OF ITF_LogowanieBledow_ElementWykonawczy := 
+														[fbZabierak.fbLBKomunikacja, 
+														fbPrzesuwanie.fbLBKomunikacja];
+	fbLBKomunikacja							: FB_PrzesuwaczNaSilowniku_Komunikacja 
+														(arrElementyWykonawcze := arrElementyWykonawcze,
+														iIloscPodlementow := 2);
+
+	tonChwilaPoDojechaniu					: TON;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+]]></ST>
+    </Implementation>
+    <Method Name="CyklBazowania_Praca" Id="{e436b484-17c0-47ed-a727-72ecc434ecc6}">
+      <Declaration><![CDATA[METHOD CyklBazowania_Praca : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (NOT bPierwszePrzejscieBazowanie) THEN
+	bPierwszePrzejscieBazowanie				:= TRUE;
+	bCyklBazowaniaSkonczony					:= FALSE;
+	fbZabierak.PrzesunDoPoczatku			:= TRUE;
+END_IF
+
+IF (fbZabierak.NaPoczatku AND NOT fbPrzesuwanie.PrzesuwanieWStronePoczatku) THEN
+	fbPrzesuwanie.PrzesunDoPoczatku		:= TRUE;
+END_IF
+
+IF (fbPrzesuwanie.NaPoczatku AND fbZabierak.NaPoczatku) THEN
+	bPierwszePrzejscieBazowanie				:= FALSE;
+	bCyklBazowaniaSkonczony					:= TRUE;
+	CyklBazowania_Praca						:= TRUE;
+ELSE
+	CyklBazowania_Praca						:= FALSE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CyklPracy_Praca" Id="{c5710e17-cb66-4931-8ad1-c66f04ccc386}">
+      <Declaration><![CDATA[METHOD CyklPracy_Praca : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (NOT bPierwszePrzejsciePracy) THEN
+	bPierwszePrzejsciePracy					:= TRUE;
+	bCyklPracySkonczony						:= FALSE;
+	fbZabierak.PrzesunDoKonca				:= TRUE;
+	tonChwilaPoDojechaniu.IN				:= FALSE;
+	iKrokPracy								:= 1;
+END_IF
+
+CASE iKrokPracy OF
+	1	:
+	IF (fbZabierak.NaKoncu) THEN
+		fbPrzesuwanie.PrzesunDoKonca	:= TRUE;
+		iKrokPracy							:= 10;
+	END_IF
+	CyklPracy_Praca							:= TRUE;
+	10	:
+	IF (fbPrzesuwanie.NaKoncu) THEN
+		tonChwilaPoDojechaniu.IN			:= TRUE;
+		iKrokPracy							:= 20;
+	END_IF
+	CyklPracy_Praca							:= TRUE;
+	20	:
+	IF (tonChwilaPoDojechaniu.Q) THEN
+		tonChwilaPoDojechaniu.IN			:= FALSE;
+		fbZabierak.PrzesunDoKonca			:= TRUE;
+		iKrokPracy							:= 30;
+	END_IF
+	CyklPracy_Praca							:= TRUE;
+	30	:
+	IF (fbZabierak.NaPoczatku) THEN
+		fbPrzesuwanie.PrzesunDoPoczatku	:= TRUE;
+		iKrokPracy							:= 40;
+	END_IF
+	CyklPracy_Praca							:= TRUE;
+	40	:
+	IF (fbPrzesuwanie.NaPoczatku) THEN
+		iKrokPracy							:= 50;
+		bCyklPracySkonczony					:= TRUE;
+	END_IF
+	CyklPracy_Praca							:= TRUE;
+	50	:
+		iKrokPracy							:= 0;
+		CyklPracy_Praca						:= FALSE;
+END_CASE
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{1ce11768-98bf-4742-be1e-5a2040e34f8c}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	bCzujnik0Zabieraka						: ITF_Czujnik;
+	bCzujnikMaxZabieraka					: ITF_Czujnik;
+	fbElektrozaworZabieraka					: ITF_Elektozawor;
+	bCzujnik0Przesuwacza					: ITF_Czujnik;
+	bCzujnikMaxPrzesuwacza					: ITF_Czujnik;
+	fbElektrozaworPrzesuwacza				: ITF_Elektozawor;
+	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+THIS^.bCzujnik0Zabieraka					:= bCzujnik0Zabieraka;			     
+THIS^.bCzujnikMaxZabieraka					:= bCzujnikMaxZabieraka;		    
+THIS^.fbElektrozaworZabieraka				:= fbElektrozaworZabieraka;		 
+THIS^.bCzujnik0Przesuwacza					:= bCzujnik0Przesuwacza;		    
+THIS^.bCzujnikMaxPrzesuwacza				:= bCzujnikMaxPrzesuwacza;		  
+THIS^.fbElektrozaworPrzesuwacza				:= fbElektrozaworPrzesuwacza;
+
+THIS^.fbZabierak.FB_init (FALSE, FALSE, bCzujnik0Zabieraka, bCzujnikMaxZabieraka, fbElektrozaworZabieraka);
+THIS^.fbPrzesuwanie.FB_init (FALSE, FALSE, bCzujnik0Przesuwacza, bCzujnikMaxPrzesuwacza, fbElektrozaworPrzesuwacza);
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Praca" Id="{50a1e78a-cc3a-4bbd-b431-040552237ed9}">
+      <Declaration><![CDATA[METHOD Praca : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[tonChwilaPoDojechaniu (PT := REAL_TO_TIME (stParametry.rCzasNaKoncu));
+
+fbZabierak.Praca ();
+fbPrzesuwanie.Praca ();
+
+
+SUPER^.Praca ();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Resetowanie" Id="{d30fd266-e071-49ab-aaa8-8763b31c16f0}">
+      <Declaration><![CDATA[METHOD Resetowanie : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[tonChwilaPoDojechaniu.IN					:= FALSE;
+
+SUPER^.Resetowanie ();
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_PrzesuwaczNaSilowniku">
+      <LineId Id="9" Count="0" />
+      <LineId Id="33" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PrzesuwaczNaSilowniku.CyklBazowania_Praca">
+      <LineId Id="5" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="14" Count="1" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="21" Count="3" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="25" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PrzesuwaczNaSilowniku.CyklPracy_Praca">
+      <LineId Id="77" Count="12" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="92" Count="3" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="98" Count="4" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="105" Count="3" />
+      <LineId Id="110" Count="0" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="111" Count="2" />
+      <LineId Id="115" Count="1" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="117" Count="6" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PrzesuwaczNaSilowniku.FB_init">
+      <LineId Id="35" Count="0" />
+      <LineId Id="14" Count="4" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="36" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PrzesuwaczNaSilowniku.Praca">
+      <LineId Id="5" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="12" Count="2" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="6" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_PrzesuwaczNaSilowniku.Resetowanie">
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="8" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

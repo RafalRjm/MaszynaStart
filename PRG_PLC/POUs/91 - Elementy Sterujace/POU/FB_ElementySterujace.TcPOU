@@ -50,7 +50,7 @@ END_VAR
 		E_PMLState.SUSPENDED 	:
 			SM_Suspended ();
 		E_PMLState.EXECUTE 		:
-			SM_Execute ();
+			SM_Execute (eTrybPracy := eTrybPracy);
 		E_PMLState.STOPPING	 	:
 			SM_Stopping ();
 		E_PMLState.ABORTING 	:
@@ -129,6 +129,7 @@ END_VAR
     <Method Name="SM_Aborted" Id="{962fd802-37a0-40ee-91a7-655ff3483808}">
       <Declaration><![CDATA[METHOD SM_Aborted : BOOL
 VAR_INPUT
+
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -204,6 +205,7 @@ bPodswietlanieStop							:= FALSE;
     <Method Name="SM_Execute" Id="{c116466f-2942-4b8d-bc54-880ff59ba43f}">
       <Declaration><![CDATA[METHOD SM_Execute : BOOL
 VAR_INPUT
+	eTrybPracy								: E_PMLUnitMode;
 END_VAR
 ]]></Declaration>
       <Implementation>

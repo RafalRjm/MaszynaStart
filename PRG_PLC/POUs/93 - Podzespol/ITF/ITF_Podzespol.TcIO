@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <Itf Name="ITF_Podzespol" Id="{5d25e72b-1438-44c3-b36e-0885f28d066d}">
+    <Declaration><![CDATA[INTERFACE ITF_Podzespol
+]]></Declaration>
+    <Property Name="Bazowanie" Id="{7b397dae-2a67-4c52-821b-2d0d89e6efc0}">
+      <Declaration><![CDATA[PROPERTY Bazowanie : BOOL]]></Declaration>
+      <Get Name="Get" Id="{55a70d2c-7ef8-4aa0-9600-fd519c399e36}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="Bazuj" Id="{15e4b681-3893-4eaa-8788-a93fd0efaee4}">
+      <Declaration><![CDATA[PROPERTY Bazuj : BOOL]]></Declaration>
+      <Set Name="Set" Id="{c735cbdf-f000-4512-ac9b-366d8d190dcb}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Method Name="CyklBazowania_Praca" Id="{d632d771-9980-4097-9c77-aee8c894d905}">
+      <Declaration><![CDATA[METHOD CyklBazowania_Praca : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="CyklPracy" Id="{bfb099a0-998b-4882-8686-2985e13b715b}">
+      <Declaration><![CDATA[PROPERTY CyklPracy : BOOL]]></Declaration>
+      <Get Name="Get" Id="{b49a6731-cfb1-453c-ab0e-40d4e9384c2f}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="CyklPracy_Praca" Id="{bb6f835d-1ae3-49a1-afa3-7f7c9567a0e6}">
+      <Declaration><![CDATA[METHOD CyklPracy_Praca : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="CyklPracySkonczony" Id="{3772dc0e-11a7-4714-8bd5-32cd4c030af3}">
+      <Declaration><![CDATA[PROPERTY CyklPracySkonczony : BOOL]]></Declaration>
+      <Get Name="Get" Id="{c87ffec6-e3fe-4163-aaed-359f74bb4295}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="Praca" Id="{cdd1443e-4aef-41f9-8ae1-db2e9e1959a0}">
+      <Declaration><![CDATA[METHOD Praca : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Resetowanie" Id="{2cc9d381-ed8d-4245-a9b7-dee98be1f3f8}">
+      <Declaration><![CDATA[METHOD Resetowanie : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="Resetuj" Id="{ed86aa34-1e7f-448e-b4eb-efd94c830e9c}">
+      <Declaration><![CDATA[PROPERTY Resetuj : BOOL]]></Declaration>
+      <Set Name="Set" Id="{5ec24030-3ae1-4862-8d44-ef9b0e14ed88}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="WykonajCyklPracy" Id="{cdeb26fc-e3db-4305-9597-6cc3c95009ce}">
+      <Declaration><![CDATA[PROPERTY WykonajCyklPracy : BOOL]]></Declaration>
+      <Set Name="Set" Id="{ed12fddf-61cb-4d2a-a301-ed247672199c}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+  </Itf>
+</TcPlcObject>
