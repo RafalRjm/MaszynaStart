@@ -1,11 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
   <POU Name="FB_Krajalnica" Id="{b1cca2fa-5ba4-460e-b30f-13d8a51cc995}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_Krajalnica IMPLEMENTS ITF_StanMaszyny
+    <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Sterowanie krajalnica  
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+
+FUNCTION_BLOCK FB_Krajalnica IMPLEMENTS ITF_StanMaszyny
 VAR_INPUT
 	stParametry								: DUT_Krajalnica_Parametry;
+	stSterowanieSymulacja					: DUT_Krajalnica_Symulacja;
 END_VAR
 VAR_OUTPUT
+	stStanyPodzespolow						: DUT_Krajalnica_StanyPodzespolow;
 END_VAR
 VAR
 	bC1_Czujnik0							: ITF_Czujnik;
@@ -46,12 +55,19 @@ VAR
 	fbLBKomunikacja							: FB_PrzesuwaczNaSilowniku_Komunikacja 
 														(	arrElementyWykonawcze := arrElementyWykonawcze,
 															iIloscPodlementow := 3);	
+															
+	bSM_Resetting_PierwszePrzejscie			: BOOL := FALSE;
+														
+
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[fbCiecie1.Praca ();
 fbCiecie2.Praca ();
 fbPodawanieWafla.Praca ();
+
+StanyPodzespolow ();
+
 ]]></ST>
     </Implementation>
     <Method Name="FB_init" Id="{58f65211-82b7-4ff8-8687-0ccc3dfaf66d}">
@@ -101,7 +117,13 @@ THIS^.fbPodawanieWafla.FB_init (FALSE, FALSE, bPW_Z_Czujnik0, bPW_Z_CzujnikMax, 
       </Implementation>
     </Method>
     <Method Name="SM_Aborted" Id="{11732134-ddbf-4743-ab39-8f1b6de230ab}">
-      <Declaration><![CDATA[METHOD SM_Aborted : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Aborted - metoda pusta
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Aborted : BOOL
 VAR_INPUT
 
 END_VAR
@@ -111,129 +133,327 @@ END_VAR
       </Implementation>
     </Method>
     <Method Name="SM_Aborting" Id="{17e2ac69-bd6c-456d-982e-330865c646bc}">
-      <Declaration><![CDATA[METHOD SM_Aborting : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Aborting - awaryjne zatrzymanie maszyny E-STOP
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Aborting : BOOL
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
     <Method Name="SM_Clearing" Id="{f11bff81-ef5b-4db9-9fb6-b5f4308e4c83}">
-      <Declaration><![CDATA[METHOD SM_Clearing : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Clearing
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Clearing : BOOL
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[SM_Clearing := TRUE;
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="SM_Complete" Id="{7d7d2c8a-f309-43e0-8c3a-2cef248ab451}">
-      <Declaration><![CDATA[METHOD SM_Complete : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Complete 
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Complete : BOOL
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
     <Method Name="SM_Completing" Id="{2d037f69-9a7c-440c-b629-301e312682f3}">
-      <Declaration><![CDATA[METHOD SM_Completing : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Completing
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Completing : BOOL
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
     <Method Name="SM_Execute" Id="{e4902feb-fd05-41c9-9465-a6e9009aa608}">
-      <Declaration><![CDATA[METHOD SM_Execute : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Execute
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Execute : BOOL
 VAR_INPUT
 	eTrybPracy								: E_PMLUnitMode;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[CASE eTrybPracy OF
 	E_PMLUnitMode.MANUAL		:
-		;
+		SM_Execute_Manual ();
 	E_PMLUnitMode.SEMIAUTOMATIC	:
-		;
+		SM_Execute_Semiautomatic ();
 	E_PMLUnitMode.AUTOMATIC		:
-		;
+		SM_Execute_Automatic ();
 END_CASE]]></ST>
       </Implementation>
     </Method>
+    <Method Name="SM_Execute_Automatic" Id="{d2f030dc-1aec-44ef-945f-42c1f2eb4fa1}">
+      <Declaration><![CDATA[METHOD PRIVATE SM_Execute_Automatic : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Execute_Manual" Id="{13cf6c2f-1b3f-4155-be15-c20baae10ae1}">
+      <Declaration><![CDATA[METHOD PRIVATE SM_Execute_Manual : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Execute_Semiautomatic" Id="{597d8a98-1ac5-4d89-96de-32b0cacf96c8}">
+      <Declaration><![CDATA[METHOD PRIVATE SM_Execute_Semiautomatic : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="SM_Held" Id="{3ac3cc8e-c1a0-4ac9-9431-9fc62438a175}">
-      <Declaration><![CDATA[METHOD SM_Held : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Held  - metoda pusta
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Held : BOOL
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
     <Method Name="SM_Holding" Id="{4e70d810-4072-4abb-86e7-0b8a82653d7f}">
-      <Declaration><![CDATA[METHOD SM_Holding : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Holding
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Holding : BOOL
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
     <Method Name="SM_Idle" Id="{abd85865-0c8f-456f-9d92-541097300101}">
-      <Declaration><![CDATA[METHOD SM_Idle : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Idle
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Idle : BOOL
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
     <Method Name="SM_Resetting" Id="{cf7a7a46-92e5-4b6c-9942-b554e9193634}">
-      <Declaration><![CDATA[METHOD SM_Resetting : BOOL
-]]></Declaration>
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Reseting - konczenie niedokocznonych cykli i powrot podzespolami do pozycji startowej
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Resetting : BOOL
+VAR_INPUT
+	eTrybPracy								: E_PMLUnitMode;
+END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[
+CASE eTrybPracy OF
+	E_PMLUnitMode.MANUAL		:
+		;
+	E_PMLUnitMode.SEMIAUTOMATIC	:
+		IF (stSterowanieSymulacja.bCiecie1Bazuj) THEN
+			fbCiecie1.Bazuj							:= TRUE;
+		END_IF
+		IF (stSterowanieSymulacja.bCiecie1Tnij) THEN
+			fbCiecie1.WykonajCyklPracy				:= TRUE;
+		END_IF
+		IF (stSterowanieSymulacja.bCiecie2Bazuj) THEN
+			fbCiecie2.Bazuj							:= TRUE;
+		END_IF
+		IF (stSterowanieSymulacja.bCiecie2Tnij) THEN
+			fbCiecie2.WykonajCyklPracy				:= TRUE;
+		END_IF
+		IF (stSterowanieSymulacja.bPodawanieBazuj) THEN
+			fbPodawanieWafla.Bazuj					:= TRUE;
+		END_IF
+		IF (stSterowanieSymulacja.bPodawaniePodaj) THEN
+			fbPodawanieWafla.WykonajCyklPracy		:= TRUE;
+		END_IF
+	E_PMLUnitMode.AUTOMATIC		:
+		(*
+		DOPISAĆ KOŃCZENIE CYKLI JAK ZOSTAŁY PRZERWANE
+		*)
+		IF (NOT bSM_Resetting_PierwszePrzejscie) THEN
+			fbCiecie1.Bazuj							:= TRUE;
+			fbCiecie2.Bazuj							:= TRUE;
+			fbPodawanieWafla.Bazuj					:= TRUE;
+			bSM_Resetting_PierwszePrzejscie			:= TRUE;
+		END_IF
+		
+		IF (fbCiecie1.Pozycja0 AND fbCiecie2.Pozycja0 AND fbPodawanieWafla.Pozycja0) THEN
+			SM_Resetting 							:= TRUE;
+			bSM_Resetting_PierwszePrzejscie			:= FALSE;
+		ELSE
+			SM_Resetting							:= FALSE;
+		END_IF
+END_CASE
+
+
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="SM_Starting" Id="{5b246055-cb9e-4abb-b856-5259ea59e5c7}">
-      <Declaration><![CDATA[METHOD SM_Starting : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Starting - Ustawienie elementów do pracy 
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Starting : BOOL
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[SM_Starting 								:= TRUE;
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="SM_Stopped" Id="{ec8c12b2-651e-41be-a543-a9403e48675b}">
-      <Declaration><![CDATA[METHOD SM_Stopped : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Stoped - metoda pusta
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Stopped : BOOL
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
     <Method Name="SM_Stopping" Id="{1b5a5a90-445f-465e-8492-f09983dcbeb6}">
-      <Declaration><![CDATA[METHOD SM_Stopping : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Stopping - Zakonczenie aktualnych operacji nie zaczynamy kolejnych
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Stopping : BOOL
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
     <Method Name="SM_Suspended" Id="{8a180c29-3734-48de-8589-f9c274cc9031}">
-      <Declaration><![CDATA[METHOD SM_Suspended : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Suspended - metoda pusta
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Suspended : BOOL
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
     <Method Name="SM_Suspending" Id="{2dacfcfa-b778-4e98-a465-b13954d6da59}">
-      <Declaration><![CDATA[METHOD SM_Suspending : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Suspending
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Suspending : BOOL
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
     <Method Name="SM_Unholding" Id="{ef10e97b-c942-454f-b430-c8aaeff58b64}">
-      <Declaration><![CDATA[METHOD SM_Unholding : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Unholding
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Unholding : BOOL
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
     <Method Name="SM_Unsuspending" Id="{fbb47822-7f21-45ea-978c-c5631d77a8e6}">
-      <Declaration><![CDATA[METHOD SM_Unsuspending : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Unsuspending
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Unsuspending : BOOL
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
+    <Method Name="StanyPodzespolow" Id="{7df62ee1-11b2-440b-b857-5b2d2790b28f}">
+      <Declaration><![CDATA[METHOD StanyPodzespolow : DUT_Krajalnica_StanyPodzespolow
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[stStanyPodzespolow.bCiecie1_Bazowanie						:= fbCiecie1.Bazowanie;
+stStanyPodzespolow.bCiecie1_Ciecie							:= fbCiecie1.CyklPracy;
+stStanyPodzespolow.bCiecie1_Naped_WStronePoczatku			:= fbCiecie1.fbNaped.PrzesuwanieWStronePoczatku;
+stStanyPodzespolow.bCiecie1_Naped_WStroneKonca				:= fbCiecie1.fbNaped.PrzesuwanieWStroneKonca;
+stStanyPodzespolow.bCiecie2_Bazowanie						:= fbCiecie2.Bazowanie;
+stStanyPodzespolow.bCiecie2_Ciecie							:= fbCiecie2.CyklPracy;
+stStanyPodzespolow.bCiecie2_Naped_WStronePoczatku			:= fbCiecie2.fbNaped.PrzesuwanieWStronePoczatku;
+stStanyPodzespolow.bCiecie2_Naped_WStroneKonca				:= fbCiecie2.fbNaped.PrzesuwanieWStroneKonca;
+stStanyPodzespolow.bPodawanie_Bazowanie						:= fbPodawanieWafla.Bazowanie;
+stStanyPodzespolow.bPodawanie_Podawanie						:= fbPodawanieWafla.CyklPracy;
+stStanyPodzespolow.bPodawanie_Zabierak_WStronePoczatku		:= fbPodawanieWafla.fbZabierak.PrzesuwanieWStronePoczatku;
+stStanyPodzespolow.bPodawanie_zabierak_WStroneKonca			:= fbPodawanieWafla.fbZabierak.PrzesuwanieWStroneKonca;
+stStanyPodzespolow.bPodawanie_Przesuwanie_WStronePoczatku	:= fbPodawanieWafla.fbPrzesuwanie.PrzesuwanieWStronePoczatku;
+stStanyPodzespolow.bPodawanie_Przesuwanie_WStroneKonca		:= fbPodawanieWafla.fbPrzesuwanie.PrzesuwanieWStroneKonca;
+
+]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_Krajalnica">
       <LineId Id="9" Count="0" />
-      <LineId Id="69" Count="2" />
+      <LineId Id="69" Count="1" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="129" Count="0" />
     </LineIds>
     <LineIds Name="FB_Krajalnica.FB_init">
       <LineId Id="38" Count="1" />
@@ -258,6 +478,7 @@ END_CASE]]></ST>
     </LineIds>
     <LineIds Name="FB_Krajalnica.SM_Clearing">
       <LineId Id="4" Count="0" />
+      <LineId Id="12" Count="0" />
     </LineIds>
     <LineIds Name="FB_Krajalnica.SM_Complete">
       <LineId Id="4" Count="0" />
@@ -271,6 +492,15 @@ END_CASE]]></ST>
       <LineId Id="12" Count="4" />
       <LineId Id="11" Count="0" />
     </LineIds>
+    <LineIds Name="FB_Krajalnica.SM_Execute_Automatic">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Krajalnica.SM_Execute_Manual">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Krajalnica.SM_Execute_Semiautomatic">
+      <LineId Id="5" Count="0" />
+    </LineIds>
     <LineIds Name="FB_Krajalnica.SM_Held">
       <LineId Id="4" Count="0" />
     </LineIds>
@@ -281,10 +511,26 @@ END_CASE]]></ST>
       <LineId Id="4" Count="0" />
     </LineIds>
     <LineIds Name="FB_Krajalnica.SM_Resetting">
-      <LineId Id="4" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="30" Count="4" />
+      <LineId Id="54" Count="4" />
+      <LineId Id="60" Count="4" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="66" Count="4" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="52" Count="1" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="39" Count="11" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="26" Count="0" />
     </LineIds>
     <LineIds Name="FB_Krajalnica.SM_Starting">
       <LineId Id="4" Count="0" />
+      <LineId Id="12" Count="0" />
     </LineIds>
     <LineIds Name="FB_Krajalnica.SM_Stopped">
       <LineId Id="4" Count="0" />
@@ -303,6 +549,13 @@ END_CASE]]></ST>
     </LineIds>
     <LineIds Name="FB_Krajalnica.SM_Unsuspending">
       <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Krajalnica.StanyPodzespolow">
+      <LineId Id="5" Count="4" />
+      <LineId Id="11" Count="3" />
+      <LineId Id="16" Count="4" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="21" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

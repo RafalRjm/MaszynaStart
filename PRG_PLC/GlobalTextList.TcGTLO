@@ -21,6 +21,21 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"970"</v>
+              <v n="TextDefault">"Bazuj ciecie 1"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"30"</v>
+              <v n="TextDefault">"Bazuj ciecie 2"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"176"</v>
+              <v n="TextDefault">"Bazuj Podawanie"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"836"</v>
               <v n="TextDefault">"Bezpieczeństwo"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -28,6 +43,56 @@
             <o>
               <v n="TextID">"340"</v>
               <v n="TextDefault">"Błędy"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"322"</v>
+              <v n="TextDefault">"C1"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"888"</v>
+              <v n="TextDefault">"C1- bazowanie"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"11"</v>
+              <v n="TextDefault">"C1- ciecie"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"750"</v>
+              <v n="TextDefault">"C1- podawanie"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"655"</v>
+              <v n="TextDefault">"C2"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"746"</v>
+              <v n="TextDefault">"C2- bazowanie"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"812"</v>
+              <v n="TextDefault">"C2- ciecie"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"537"</v>
+              <v n="TextDefault">"C2- podawanie"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"70"</v>
+              <v n="TextDefault">"Ciecie 1"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"806"</v>
+              <v n="TextDefault">"Ciecie 2"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
@@ -127,6 +192,26 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"707"</v>
+              <v n="TextDefault">"Podaj"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"687"</v>
+              <v n="TextDefault">"Podawanie - bazowanie"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"564"</v>
+              <v n="TextDefault">"Podawanie - podawanie"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"973"</v>
+              <v n="TextDefault">"Podawanie wafla"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"433"</v>
               <v n="TextDefault">"R"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -194,6 +279,21 @@
             <o>
               <v n="TextID">"13"</v>
               <v n="TextDefault">"User: %s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"460"</v>
+              <v n="TextDefault">"Wafel do C1"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"762"</v>
+              <v n="TextDefault">"Wafel do C2"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"374"</v>
+              <v n="TextDefault">"Wafel do podania"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>

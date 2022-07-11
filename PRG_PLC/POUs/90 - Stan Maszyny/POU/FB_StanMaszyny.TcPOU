@@ -484,8 +484,8 @@ VAR_INPUT
 END_VAR
 
 VAR
-	i: INT;
-	bAbortingOK: BOOL;
+	i										: INT;
+	bAbortingOK								: BOOL := TRUE;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF (NOT bPierwszePrzejscieWOperacji) THEN
@@ -525,8 +525,8 @@ VAR_INPUT
 END_VAR
 
 VAR
-	i: INT;
-	bClearingOK: BOOL;
+	i										: INT;
+	bClearingOK								: BOOL := TRUE;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF (NOT bPierwszePrzejscieWOperacji) THEN
@@ -590,8 +590,8 @@ VAR_INPUT
 END_VAR
 
 VAR
-	i: INT;
-	bCompletingOK: BOOL;
+	i										: INT;
+	bCompletingOK							: BOOL := TRUE;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF (NOT bPierwszePrzejscieWOperacji) THEN
@@ -691,8 +691,8 @@ VAR_INPUT
 END_VAR
 
 VAR
-	i: INT;
-	bHoldingOK: BOOL;
+	i										: INT;
+	bHoldingOK								: BOOL := TRUE;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF (NOT bPierwszePrzejscieWOperacji) THEN
@@ -773,7 +773,7 @@ END_VAR]]></Declaration>
 END_IF
 FOR i := 1 TO iIloscDodanychPodzespolow DO
 	IF (NOT arrOperacjaWykonana [i]) THEN
-		arrOperacjaWykonana [i]				:= arrPodzesoly [i].SM_Resetting ();
+		arrOperacjaWykonana [i]				:= arrPodzesoly [i].SM_Resetting (eTrybPracy := eTrybPracy);
 	END_IF
 	bResetingOK								:= bResetingOK AND arrOperacjaWykonana [i];
 END_FOR
@@ -803,8 +803,8 @@ VAR_INPUT
 END_VAR
 
 VAR
-	i: INT;
-	bStartingOK: BOOL;
+	i										: INT;
+	bStartingOK								: BOOL := TRUE;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF (NOT bPierwszePrzejscieWOperacji) THEN
@@ -877,8 +877,8 @@ VAR_INPUT
 END_VAR
 
 VAR
-	i: INT;
-	bStoppingOK: BOOL;
+	i										: INT;
+	bStoppingOK								: BOOL := TRUE;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF (NOT bPierwszePrzejscieWOperacji) THEN
@@ -942,8 +942,8 @@ VAR_INPUT
 END_VAR
 
 VAR
-	i: INT;
-	bSuspendingOK: BOOL;
+	i										: INT;
+	bSuspendingOK							: BOOL := TRUE;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF (NOT bPierwszePrzejscieWOperacji) THEN
@@ -994,8 +994,8 @@ VAR_INPUT
 END_VAR
 
 VAR
-	i: INT;
-	bUnholdingOK: BOOL;
+	i										: INT;
+	bUnholdingOK							: BOOL := TRUE;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF (NOT bPierwszePrzejscieWOperacji) THEN
@@ -1035,8 +1035,8 @@ VAR_INPUT
 END_VAR
 
 VAR
-	i: INT;
-	bUnsuspendingOK: BOOL;
+	i										: INT;
+	bUnsuspendingOK							: BOOL := TRUE;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF (NOT bPierwszePrzejscieWOperacji) THEN

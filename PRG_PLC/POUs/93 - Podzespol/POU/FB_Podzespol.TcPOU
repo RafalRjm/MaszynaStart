@@ -43,7 +43,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[Bazowanie									:= bBazuj;
+          <ST><![CDATA[Bazowanie									:= bBazowanie;
 ]]></ST>
         </Implementation>
       </Get>
@@ -99,6 +99,17 @@ END_VAR
         <Implementation>
           <ST><![CDATA[CyklPracySkonczony					:= bCyklPracySkonczony;
 ]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Pozycja0" Id="{7ee512aa-742f-4018-9aaf-a218734ae410}">
+      <Declaration><![CDATA[PROPERTY Pozycja0 : BOOL]]></Declaration>
+      <Get Name="Get" Id="{ba43d01d-af58-4bf9-8217-d9ba3760f9ff}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -207,6 +218,9 @@ END_VAR
     <LineIds Name="FB_Podzespol.CyklPracySkonczony.Get">
       <LineId Id="2" Count="0" />
       <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Podzespol.Pozycja0.Get">
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Podzespol.Praca">
       <LineId Id="17" Count="0" />

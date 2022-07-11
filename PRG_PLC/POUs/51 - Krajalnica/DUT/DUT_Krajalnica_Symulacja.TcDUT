@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <DUT Name="DUT_Krajalnica_Symulacja" Id="{9104e49a-c80d-4324-9e4c-5736e2f78c32}">
+    <Declaration><![CDATA[TYPE DUT_Krajalnica_Symulacja :
+STRUCT
+	bCiecie1Bazuj							: BOOL;		
+	bCiecie1Tnij							: BOOL;
+	bCiecie2Bazuj							: BOOL;		
+	bCiecie2Tnij							: BOOL;
+	bPodawanieBazuj							: BOOL;		
+	bPodawaniePodaj							: BOOL;	
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

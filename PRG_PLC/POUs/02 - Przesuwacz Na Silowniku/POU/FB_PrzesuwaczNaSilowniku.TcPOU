@@ -53,19 +53,27 @@ END_VAR
 	bPierwszePrzejscieBazowanie				:= TRUE;
 	bCyklBazowaniaSkonczony					:= FALSE;
 	fbZabierak.PrzesunDoPoczatku			:= TRUE;
+	iKrokBazowania							:= 1;
 END_IF
 
-IF (fbZabierak.NaPoczatku AND NOT fbPrzesuwanie.PrzesuwanieWStronePoczatku) THEN
-	fbPrzesuwanie.PrzesunDoPoczatku		:= TRUE;
-END_IF
-
-IF (fbPrzesuwanie.NaPoczatku AND fbZabierak.NaPoczatku) THEN
-	bPierwszePrzejscieBazowanie				:= FALSE;
-	bCyklBazowaniaSkonczony					:= TRUE;
-	CyklBazowania_Praca						:= TRUE;
-ELSE
-	CyklBazowania_Praca						:= FALSE;
-END_IF
+CASE iKrokBazowania OF
+	1	:
+		IF (fbZabierak.NaPoczatku) THEN
+			fbPrzesuwanie.PrzesunDoPoczatku	:= TRUE;
+			iKrokBazowania					:= 10;
+		END_IF
+		CyklBazowania_Praca					:= TRUE;
+	10	:
+		IF (fbPrzesuwanie.NaPoczatku AND fbZabierak.NaPoczatku) THEN
+			bPierwszePrzejscieBazowanie		:= FALSE;
+			bCyklBazowaniaSkonczony			:= TRUE;
+			CyklBazowania_Praca				:= FALSE;
+			iKrokBazowania					:= 0;
+		ELSE
+			CyklBazowania_Praca				:= TRUE;
+		END_IF
+		
+END_CASE
 ]]></ST>
       </Implementation>
     </Method>
@@ -154,6 +162,18 @@ THIS^.fbPrzesuwanie.FB_init (FALSE, FALSE, bCzujnik0Przesuwacza, bCzujnikMaxPrze
 ]]></ST>
       </Implementation>
     </Method>
+    <Property Name="Pozycja0" Id="{fee6f26b-77c7-426b-ae9d-2c1905b1a604}">
+      <Declaration><![CDATA[PROPERTY Pozycja0 : BOOL]]></Declaration>
+      <Get Name="Get" Id="{f3c5379b-8f56-4991-b5a3-ebfe323866be}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Pozycja0									:= fbZabierak.NaPoczatku AND fbPrzesuwanie.NaPoczatku;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Method Name="Praca" Id="{50a1e78a-cc3a-4bbd-b431-040552237ed9}">
       <Declaration><![CDATA[METHOD Praca : BOOL
 VAR_INPUT
@@ -191,15 +211,21 @@ SUPER^.Resetowanie ();
       <LineId Id="9" Count="0" />
       <LineId Id="20" Count="0" />
       <LineId Id="11" Count="0" />
+      <LineId Id="29" Count="0" />
       <LineId Id="10" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="14" Count="1" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="21" Count="3" />
-      <LineId Id="19" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="34" Count="1" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="38" Count="1" />
+      <LineId Id="41" Count="2" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="46" Count="1" />
+      <LineId Id="44" Count="1" />
+      <LineId Id="33" Count="0" />
       <LineId Id="25" Count="0" />
     </LineIds>
     <LineIds Name="FB_PrzesuwaczNaSilowniku.CyklPracy_Praca">
@@ -230,6 +256,10 @@ SUPER^.Resetowanie ();
       <LineId Id="21" Count="0" />
       <LineId Id="40" Count="0" />
       <LineId Id="36" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PrzesuwaczNaSilowniku.Pozycja0.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="FB_PrzesuwaczNaSilowniku.Praca">
       <LineId Id="5" Count="0" />

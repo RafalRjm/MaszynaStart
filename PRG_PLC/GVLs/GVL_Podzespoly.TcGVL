@@ -4,6 +4,8 @@
     <Declaration><![CDATA[{attribute 'qualified_only'}
 {attribute 'global_init_slot' := '40505'}
 VAR_GLOBAL
+	
+	fbSymulacja								: FB_Symulacja;	
 
 	fbKrajalnica							: FB_Krajalnica ( 	bC1_Czujnik0					:= GVL_Wejscia_IO.bCzujnik0C1,	
                                                                 bC1_CzujnikMax					:= GVL_Wejscia_IO.bCzujnikMaxC1,
@@ -21,6 +23,7 @@ VAR_GLOBAL
                                                                 bWafalDoCiecia1					:= GVL_Wejscia_IO.bWafelDoCiecia1,
                                                                 bWafalDoCiecia2					:= GVL_Wejscia_IO.bWafelDoCiecia2);
 
+															
 END_VAR	
 ]]></Declaration>
   </GVL>

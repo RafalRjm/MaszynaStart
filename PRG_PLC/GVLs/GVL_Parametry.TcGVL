@@ -3,6 +3,7 @@
   <GVL Name="GVL_Parametry" Id="{a710716c-0c46-49ed-bfcd-a6b5c3064ce3}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
+	stSymulacja								: DUT_Symulacja_Parametry;
 	stKrajalnica							: DUT_Krajalnica_Parametry;
 END_VAR]]></Declaration>
   </GVL>

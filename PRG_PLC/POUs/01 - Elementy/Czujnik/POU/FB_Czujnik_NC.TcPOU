@@ -8,6 +8,9 @@
 // 	v1.0	|| TC v 3.1.4024.22		|| - pierwsza wersja
 //==================================================================================================
 FUNCTION_BLOCK FB_Czujnik_NC IMPLEMENTS ITF_Czujnik
+VAR_INPUT
+	bSymulacja								: BOOL;
+END_VAR
 VAR
 	bWejscie						AT %I*	: BOOL;
 END_VAR

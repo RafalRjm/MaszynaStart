@@ -120,6 +120,18 @@ THIS^.fbNaped.FB_init (FALSE, FALSE, bCzujnik0Naped, bCzujnikMaxNaped, fbElektro
 ]]></ST>
       </Implementation>
     </Method>
+    <Property Name="Pozycja0" Id="{62ed0a0b-91f2-454a-9c1c-0adc399fb2a8}">
+      <Declaration><![CDATA[PROPERTY Pozycja0 : BOOL]]></Declaration>
+      <Get Name="Get" Id="{6cb61992-0399-443e-b6d5-18985717457e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Pozycja0									:= fbNaped.NaPoczatku;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Method Name="Praca" Id="{a7095052-7027-46be-846c-cd007f0cd31b}">
       <Declaration><![CDATA[METHOD Praca : BOOL
 VAR_INPUT
@@ -201,6 +213,10 @@ SUPER^.Resetowanie ();
       <LineId Id="35" Count="0" />
       <LineId Id="13" Count="0" />
       <LineId Id="33" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Ciecie.Pozycja0.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="FB_Ciecie.Praca">
       <LineId Id="39" Count="0" />

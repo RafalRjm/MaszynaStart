@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <DUT Name="DUT_Wizualizacja_SymulacjaDane" Id="{0ebfd58f-ef65-49ab-9651-bc8f088aee91}">
+    <Declaration><![CDATA[TYPE DUT_Wizualizacja_SymulacjaDane :
+STRUCT
+	stStanySilownikow						: DUT_Krajalnica_StanyPodzespolow;
+	eTrybPracy								: E_PMLUnitMode;
+	bCiecie1_Poczatek						: BOOL;
+	bCiecie1_Koniec							: BOOL;
+	bCiecie2_Poczatek						: BOOL;
+	bCiecie2_Koniec							: BOOL;
+	bPodawanieZabierakPoczatek				: BOOL;
+	bPodawanieZabierakKoniec				: BOOL;
+	bPodawaniePrzesuwaniePoczatek			: BOOL;
+	bPodawaniePrzesuwanieKoniec				: BOOL;
+	bCzujnikWaflaDoPodania					: BOOL;
+	bCzujnikWaflaDoCiecia1					: BOOL;
+	bCzujnikWaflaDoCiecia2					: BOOL;	
+	
+	bCiecie1Bazuj							: BOOL;
+	bCiecie1Tnij							: BOOL;
+	bCiecie2Bazuj							: BOOL;		
+	bCiecie2Tnij							: BOOL;
+	bPodawanieBazuj							: BOOL;		
+	bPodawaniePodaj							: BOOL;	
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

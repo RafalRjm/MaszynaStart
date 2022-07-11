@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="FB_Wizualizacja" Id="{706a4fd4-acd5-4bbf-849a-79e263fda2e8}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Wizualizacja
+VAR_INPUT
+	stStanySilownikow						: DUT_Krajalnica_StanyPodzespolow;
+	eTrybPracy								: E_PMLUnitMode;
+	bCiecie1_Poczatek						: BOOL;
+	bCiecie1_Koniec							: BOOL;
+	bCiecie2_Poczatek						: BOOL;
+	bCiecie2_Koniec							: BOOL;
+	bPodawanieZabierakPoczatek				: BOOL;
+	bPodawanieZabierakKoniec				: BOOL;
+	bPodawaniePrzesuwaniePoczatek			: BOOL;
+	bPodawaniePrzesuwanieKoniec				: BOOL;
+	bCzujnikWaflaDoPodania					: BOOL;
+	bCzujnikWaflaDoCiecia1					: BOOL;
+	bCzujnikWaflaDoCiecia2					: BOOL;
+END_VAR
+VAR_OUTPUT
+	stSterowanie							: DUT_Krajalnica_Symulacja;
+END_VAR
+VAR
+	stDane									: DUT_Wizualizacja_SymulacjaDane;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[stDane.stStanySilownikow					:= stStanySilownikow;
+stDane.eTrybPracy							:= eTrybPracy;
+stDane.bCiecie1_Poczatek					:= bCiecie1_Poczatek;				         
+stDane.bCiecie1_Koniec						:= bCiecie1_Koniec;					          
+stDane.bCiecie2_Poczatek					:= bCiecie2_Poczatek;				         
+stDane.bCiecie2_Koniec						:= bCiecie2_Koniec;					          
+stDane.bPodawanieZabierakPoczatek			:= bPodawanieZabierakPoczatek;		  
+stDane.bPodawanieZabierakKoniec		    	:= bPodawanieZabierakKoniec;		    
+stDane.bPodawaniePrzesuwaniePoczatek		:= bPodawaniePrzesuwaniePoczatek;	
+stDane.bPodawaniePrzesuwanieKoniec			:= bPodawaniePrzesuwanieKoniec;		 
+stDane.bCzujnikWaflaDoPodania				:= bCzujnikWaflaDoPodania;			     
+stDane.bCzujnikWaflaDoCiecia1				:= bCzujnikWaflaDoCiecia1;			     
+stDane.bCzujnikWaflaDoCiecia2				:= bCzujnikWaflaDoCiecia2;
+
+stSterowanie.bCiecie1Bazuj					:= stDane.bCiecie1Bazuj;
+stSterowanie.bCiecie1Tnij					:= stDane.bCiecie1Tnij;
+			     ]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Wizualizacja">
+      <LineId Id="9" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="23" Count="6" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="31" Count="2" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="41" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

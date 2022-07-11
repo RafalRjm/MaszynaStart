@@ -5,6 +5,7 @@
 VAR
 	bKonfiguruj								: BOOL := TRUE;
 	
+	fbWizualizacja							: FB_Wizualizacja;
 	
 END_VAR
 ]]></Declaration>
@@ -37,8 +38,43 @@ GVL_ElementySterujace.fbElementySterujace.StanMaszyny	:= GVL_StanMaszyny.fbStanM
 GVL_ElementySterujace.fbElementySterujace.TrybPracy		:= GVL_StanMaszyny.fbStanMaszyny.TrybPracy;
 //--------STEROWANIE MASZYNĄ
 
-GVL_Podzespoly.fbKrajalnica (stParametry := GVL_Parametry.stKrajalnica);
-]]></ST>
+GVL_Podzespoly.fbSymulacja(
+								stParametry						:= GVL_Parametry.stSymulacja, 
+								stStanyPodzespolow				:= GVL_Podzespoly.fbKrajalnica.stStanyPodzespolow,
+								eTrybPracy						:= GVL_StanMaszyny.fbStanMaszyny.TrybPracy, 
+								bCiecie1_Poczatek				=> GVL_Wejscia_IO.bCzujnik0C1.bSymulacja, 
+								bCiecie1_Koniec					=> GVL_Wejscia_IO.bCzujnikMaxC1.bSymulacja, 
+								bCiecie2_Poczatek				=> GVL_Wejscia_IO.bCzujnik0C2.bSymulacja, 
+								bCiecie2_Koniec					=> GVL_Wejscia_IO.bCzujnikMaxC2.bSymulacja, 
+								bPodawanieZabierakPoczatek		=> GVL_Wejscia_IO.bCzujnik0PW_Z.bSymulacja, 
+								bPodawanieZabierakKoniec		=> GVL_Wejscia_IO.bCzujnikMaxPW_Z.bSymulacja, 
+								bPodawaniePrzesuwaniePoczatek	=> GVL_Wejscia_IO.bCzujnik0PW_N.bSymulacja, 
+								bPodawaniePrzesuwanieKoniec		=> GVL_Wejscia_IO.bCzujnikMaxPW_N.bSymulacja, 
+								bCzujnikWaflaDoPodania			=> GVL_Wejscia_IO.bWafelNaWejsciu.bSymulacja, 
+								bCzujnikWaflaDoCiecia1			=> GVL_Wejscia_IO.bWafelDoCiecia1.bSymulacja, 
+								bCzujnikWaflaDoCiecia2			=> GVL_Wejscia_IO.bWafelDoCiecia2.bSymulacja);
+								
+GVL_Podzespoly.fbKrajalnica (	stParametry 					:= GVL_Parametry.stKrajalnica,
+								stSterowanieSymulacja			:= fbWizualizacja.stSterowanie);
+
+	
+fbWizualizacja(
+								stStanySilownikow				:= GVL_Podzespoly.fbKrajalnica.stStanyPodzespolow,
+								eTrybPracy						:= GVL_StanMaszyny.fbStanMaszyny.TrybPracy,   
+								bCiecie1_Poczatek				:= GVL_Wejscia_IO.bCzujnik0C1.CzyZadzialany, 
+								bCiecie1_Koniec					:= GVL_Wejscia_IO.bCzujnikMaxC1.CzyZadzialany, 
+								bCiecie2_Poczatek				:= GVL_Wejscia_IO.bCzujnik0C2.CzyZadzialany, 
+								bCiecie2_Koniec					:= GVL_Wejscia_IO.bCzujnikMaxC2.CzyZadzialany, 
+								bPodawanieZabierakPoczatek		:= GVL_Wejscia_IO.bCzujnik0PW_Z.CzyZadzialany, 
+								bPodawanieZabierakKoniec		:= GVL_Wejscia_IO.bCzujnikMaxPW_Z.CzyZadzialany, 
+								bPodawaniePrzesuwaniePoczatek	:= GVL_Wejscia_IO.bCzujnik0PW_N.CzyZadzialany,
+								bPodawaniePrzesuwanieKoniec		:= GVL_Wejscia_IO.bCzujnikMaxPW_N.CzyZadzialany, 
+								bCzujnikWaflaDoPodania			:= GVL_Wejscia_IO.bWafelNaWejsciu.CzyZadzialany, 
+								bCzujnikWaflaDoCiecia1			:= GVL_Wejscia_IO.bWafelDoCiecia1.CzyZadzialany, 
+								bCzujnikWaflaDoCiecia2			:= GVL_Wejscia_IO.bWafelDoCiecia2.CzyZadzialany);
+						
+				
+							]]></ST>
     </Implementation>
     <Action Name="A_Konfiguracja" Id="{124be6a6-033b-419d-b278-24d79c8f18b6}">
       <Implementation>
@@ -107,9 +143,21 @@ GVL_Podzespoly.fbKrajalnica (stParametry := GVL_Parametry.stKrajalnica);
       <LineId Id="10" Count="16" />
       <LineId Id="2" Count="0" />
       <LineId Id="38" Count="0" />
-      <LineId Id="46" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="61" Count="2" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="64" Count="9" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="74" Count="0" />
       <LineId Id="39" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="56" Count="0" />
       <LineId Id="47" Count="0" />
+      <LineId Id="78" Count="1" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="80" Count="9" />
+      <LineId Id="94" Count="2" />
+      <LineId Id="76" Count="0" />
     </LineIds>
     <LineIds Name="MAIN.A_Konfiguracja">
       <LineId Id="2" Count="36" />

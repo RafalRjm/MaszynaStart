@@ -228,12 +228,12 @@
                               <d n="TypeNodeAttributesData" t="CaseInsensitiveHashtable" ckt="String" cvt="String">
                                 <v>Visible</v>
                                 <v>False</v>
-                                <v>DefaultArraySize</v>
-                                <v>5</v>
-                                <v>VisibleChildren</v>
-                                <v>True</v>
                                 <v>ieccodeconversion_array</v>
                                 <v></v>
+                                <v>VisibleChildren</v>
+                                <v>True</v>
+                                <v>DefaultArraySize</v>
+                                <v>5</v>
                                 <v>''NORMAL__COMMENT</v>
                                 <v> We hide this node to prevent having two References nodes
  Nevertheless we want to make sure that the children are displayed</v>
@@ -289,8 +289,8 @@
                         <o n="TypeNodeAttributes" t="TypeNodeAttributes2">
                           <v n="AttrFlags">81920UL</v>
                           <d n="TypeNodeAttributesData" t="CaseInsensitiveHashtable" ckt="String" cvt="String">
-                            <v>DisplayFrameReferencesConfiguration</v>
-                            <v></v>
+                            <v>conditionalshow</v>
+                            <v>visu_elemdev</v>
                             <v>DescriptionTextId</v>
                             <v>TL_ElementProperties.Desc_ReferencedVisus</v>
                             <v>SortFlag</v>
@@ -301,14 +301,14 @@
                             <v>Simple|Standard</v>
                             <v>DynamicArray</v>
                             <v></v>
-                            <v>conditionalshow</v>
-                            <v>visu_elemdev</v>
+                            <v>DisplayFrameReferencesConfiguration</v>
+                            <v></v>
                             <v>FrameReferences</v>
                             <v></v>
-                            <v>DisplayTextId</v>
-                            <v>TL_ElementProperties.References</v>
                             <v>Storable</v>
                             <v>True</v>
+                            <v>DisplayTextId</v>
+                            <v>TL_ElementProperties.References</v>
                           </d>
                           <v n="ConvDone">true</v>
                         </o>
@@ -1351,6 +1351,10 @@
                       <v n="Value">false</v>
                     </o>
                     <o>
+                      <v n="Id">2880254039L</v>
+                      <v n="Value">"not GVL_StanMaszyny.fbStanMaszyny.arrVisuTryb[GVL_StanMaszyny.fbStanMaszyny.iNumerTrybuPracy][11]"</v>
+                    </o>
+                    <o>
                       <v n="Id">823443203L</v>
                       <v n="Value">"936"</v>
                     </o>
@@ -1537,6 +1541,10 @@
                       <v n="Value">false</v>
                     </o>
                     <o>
+                      <v n="Id">2880254039L</v>
+                      <v n="Value">"not GVL_StanMaszyny.fbStanMaszyny.arrVisuTryb[GVL_StanMaszyny.fbStanMaszyny.iNumerTrybuPracy][11]"</v>
+                    </o>
+                    <o>
                       <v n="Id">823443203L</v>
                       <v n="Value">"974"</v>
                     </o>
@@ -1717,6 +1725,10 @@
                     <o>
                       <v n="Id">2597686782L</v>
                       <v n="Value">false</v>
+                    </o>
+                    <o>
+                      <v n="Id">2880254039L</v>
+                      <v n="Value">"not GVL_StanMaszyny.fbStanMaszyny.arrVisuTryb[GVL_StanMaszyny.fbStanMaszyny.iNumerTrybuPracy][5]"</v>
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
@@ -1901,6 +1913,10 @@
                       <v n="Value">false</v>
                     </o>
                     <o>
+                      <v n="Id">2880254039L</v>
+                      <v n="Value">"not GVL_StanMaszyny.fbStanMaszyny.arrVisuTryb[GVL_StanMaszyny.fbStanMaszyny.iNumerTrybuPracy][5]"</v>
+                    </o>
+                    <o>
                       <v n="Id">823443203L</v>
                       <v n="Value">"152"</v>
                     </o>
@@ -1988,7 +2004,7 @@
                     </o>
                     <o>
                       <v n="Id">2422045748L</v>
-                      <v n="Value">150</v>
+                      <v n="Value" t="Int16">180</v>
                     </o>
                     <o>
                       <v n="Id">2134141914L</v>
@@ -2037,7 +2053,7 @@
                     </o>
                     <o>
                       <v n="Id">550940142L</v>
-                      <v n="Value">85</v>
+                      <v n="Value">100</v>
                     </o>
                     <o>
                       <v n="Id">1473355128L</v>
@@ -2075,6 +2091,10 @@
                       <v n="Id">823443203L</v>
                       <v n="Value">"892"</v>
                     </o>
+                    <o>
+                      <v n="Id">1999528970L</v>
+                      <v n="Value">"GVL_StanMaszyny.eTrybPracy = E_PMLUnitMode.AUTOMATIC"</v>
+                    </o>
                   </l>
                 </o>
                 <v n="VisualElementName">"Button"</v>
@@ -2083,7 +2103,7 @@
                 <v n="VisualElementIdentifier">"GenElemInst_84"</v>
                 <n n="VisualElementOfflinePaintCommands" />
                 <n n="VisualElementFrameInformation" />
-                <d n="VisualElementInputActions" t="Hashtable" ckt="String" cvt="STSnippetInputAction[]">
+                <d n="VisualElementInputActions" t="Hashtable" ckt="String" cvt="IInputAction[]">
                   <v>OnMouseDown</v>
                   <a cet="STSnippetInputAction">
                     <o>
@@ -2159,7 +2179,7 @@
                     </o>
                     <o>
                       <v n="Id">1649127785L</v>
-                      <v n="Value">180</v>
+                      <v n="Value">210</v>
                     </o>
                     <o>
                       <v n="Id">357335551L</v>
@@ -2167,7 +2187,7 @@
                     </o>
                     <o>
                       <v n="Id">2422045748L</v>
-                      <v n="Value">150</v>
+                      <v n="Value" t="Int16">180</v>
                     </o>
                     <o>
                       <v n="Id">2134141914L</v>
@@ -2216,7 +2236,7 @@
                     </o>
                     <o>
                       <v n="Id">550940142L</v>
-                      <v n="Value">250</v>
+                      <v n="Value">280</v>
                     </o>
                     <o>
                       <v n="Id">1473355128L</v>
@@ -2253,6 +2273,10 @@
                     <o>
                       <v n="Id">823443203L</v>
                       <v n="Value">"740"</v>
+                    </o>
+                    <o>
+                      <v n="Id">1999528970L</v>
+                      <v n="Value">"GVL_StanMaszyny.eTrybPracy = E_PMLUnitMode.MANUAL"</v>
                     </o>
                   </l>
                 </o>
@@ -2524,7 +2548,7 @@
                     </o>
                     <o>
                       <v n="Id">1649127785L</v>
-                      <v n="Value">350</v>
+                      <v n="Value">410</v>
                     </o>
                     <o>
                       <v n="Id">357335551L</v>
@@ -2532,7 +2556,7 @@
                     </o>
                     <o>
                       <v n="Id">2422045748L</v>
-                      <v n="Value">150</v>
+                      <v n="Value" t="Int16">180</v>
                     </o>
                     <o>
                       <v n="Id">2134141914L</v>
@@ -2581,7 +2605,7 @@
                     </o>
                     <o>
                       <v n="Id">550940142L</v>
-                      <v n="Value">420</v>
+                      <v n="Value">480</v>
                     </o>
                     <o>
                       <v n="Id">1473355128L</v>
@@ -2618,6 +2642,10 @@
                     <o>
                       <v n="Id">823443203L</v>
                       <v n="Value">"732"</v>
+                    </o>
+                    <o>
+                      <v n="Id">1999528970L</v>
+                      <v n="Value">"GVL_StanMaszyny.eTrybPracy = E_PMLUnitMode.SEMIAUTOMATIC"</v>
                     </o>
                   </l>
                 </o>
@@ -2745,10 +2773,10 @@
               <d n="FbMethods" t="CaseInsensitiveHashtable_1" ckt="String" cvt="Guid">
                 <v>FB_Init</v>
                 <v>439bb524-c788-418a-9358-9616c7c585e9</v>
-                <v>FB_Reinit</v>
-                <v>67880b05-7e8d-42a8-81c1-6fd4b5085d36</v>
                 <v>FB_Exit</v>
                 <v>d2f399c2-2d5a-49f3-865f-cdaa3fc6866a</v>
+                <v>FB_Reinit</v>
+                <v>67880b05-7e8d-42a8-81c1-6fd4b5085d36</v>
               </d>
               <v n="FbName">"NotImportant"</v>
               <v n="FbGuid">{16010d51-6ac7-4f96-acb5-c27363fcd79c}</v>
@@ -2873,6 +2901,7 @@
         <Type n="Guid">System.Guid</Type>
         <Type n="Hashtable">System.Collections.Hashtable</Type>
         <Type n="HotkeyConfiguration">{6b108d46-58af-4e41-a3f4-174d8f160cc4}</Type>
+        <Type n="IInputAction[]">_3S.CoDeSys.VisualElem.IInputAction[], VisualElem, Version=3.5.13.0, Culture=neutral, PublicKeyToken=null</Type>
         <Type n="Int16">System.Int16</Type>
         <Type n="Int32">System.Int32</Type>
         <Type n="Int64">System.Int64</Type>

@@ -110,10 +110,22 @@
     <Compile Include="POUs\51 - Krajalnica\DUT\DUT_Krajalnica_Parametry.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\51 - Krajalnica\DUT\DUT_Krajalnica_StanyPodzespolow.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\51 - Krajalnica\DUT\DUT_Krajalnica_Symulacja.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\51 - Krajalnica\POU\FB_Krajalnica.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\51 - Krajalnica\POU\FB_Krajalnica_Komunikacja.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\80 - Symulacja pracy\DUT\DUT_Symulacja_Parametry.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\80 - Symulacja pracy\POU\FB_Symulacja.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\90 - Stan Maszyny\DUT\DUT_StanMaszyny_VISU_Stan.TcDUT">
@@ -231,9 +243,15 @@
       <SubType>Code</SubType>
       <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
     </Compile>
-    <Compile Include="POUs\99 - Wizualizacja\GVL_Wizualizacja.TcGVL">
+    <Compile Include="POUs\99 - Wizualizacja\DUT\DUT_Wizualizacja_SymulacjaDane.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\99 - Wizualizacja\GVL\GVL_Wizualizacja.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="POUs\99 - Wizualizacja\POU\FB_Wizualizacja.TcPOU">
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\MAIN.TcPOU">
       <SubType>Code</SubType>
@@ -242,6 +260,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="VISUs\OknoGlowne.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
+    <Compile Include="VISUs\Symulacja.TcVIS">
       <SubType>Code</SubType>
       <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
     </Compile>
@@ -281,6 +303,8 @@
     <Folder Include="POUs\50 - testowy podzespol\POU" />
     <Folder Include="POUs\51 - Krajalnica\DUT" />
     <Folder Include="POUs\51 - Krajalnica\POU" />
+    <Folder Include="POUs\80 - Symulacja pracy\DUT" />
+    <Folder Include="POUs\80 - Symulacja pracy\POU" />
     <Folder Include="POUs\90 - Stan Maszyny" />
     <Folder Include="POUs\90 - Stan Maszyny\DUT" />
     <Folder Include="POUs\90 - Stan Maszyny\GVL" />
@@ -311,6 +335,10 @@
     <Folder Include="POUs\03 - Ciecie" />
     <Folder Include="POUs\93 - Podzespol" />
     <Folder Include="POUs\51 - Krajalnica" />
+    <Folder Include="POUs\80 - Symulacja pracy" />
+    <Folder Include="POUs\99 - Wizualizacja\GVL" />
+    <Folder Include="POUs\99 - Wizualizacja\DUT" />
+    <Folder Include="POUs\99 - Wizualizacja\POU" />
     <Folder Include="VISUs" />
     <Folder Include="POUs" />
     <Folder Include="VISUs\Grafika" />

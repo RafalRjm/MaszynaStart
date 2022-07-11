@@ -68,7 +68,7 @@ END_VAR
 		E_PMLState.UNSUSPENDING :
 			SM_Unsuspending ();
 		E_PMLState.RESETTING 	:
-			SM_Resetting ();
+			SM_Resetting (eTrybPracy := eTrybPracy);
 		E_PMLState.COMPLETING 	:
 			SM_Completing ();
 		E_PMLState.COMPLETE	 	:
@@ -269,6 +269,7 @@ bPodswietlanieStop							:= TRUE;
     <Method Name="SM_Resetting" Id="{4bf7734c-aa62-44b6-bae9-13d2ec2789c2}">
       <Declaration><![CDATA[METHOD SM_Resetting : BOOL
 VAR_INPUT
+	eTrybPracy								: E_PMLUnitMode;
 END_VAR
 ]]></Declaration>
       <Implementation>

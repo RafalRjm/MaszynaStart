@@ -1,0 +1,382 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="FB_Symulacja" Id="{765dcd61-bc4a-4fd9-ac8e-50d6dcf33eec}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Symulacja IMPLEMENTS ITF_StanMaszyny
+VAR_INPUT
+	stParametry								: DUT_Symulacja_Parametry;
+	stStanyPodzespolow						: DUT_Krajalnica_StanyPodzespolow;
+	eTrybPracy								: E_PMLUnitMode;
+END_VAR
+VAR_OUTPUT
+	//wyjscia zadziałania czujnikow 
+	bCiecie1_Poczatek						: BOOL;
+	bCiecie1_Koniec							: BOOL;
+	bCiecie2_Poczatek						: BOOL;
+	bCiecie2_Koniec							: BOOL;
+	bPodawanieZabierakPoczatek				: BOOL;
+	bPodawanieZabierakKoniec				: BOOL;
+	bPodawaniePrzesuwaniePoczatek			: BOOL;
+	bPodawaniePrzesuwanieKoniec				: BOOL;
+	bCzujnikWaflaDoPodania					: BOOL;
+	bCzujnikWaflaDoCiecia1					: BOOL;
+	bCzujnikWaflaDoCiecia2					: BOOL;
+END_VAR
+VAR
+	tonCiecie1_BazowanieCzasNaPowrot				: TON;           
+	tonCiecie1_CiecieCzasNaCiecie					: TON;
+	tonCiecie1_CiecieCzasNaPowrot					: TON;
+	tonCiecie2_BazowanieCzasNaPowrot				: TON;
+	tonCiecie2_CiecieCzasNaCiecie					: TON;
+	tonCiecie2_CiecieCzasNaPowrot					: TON;
+	tonPodawanieZabierak_BazowanieCzasNaPowrot		: TON;
+	tonPodawaniePrzesuwanie_BazowanieCzasNaPowrot	: TON;
+	tonPodawanieZabierak_PodawanieCzasNaPrace	: TON;
+	tonPodawanieZabierak_PodawanieCzasNaPowrot		: TON;
+	tonPodawaniePrzesuwanie_PodawanieCzasNaPobranie	: TON;
+	tonPodawaniePrzesuwanie_PodawanieCzasNaPodanie	: TON;	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[tonCiecie1_BazowanieCzasNaPowrot				(IN := stStanyPodzespolow.bCiecie1_Bazowanie ,
+													PT := REAL_TO_TIME (stParametry.rCiecie1_BazowanieCzasNaPowrot));
+tonCiecie1_CiecieCzasNaCiecie					(IN := stStanyPodzespolow.bCiecie1_Naped_WStroneKonca ,
+													PT := REAL_TO_TIME (stParametry.rCiecie1_CiecieCzasNaPowrot));
+tonCiecie1_CiecieCzasNaPowrot					(IN := stStanyPodzespolow.bCiecie1_Naped_WStronePoczatku ,
+													PT := REAL_TO_TIME (stParametry.rCiecie1_CiecieCzasNaCiecie));
+
+tonCiecie2_BazowanieCzasNaPowrot				(IN := stStanyPodzespolow.bCiecie2_Bazowanie ,
+													PT := REAL_TO_TIME (stParametry.rCiecie2_BazowanieCzasNaPowrot));
+tonCiecie2_CiecieCzasNaCiecie					(IN := stStanyPodzespolow.bCiecie2_Naped_WStroneKonca ,
+													PT := REAL_TO_TIME (stParametry.rCiecie2_CiecieCzasNaPowrot));
+tonCiecie2_CiecieCzasNaPowrot					(IN := stStanyPodzespolow.bCiecie2_Naped_WStronePoczatku ,
+													PT := REAL_TO_TIME (stParametry.rCiecie2_CiecieCzasNaCiecie));
+
+tonPodawanieZabierak_BazowanieCzasNaPowrot		(IN := stStanyPodzespolow.bPodawanie_Bazowanie AND 
+														stStanyPodzespolow.bPodawanie_Zabierak_WStronePoczatku ,
+													PT := REAL_TO_TIME (stParametry.rPodawanieZabierak_BazowanieCzasNaPowrot));
+tonPodawaniePrzesuwanie_BazowanieCzasNaPowrot	(IN := stStanyPodzespolow.bPodawanie_Bazowanie AND 
+														stStanyPodzespolow.bPodawanie_Przesuwanie_WStronePoczatku ,
+													PT := REAL_TO_TIME (stParametry.rPodawanieZabierak_PodawanieCzasNaPowrot));
+tonPodawanieZabierak_PodawanieCzasNaPrace		(IN := stStanyPodzespolow.bPodawanie_Podawanie AND
+														stStanyPodzespolow.bPodawanie_zabierak_WStroneKonca ,
+													PT := REAL_TO_TIME (stParametry.rPodawanieZabierak_PodawanieCzasNaPrace));
+tonPodawanieZabierak_PodawanieCzasNaPowrot		(IN := stStanyPodzespolow.bPodawanie_Podawanie AND
+														stStanyPodzespolow.bPodawanie_Zabierak_WStronePoczatku ,
+													PT := REAL_TO_TIME (stParametry.rPodawaniePrzesuwanie_BazowanieCzasNaPowrot));
+tonPodawaniePrzesuwanie_PodawanieCzasNaPobranie	(IN := stStanyPodzespolow.bPodawanie_Podawanie AND
+														stStanyPodzespolow.bPodawanie_Przesuwanie_WStroneKonca ,
+													PT := REAL_TO_TIME (stParametry.rPodawaniePrzesuwanie_PodawanieCzasNaPobranie));
+tonPodawaniePrzesuwanie_PodawanieCzasNaPodanie	(IN := stStanyPodzespolow.bPodawanie_Podawanie AND
+														stStanyPodzespolow.bPodawanie_Przesuwanie_WStronePoczatku ,
+													PT := REAL_TO_TIME (stParametry.rPodawaniePrzesuwanie_PodawanieCzasNaPodanie));
+]]></ST>
+    </Implementation>
+    <Method Name="SM_Aborted" Id="{9820e384-b0a1-4a66-b766-7943285c2ac4}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									5.06.2022
+	Stan maszyny Aborted - metoda pusta
+ 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+==================================================================================================*)
+METHOD SM_Aborted : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Aborting" Id="{e9bc9ab0-0d62-45b3-87ed-c48facf26e6a}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									5.06.2022
+	Stan maszyny Aborting - awaryjne zatrzymanie maszyny E-STOP
+ 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+==================================================================================================*)
+METHOD SM_Aborting : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[SM_Aborting									:= TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Clearing" Id="{d163b2b8-f211-4417-bbf5-77228b385af9}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									5.06.2022
+	Stan maszyny Clearing
+ 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+==================================================================================================*)
+METHOD SM_Clearing : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[SM_Clearing									:= TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Complete" Id="{0f0e3d35-0984-42ea-aa82-088afcd7725d}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									5.06.2022
+	Stan maszyny Complete 
+ 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+==================================================================================================*)
+METHOD SM_Complete : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Completing" Id="{09d9d436-b712-4447-9816-dcfd05c8572f}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									5.06.2022
+	Stan maszyny Completing
+ 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+==================================================================================================*)
+METHOD SM_Completing : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Execute" Id="{63969b11-f63c-4dbf-812a-15889dfbd297}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									5.06.2022
+	Stan maszyny Execute
+ 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+==================================================================================================*)
+METHOD SM_Execute : BOOL
+VAR_INPUT
+	eTrybPracy	: E_PMLUnitMode;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Held" Id="{1322292e-a8f5-42f5-b961-fb202a5f24c3}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									5.06.2022
+	Stan maszyny Held  - metoda pusta
+ 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+==================================================================================================*)
+METHOD SM_Held : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Holding" Id="{01d50ea5-47c7-4cb4-8a36-ef46039a9500}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									5.06.2022
+	Stan maszyny Holding
+ 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+==================================================================================================*)
+METHOD SM_Holding : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Idle" Id="{ca33b034-1f43-4c44-8eac-87db46373658}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									5.06.2022
+	Stan maszyny Idle
+ 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+==================================================================================================*)
+METHOD SM_Idle : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Resetting" Id="{d2f071d2-07dd-4093-b4d5-b2873fa1fd86}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									5.06.2022
+	Stan maszyny Reseting - konczenie niedokocznonych cykli i powrot podzespolami do pozycji startowej
+ 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+==================================================================================================*)
+METHOD SM_Resetting : BOOL
+VAR_INPUT
+	eTrybPracy								: E_PMLUnitMode;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[SM_Resetting								:= TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Starting" Id="{cb29fb05-3558-4bc6-85d8-b4598b57210a}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									5.06.2022
+	Stan maszyny Starting - Ustawienie elementów do pracy 
+ 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+==================================================================================================*)
+METHOD SM_Starting : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Stopped" Id="{e8c6cc90-3fea-4b85-b39c-66505ec65a00}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									5.06.2022
+	Stan maszyny Stoped - metoda pusta
+ 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+==================================================================================================*)
+METHOD SM_Stopped : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Stopping" Id="{acf116d2-616d-4f22-b4b6-59579d770113}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									5.06.2022
+	Stan maszyny Stopping - Zakonczenie aktualnych operacji nie zaczynamy kolejnych
+ 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+==================================================================================================*)
+METHOD SM_Stopping : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Suspended" Id="{103c2f79-faea-4685-a656-2e23f8e41503}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									5.06.2022
+	Stan maszyny Suspended - metoda pusta
+ 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+==================================================================================================*)
+METHOD SM_Suspended : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Suspending" Id="{7ab1c70c-dd0f-4d06-b92d-790e6ad9975e}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									5.06.2022
+	Stan maszyny Suspending
+ 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+==================================================================================================*)
+METHOD SM_Suspending : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Unholding" Id="{e61b12f8-b1f2-4866-ba8e-9492f13e5f60}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									5.06.2022
+	Stan maszyny Unholding
+ 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+==================================================================================================*)
+METHOD SM_Unholding : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SM_Unsuspending" Id="{8bd26fa7-7cca-4146-9c79-a16a802f7fde}">
+      <Declaration><![CDATA[(*==================================================================================================
+								RJM Maszyny sp. z o.o.
+									5.06.2022
+	Stan maszyny Unsuspending
+ 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+==================================================================================================*)
+METHOD SM_Unsuspending : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Symulacja">
+      <LineId Id="98" Count="0" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="119" Count="0" />
+      <LineId Id="100" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="101" Count="1" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="105" Count="2" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="108" Count="1" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="110" Count="1" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="112" Count="1" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="114" Count="1" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="116" Count="1" />
+      <LineId Id="129" Count="0" />
+      <LineId Id="54" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Symulacja.SM_Aborted">
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Symulacja.SM_Aborting">
+      <LineId Id="10" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_Symulacja.SM_Clearing">
+      <LineId Id="10" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_Symulacja.SM_Complete">
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Symulacja.SM_Completing">
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Symulacja.SM_Execute">
+      <LineId Id="13" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Symulacja.SM_Held">
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Symulacja.SM_Holding">
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Symulacja.SM_Idle">
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Symulacja.SM_Resetting">
+      <LineId Id="10" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_Symulacja.SM_Starting">
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Symulacja.SM_Stopped">
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Symulacja.SM_Stopping">
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Symulacja.SM_Suspended">
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Symulacja.SM_Suspending">
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Symulacja.SM_Unholding">
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Symulacja.SM_Unsuspending">
+      <LineId Id="10" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

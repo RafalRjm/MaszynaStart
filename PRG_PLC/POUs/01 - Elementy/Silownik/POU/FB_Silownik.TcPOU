@@ -185,7 +185,7 @@ PROPERTY PrzesuwanieWStronePoczatku : BOOL
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[bPrzesuwanieWStronePoczatku					:= bPrzesuwanieWStronePoczatku;
+          <ST><![CDATA[PrzesuwanieWStronePoczatku					:= bPrzesuwanieWStronePoczatku;
 ]]></ST>
         </Implementation>
       </Get>

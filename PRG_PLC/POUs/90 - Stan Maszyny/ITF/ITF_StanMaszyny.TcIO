@@ -4,105 +4,208 @@
     <Declaration><![CDATA[INTERFACE ITF_StanMaszyny
 ]]></Declaration>
     <Method Name="SM_Aborted" Id="{ee45967d-d5f3-4a74-a1ad-b8f8be01ac94}">
-      <Declaration><![CDATA[METHOD SM_Aborted : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Aborted - metoda pusta
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Aborted : BOOL
 VAR_INPUT
 	
 END_VAR
 ]]></Declaration>
     </Method>
     <Method Name="SM_Aborting" Id="{55681dd0-800f-4d75-b3c8-959ba960914d}">
-      <Declaration><![CDATA[METHOD SM_Aborting : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Aborting - awaryjne zatrzymanie maszyny E-STOP
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Aborting : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
     <Method Name="SM_Clearing" Id="{6229c36a-94c2-4efb-a1d2-1501c4a88dd8}">
-      <Declaration><![CDATA[METHOD SM_Clearing : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Clearing
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Clearing : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
     <Method Name="SM_Complete" Id="{6d52ee19-f8f9-4f7c-8286-61b8feab6710}">
-      <Declaration><![CDATA[METHOD SM_Complete : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Complete 
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Complete : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
     <Method Name="SM_Completing" Id="{a62a5e97-89e4-4890-b9d0-5f498a20b3cd}">
-      <Declaration><![CDATA[METHOD SM_Completing : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Completing
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Completing : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
     <Method Name="SM_Execute" Id="{dad41575-f4e3-4a36-bc81-045bb8cd4c3c}">
-      <Declaration><![CDATA[METHOD SM_Execute : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Execute
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Execute : BOOL
 VAR_INPUT
 	eTrybPracy								: E_PMLUnitMode;
 END_VAR
 ]]></Declaration>
     </Method>
     <Method Name="SM_Held" Id="{cadc32f7-acaa-4f6c-b7dd-cde5f902b052}">
-      <Declaration><![CDATA[METHOD SM_Held : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Held  - metoda pusta
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Held : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
     <Method Name="SM_Holding" Id="{4f1a4021-c68b-44ec-9c1f-615d0ed8eff7}">
-      <Declaration><![CDATA[METHOD SM_Holding : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Holding
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Holding : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
     <Method Name="SM_Idle" Id="{80328817-7f47-48d5-a594-dff9bf2d4218}">
-      <Declaration><![CDATA[METHOD SM_Idle : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Idle
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Idle : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
     <Method Name="SM_Resetting" Id="{948a70de-043a-4568-9567-79cf79702eeb}">
-      <Declaration><![CDATA[METHOD SM_Resetting : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Reseting - konczenie niedokocznonych cykli i powrot podzespolami do pozycji startowej
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Resetting : BOOL
 VAR_INPUT
+	eTrybPracy								: E_PMLUnitMode;
 END_VAR
 ]]></Declaration>
     </Method>
     <Method Name="SM_Starting" Id="{a8ccf26e-38e3-40ee-9922-f658ed35b74f}">
-      <Declaration><![CDATA[METHOD SM_Starting : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Starting - Ustawienie elementów do pracy 
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Starting : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
     <Method Name="SM_Stopped" Id="{edce668a-0d68-4a81-af18-f26d3602ce48}">
-      <Declaration><![CDATA[METHOD SM_Stopped : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Stoped - metoda pusta
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Stopped : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
     <Method Name="SM_Stopping" Id="{bb544129-4333-4a53-ac1d-d921ad08426a}">
-      <Declaration><![CDATA[METHOD SM_Stopping : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Stopping - Zakonczenie aktualnych operacji nie zaczynamy kolejnych
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Stopping : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
     <Method Name="SM_Suspended" Id="{09be560d-ade3-4fb2-b67c-15cde023a8dc}">
-      <Declaration><![CDATA[METHOD SM_Suspended : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Suspended - metoda pusta
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Suspended : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
     <Method Name="SM_Suspending" Id="{585f795f-6c69-4344-b5b0-54ae9ae7074c}">
-      <Declaration><![CDATA[METHOD SM_Suspending : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Suspending
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Suspending : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
     <Method Name="SM_Unholding" Id="{fd2061d5-57dc-459b-aaa8-b726218c698e}">
-      <Declaration><![CDATA[METHOD SM_Unholding : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Unholding
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Unholding : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
     <Method Name="SM_Unsuspending" Id="{8c9270a4-bed3-4de3-bfe5-fe1536771cdf}">
-      <Declaration><![CDATA[METHOD SM_Unsuspending : BOOL
+      <Declaration><![CDATA[//==================================================================================================
+//								RJM Maszyny sp. z o.o.
+//									5.06.2022
+//	Stan maszyny Unsuspending
+// 	v1.0	|| TC v 3.1.4024.29		|| - pierwsza wersja
+//==================================================================================================
+METHOD SM_Unsuspending : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>
